@@ -258,10 +258,68 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .btn-ad:hover{background:rgba(255,215,0,.2)}
 
 .gamble-stat-row{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:1px solid var(--border)}
+
+.quickbet-row{display:flex;gap:5px;margin:6px 0}
+.quickbet-row .buy-x-btn{flex:1;text-align:center}
+
+.crash-area{display:flex;flex-direction:column;align-items:center;gap:8px}
+.crash-display{width:100%;background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius-md);padding:8px;position:relative}
+.crash-mult{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:28px;font-weight:800;color:var(--neon-green);z-index:2;text-shadow:0 0 12px currentColor}
+.crash-mult.busted{color:var(--danger)}
+.btn-cashout{width:100%;padding:10px;border-radius:var(--radius-sm);background:var(--neon-gold);color:#000;font-weight:800;font-size:14px}
+.btn-cashout:disabled{opacity:.3;cursor:not-allowed;background:var(--bg-hover);color:var(--text-muted)}
+
+.dice-area{display:flex;flex-direction:column;gap:8px}
+.dice-target-row{display:flex;flex-direction:column;gap:4px;font-size:12px}
+.dice-slider{width:100%;accent-color:var(--neon-purple)}
+.dice-info-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted)}
+.dice-result-display{text-align:center;font-size:32px;padding:10px;background:var(--bg-deep);border-radius:var(--radius-md);border:1px solid var(--border)}
 .gamble-win{color:var(--neon-green)}.gamble-loss{color:var(--danger)}
+
+/* AUTH / LOGIN SCREEN */
+#auth-overlay{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#0d1a30,var(--bg-deep));display:flex;align-items:center;justify-content:center;z-index:500}
+.auth-box{background:var(--bg-panel);border:1px solid var(--border-glow);border-radius:var(--radius-lg);padding:32px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.auth-logo{font-size:24px;font-weight:800;text-align:center;margin-bottom:6px;background:linear-gradient(90deg,var(--neon-blue),var(--neon-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.auth-sub{text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:20px}
+.auth-tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg-deep);border-radius:var(--radius-md);padding:4px}
+.auth-tab{flex:1;padding:8px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;text-align:center;color:var(--text-muted);cursor:pointer}
+.auth-tab.active{background:var(--bg-card);color:var(--neon-blue)}
+.auth-input{width:100%;background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text-main);font-size:13px;font-family:inherit;margin-bottom:10px}
+.auth-input:focus{outline:none;border-color:var(--neon-blue)}
+.btn-auth-submit{width:100%;padding:12px;border-radius:var(--radius-md);background:linear-gradient(90deg,var(--neon-blue),var(--neon-purple));color:white;font-weight:700;font-size:14px;margin-top:6px;transition:opacity .2s}
+.btn-auth-submit:hover{opacity:.9}
+.btn-auth-submit:disabled{opacity:.4;cursor:not-allowed}
+.auth-error{font-size:11px;color:var(--danger);text-align:center;min-height:16px;margin-top:8px}
+.auth-guest{display:block;text-align:center;font-size:11px;color:var(--text-muted);margin-top:14px;cursor:pointer;text-decoration:underline}
+.auth-guest:hover{color:var(--neon-blue)}
+.auth-loading{text-align:center;color:var(--text-muted);font-size:13px;padding:30px 0}
+#user-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);padding:4px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;cursor:pointer}
+#user-badge:hover{border-color:var(--neon-blue)}
 </style>
 </head>
 <body>
+
+<!-- ============================================================
+     AUTH OVERLAY (shown before game loads)
+     ============================================================ -->
+<div id="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-logo">⚡ Internet Empire</div>
+    <div class="auth-sub">Melde dich an, um deinen Fortschritt zu speichern</div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="auth-tab-login">Anmelden</div>
+      <div class="auth-tab" id="auth-tab-register">Registrieren</div>
+    </div>
+    <div id="auth-form-area">
+      <input class="auth-input" id="auth-email" type="email" placeholder="E-Mail" autocomplete="email">
+      <input class="auth-input" id="auth-password" type="password" placeholder="Passwort" autocomplete="current-password">
+      <button class="btn-auth-submit" id="auth-submit-btn">Anmelden</button>
+      <div class="auth-error" id="auth-error"></div>
+      <span class="auth-guest" id="auth-guest-btn">Ohne Account weiterspielen (nur lokal gespeichert)</span>
+    </div>
+  </div>
+</div>
+
 <div id="game-container">
 
 <header id="header">
@@ -273,6 +331,8 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     <div class="resource-chip"><span class="icon">🔬</span><div><div class="amount" id="rp-display">0</div><div class="rate" style="color:var(--neon-green)">Research</div></div></div>
   </div>
   <div class="header-btns">
+    <div id="user-badge" title="Klicken um dich abzumelden">👤 Gast</div>
+    <button class="icon-btn" id="promo-btn" title="Promo Code">🎁</button>
     <button class="icon-btn" id="sound-btn" title="Sound">🔊</button>
     <button class="icon-btn" id="save-btn" title="Save">💾</button>
     <button class="icon-btn" id="wipe-btn" title="Hard Reset">🗑️</button>
@@ -357,6 +417,12 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
             <input class="bet-input" id="slots-bet" type="text" value="1000" placeholder="Bet amount">
             <button class="btn-spin" id="slots-btn">SPIN</button>
           </div>
+          <div class="quickbet-row" data-betfor="slots-bet">
+            <button class="buy-x-btn" data-pct="0.1">10%</button>
+            <button class="buy-x-btn" data-pct="0.25">25%</button>
+            <button class="buy-x-btn" data-pct="0.5">50%</button>
+            <button class="buy-x-btn" data-pct="1">MAX</button>
+          </div>
           <div class="slots-result" id="slots-result"></div>
           <table class="slots-paytable">
             <tr><td>💎💎💎</td><td>JACKPOT 100×</td></tr>
@@ -376,6 +442,12 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
           <div class="coin" id="coin-display">🪙</div>
           <div class="slots-bet-row">
             <input class="bet-input" id="coin-bet" type="text" value="1000" placeholder="Bet amount">
+          </div>
+          <div class="quickbet-row" data-betfor="coin-bet">
+            <button class="buy-x-btn" data-pct="0.1">10%</button>
+            <button class="buy-x-btn" data-pct="0.25">25%</button>
+            <button class="buy-x-btn" data-pct="0.5">50%</button>
+            <button class="buy-x-btn" data-pct="1">MAX</button>
           </div>
           <div class="coin-btns">
             <button class="btn-coin heads-btn" id="coin-heads">👑 Heads (1.9×)</button>
@@ -402,6 +474,12 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
             <input class="bet-input" id="roulette-bet" type="text" value="1000" placeholder="Bet">
             <button class="btn-spin" id="roulette-btn">SPIN</button>
           </div>
+          <div class="quickbet-row" data-betfor="roulette-bet">
+            <button class="buy-x-btn" data-pct="0.1">10%</button>
+            <button class="buy-x-btn" data-pct="0.25">25%</button>
+            <button class="buy-x-btn" data-pct="0.5">50%</button>
+            <button class="buy-x-btn" data-pct="1">MAX</button>
+          </div>
           <div class="slots-result" id="roulette-result"></div>
         </div>
       </div>
@@ -415,7 +493,65 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
           <input class="bet-input" id="race-bet" type="text" value="1000" placeholder="Bet">
           <button class="btn-spin" id="race-btn">🏁 RACE!</button>
         </div>
+        <div class="quickbet-row" data-betfor="race-bet">
+          <button class="buy-x-btn" data-pct="0.1">10%</button>
+          <button class="buy-x-btn" data-pct="0.25">25%</button>
+          <button class="buy-x-btn" data-pct="0.5">50%</button>
+          <button class="buy-x-btn" data-pct="1">MAX</button>
+        </div>
         <div class="slots-result" id="race-result"></div>
+      </div>
+
+      <div class="gamble-panel">
+        <div class="gamble-title">🚀 Crypto Crash</div>
+        <div class="gamble-sub">Steige aus, bevor es crasht! Je länger du wartest, desto höher der Multiplikator.</div>
+        <div class="crash-area">
+          <div class="crash-display" id="crash-display">
+            <div class="crash-mult" id="crash-mult">1.00×</div>
+            <svg viewBox="0 0 280 100" id="crash-svg" style="width:100%;height:90px">
+              <polyline id="crash-line" points="0,100" fill="none" stroke="var(--neon-green)" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="slots-bet-row">
+            <input class="bet-input" id="crash-bet" type="text" value="1000" placeholder="Bet">
+            <button class="btn-spin" id="crash-btn">START</button>
+          </div>
+          <div class="quickbet-row" data-betfor="crash-bet">
+            <button class="buy-x-btn" data-pct="0.1">10%</button>
+            <button class="buy-x-btn" data-pct="0.25">25%</button>
+            <button class="buy-x-btn" data-pct="0.5">50%</button>
+            <button class="buy-x-btn" data-pct="1">MAX</button>
+          </div>
+          <button class="btn-cashout" id="crash-cashout" disabled>💰 CASH OUT</button>
+          <div class="slots-result" id="crash-result"></div>
+        </div>
+      </div>
+
+      <div class="gamble-panel">
+        <div class="gamble-title">🎲 Würfel-Duell</div>
+        <div class="gamble-sub">Wähle eine Zielzahl. Je niedriger, desto höher die Auszahlung!</div>
+        <div class="dice-area">
+          <div class="dice-target-row">
+            <label>Ziel: Wurf unter <strong id="dice-target-display">50</strong></label>
+            <input type="range" id="dice-target" min="2" max="95" value="50" class="dice-slider">
+          </div>
+          <div class="dice-info-row">
+            <span>Gewinnchance: <strong id="dice-chance">49%</strong></span>
+            <span>Auszahlung: <strong id="dice-payout" style="color:var(--neon-gold)">1.98×</strong></span>
+          </div>
+          <div class="dice-result-display" id="dice-result-display">🎲</div>
+          <div class="slots-bet-row">
+            <input class="bet-input" id="dice-bet" type="text" value="1000" placeholder="Bet">
+            <button class="btn-spin" id="dice-btn">WÜRFELN</button>
+          </div>
+          <div class="quickbet-row" data-betfor="dice-bet">
+            <button class="buy-x-btn" data-pct="0.1">10%</button>
+            <button class="buy-x-btn" data-pct="0.25">25%</button>
+            <button class="buy-x-btn" data-pct="0.5">50%</button>
+            <button class="buy-x-btn" data-pct="1">MAX</button>
+          </div>
+          <div class="slots-result" id="dice-result"></div>
+        </div>
       </div>
 
       <div class="gamble-panel">
@@ -724,6 +860,17 @@ const PRESTIGE_MILESTONES = [
 ];
 
 /* ============================================================
+   PROMO CODES
+   ============================================================ */
+const PROMO_CODES = {
+  'GET10':    {cash:1e7,            label:'+$10.000.000 Cash'},
+  'WELCOME':  {cash:1e5,            label:'+$100.000 Cash'},
+  'CHIPS50':  {chips:50,            label:'+50 Quantum Chips'},
+  'RESEARCH100':{rp:100,            label:'+100 Forschungspunkte'},
+  'LAUNCH':   {cash:5e6, chips:10,  label:'+$5.000.000 Cash & +10 Quantum Chips'},
+};
+
+/* ============================================================
    GAME STATE
    ============================================================ */
 let G = {
@@ -753,6 +900,7 @@ let G = {
   offlineBonus: 0, offlineEarned: 0, offlineElapsed: 0,
   easterFound: false,
   offlineEfficiency: 0.5,
+  redeemedCodes: [],
 };
 
 BUSINESSES_DEF.forEach(b => { G.businesses[b.id] = {level:0, autoEnabled:false, progress:0}; });
@@ -787,7 +935,7 @@ const SAVE = {
         achievements:G.achievements, cards:G.cards, research:G.research,
         dailyMissions:G.dailyMissions, gambling:G.gambling,
         easterFound:G.easterFound, offlineBonus:G.offlineBonus,
-        offlineEfficiency:G.offlineEfficiency,
+        offlineEfficiency:G.offlineEfficiency, redeemedCodes:G.redeemedCodes,
       };
       localStorage.setItem(this.KEY, JSON.stringify(d));
     } catch(e) {}
@@ -927,14 +1075,14 @@ const CALC = {
 /* ============================================================
    NUMBER FORMAT
    ============================================================ */
-const SUFF=['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc','Ud','Dd','Td','Qad','Qid','Sxd'];
+const SUFF=['','Tsd','Mio','Mrd','Bio','Brd','Trill','Trilld','Quadr','Quadrd','Quint','Quintd','Sext','Sextd','Sept','Septd','Okt','Oktd'];
 function fmt(n) {
   if(!isFinite(n)||n<0) return '0';
   if(n<1000) return n<1?n.toFixed(2):Math.floor(n).toString();
   const t=Math.floor(Math.log10(Math.abs(n))/3);
   const s=SUFF[Math.min(t,SUFF.length-1)]||('e'+t*3);
   const sc=n/Math.pow(1000,t);
-  return(sc<10?sc.toFixed(2):sc<100?sc.toFixed(1):Math.floor(sc))+s;
+  return(sc<10?sc.toFixed(2):sc<100?sc.toFixed(1):Math.floor(sc))+' '+s;
 }
 function fmtTime(s) {
   if(s<60) return Math.floor(s)+'s';
@@ -1520,6 +1668,123 @@ const GAMBLE = {
       }
     },80);
   },
+
+  // ---- CRASH GAME ----
+  _crashRunning: false,
+  _crashMult: 1,
+  _crashBet: 0,
+  _crashCashedOut: false,
+  _crashInterval: null,
+  _crashPoints: [],
+
+  startCrash(betStr){
+    if(this._crashRunning||G.gamblingLocked) return;
+    const bet=parseBet(betStr);
+    if(!bet||bet<=0){ UI.toast('❌ Invalid bet!','danger'); return; }
+    if(bet>G.cash){ UI.toast('❌ Not enough cash!','danger'); return; }
+    G.cash-=bet; G.gambling.wagered+=bet; G.gambling.totalBets++;
+    G.gamblingLocked=true;
+    this._crashRunning=true;
+    this._crashCashedOut=false;
+    this._crashBet=bet;
+    this._crashMult=1.00;
+    this._crashPoints=[{t:0,m:1}];
+    GAME.updateMission('gamble',1);
+    document.getElementById('crash-btn').disabled=true;
+    document.getElementById('crash-cashout').disabled=false;
+    document.getElementById('crash-result').textContent='';
+    const multEl=document.getElementById('crash-mult');
+    multEl.classList.remove('busted');
+
+    // Pre-determine crash point (house edge built in: median crash ~1.8x)
+    const r = Math.random();
+    const crashPoint = Math.max(1.01, 1 / (1 - r * 0.97)); // distribution favoring early-mid crashes
+
+    let elapsed=0;
+    const startTime=performance.now();
+    this._crashInterval=setInterval(()=>{
+      elapsed=(performance.now()-startTime)/1000;
+      this._crashMult = 1 + elapsed*elapsed*0.18 + elapsed*0.15; // accelerating curve
+      multEl.textContent=this._crashMult.toFixed(2)+'×';
+      this._crashPoints.push({t:elapsed,m:this._crashMult});
+      this._drawCrashLine();
+
+      if(this._crashMult>=crashPoint){
+        clearInterval(this._crashInterval);
+        this._crashRunning=false;
+        multEl.classList.add('busted');
+        multEl.textContent='💥 CRASHED @ '+this._crashMult.toFixed(2)+'×';
+        document.getElementById('crash-cashout').disabled=true;
+        document.getElementById('crash-btn').disabled=false;
+        if(!this._crashCashedOut){
+          document.getElementById('crash-result').textContent=`💥 Crashed! Du hast $${fmt(this._crashBet)} verloren.`;
+          document.getElementById('crash-result').style.color='var(--danger)';
+          AUDIO.lose();
+          GAME._resolveGamble(this._crashBet,0);
+        }
+        G.gamblingLocked=false;
+      }
+    },50);
+  },
+
+  _drawCrashLine(){
+    const pts=this._crashPoints;
+    const maxT=Math.max(...pts.map(p=>p.t),1);
+    const maxM=Math.max(...pts.map(p=>p.m),2);
+    const line=pts.map(p=>{
+      const x=(p.t/maxT)*280;
+      const y=100-((p.m-1)/(maxM-1))*95;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const el=document.getElementById('crash-line');
+    if(el) el.setAttribute('points',line);
+  },
+
+  cashOutCrash(){
+    if(!this._crashRunning||this._crashCashedOut) return;
+    this._crashCashedOut=true;
+    const win=Math.floor(this._crashBet*this._crashMult);
+    document.getElementById('crash-cashout').disabled=true;
+    document.getElementById('crash-result').textContent=`✅ Ausgezahlt bei ${this._crashMult.toFixed(2)}×! +$${fmt(win)}`;
+    document.getElementById('crash-result').style.color='var(--neon-green)';
+    AUDIO.buy();
+    GAME._resolveGamble(this._crashBet,win);
+    G.gamblingLocked=false;
+  },
+
+  // ---- DICE DUEL ----
+  rollDice(betStr, target){
+    if(G.gamblingLocked) return;
+    const bet=parseBet(betStr);
+    if(!bet||bet<=0){ UI.toast('❌ Invalid bet!','danger'); return; }
+    if(bet>G.cash){ UI.toast('❌ Not enough cash!','danger'); return; }
+    G.cash-=bet; G.gambling.wagered+=bet; G.gambling.totalBets++;
+    G.gamblingLocked=true;
+    GAME.updateMission('gamble',1);
+    document.getElementById('dice-btn').disabled=true;
+    const display=document.getElementById('dice-result-display');
+    display.textContent='🎲';
+
+    let frame=0;
+    const anim=setInterval(()=>{
+      display.textContent=(Math.random()*100).toFixed(2);
+      frame++;
+      if(frame>=12){
+        clearInterval(anim);
+        const roll=Math.random()*100;
+        const won=roll<target;
+        const payout=(98/target); // 2% house edge
+        const win=won?Math.floor(bet*payout):0;
+        display.textContent=roll.toFixed(2);
+        const res=document.getElementById('dice-result');
+        res.textContent=won?`✅ Gewürfelt: ${roll.toFixed(2)} (Ziel <${target}) — +$${fmt(win)}`:`❌ Gewürfelt: ${roll.toFixed(2)} (Ziel <${target}) — Verloren $${fmt(bet)}`;
+        res.style.color=won?'var(--neon-green)':'var(--danger)';
+        if(won) AUDIO.buy(); else AUDIO.lose();
+        GAME._resolveGamble(bet,win);
+        document.getElementById('dice-btn').disabled=false;
+      }
+    },60);
+  },
 };
 
 /* ============================================================
@@ -1623,6 +1888,7 @@ const GAME = {
     document.getElementById('wipe-btn').addEventListener('click',()=>{
       if(confirm('Hard reset? All progress lost!')) SAVE.reset();
     });
+    document.getElementById('promo-btn').addEventListener('click',()=>this.showPromoModal());
 
     document.getElementById('btn-boost-ad').addEventListener('click',()=>{
       G.boostActive=true; G.boostMult=2; G.boostTimer=240;
@@ -1634,6 +1900,31 @@ const GAME = {
     document.getElementById('coin-tails').addEventListener('click',()=>GAMBLE.coinFlip('tails',document.getElementById('coin-bet').value));
     document.getElementById('roulette-btn').addEventListener('click',()=>GAMBLE.roulette(G.selectedRouletteBet,document.getElementById('roulette-bet').value));
     document.getElementById('race-btn').addEventListener('click',()=>GAMBLE.startRace(document.getElementById('race-bet').value));
+    document.getElementById('crash-btn').addEventListener('click',()=>GAMBLE.startCrash(document.getElementById('crash-bet').value));
+    document.getElementById('crash-cashout').addEventListener('click',()=>GAMBLE.cashOutCrash());
+    document.getElementById('dice-btn').addEventListener('click',()=>{
+      const target=parseInt(document.getElementById('dice-target').value);
+      GAMBLE.rollDice(document.getElementById('dice-bet').value,target);
+    });
+    const diceSlider=document.getElementById('dice-target');
+    diceSlider.addEventListener('input',()=>{
+      const target=parseInt(diceSlider.value);
+      document.getElementById('dice-target-display').textContent=target;
+      document.getElementById('dice-chance').textContent=target+'%';
+      document.getElementById('dice-payout').textContent=(98/target).toFixed(2)+'×';
+    });
+
+    // Global quick-bet percentage buttons (10%/25%/50%/MAX of current cash)
+    document.getElementById('gambling-section').addEventListener('click',e=>{
+      const btn=e.target.closest('[data-pct]'); if(!btn) return;
+      const row=btn.closest('.quickbet-row'); if(!row) return;
+      const targetId=row.dataset.betfor;
+      const input=document.getElementById(targetId);
+      if(!input) return;
+      const pct=parseFloat(btn.dataset.pct);
+      const amount=Math.floor(G.cash*pct);
+      input.value=Math.max(1,amount);
+    });
 
     document.getElementById('roulette-bets').addEventListener('click',e=>{
       const btn=e.target.closest('.rbet-btn'); if(!btn) return;
@@ -1773,6 +2064,48 @@ const GAME = {
     UI.hideModal();
     this.checkAchievements();
     UI.toast(`💰 Collected $${fmt(earned)}!`);
+  },
+
+  showPromoModal(){
+    document.getElementById('modal-container').innerHTML=`
+    <div class="modal-overlay" id="promo-modal">
+      <div class="modal-box">
+        <h2>🎁 Promo Code</h2>
+        <p>Gib deinen Code ein, um Belohnungen zu erhalten.</p>
+        <input class="bet-input" id="promo-input" type="text" placeholder="z.B. GET10" style="width:100%;margin-bottom:12px;text-align:center;font-size:14px;text-transform:uppercase">
+        <button class="btn-collect" id="promo-submit">Einlösen</button>
+        <button class="btn-collect secondary" id="promo-close">Schließen</button>
+      </div>
+    </div>`;
+    const input=document.getElementById('promo-input');
+    input.focus();
+    const submit=()=>this.redeemPromoCode(input.value);
+    document.getElementById('promo-submit').onclick=submit;
+    document.getElementById('promo-close').onclick=()=>UI.hideModal();
+    input.addEventListener('keydown',e=>{ if(e.key==='Enter') submit(); });
+  },
+
+  redeemPromoCode(code){
+    const normalized=(code||'').trim().toUpperCase();
+    if(!normalized){ UI.toast('❌ Bitte einen Code eingeben!','danger'); return; }
+    if(!G.redeemedCodes) G.redeemedCodes=[];
+    if(G.redeemedCodes.includes(normalized)){
+      UI.toast('❌ Code wurde bereits eingelöst!','danger');
+      return;
+    }
+    const def=PROMO_CODES[normalized];
+    if(!def){
+      UI.toast('❌ Ungültiger Code!','danger');
+      return;
+    }
+    G.redeemedCodes.push(normalized);
+    if(def.cash){ G.cash+=def.cash; G.totalCashEarned+=def.cash; }
+    if(def.chips){ G.quantumChips+=def.chips; G.totalChipsEarned+=def.chips; }
+    if(def.rp){ G.researchPoints+=def.rp; }
+    UI.hideModal();
+    UI.toast(`🎉 Code "${normalized}" eingelöst! ${def.label}`,'achievement',5000);
+    AUDIO.achieve();
+    this.render();
   },
 
   resolveEvent(ev,accepted) {
@@ -1989,7 +2322,7 @@ const GAME = {
   },
 };
 
-document.addEventListener('DOMContentLoaded',()=>GAME.init());
+// GAME.init() is now triggered by the Auth module below, after login/guest mode is confirmed.
 </script>
 
 <!-- ============================================================
@@ -2089,22 +2422,25 @@ document.addEventListener('DOMContentLoaded',()=>GAME.init());
    EXPANSION DATA
    ============================================================ */
 const STOCKS_DEF = [
-  {id:'s_meme',   name:'Meme Page Inc.',     ticker:'MEME', basePrice:10,   volatility:0.15, sector:'media'},
-  {id:'s_app',    name:'AppWorks Co.',       ticker:'APPW', basePrice:50,   volatility:0.12, sector:'tech'},
-  {id:'s_crypto', name:'CryptoExchange Ltd', ticker:'CRPX', basePrice:120,  volatility:0.35, sector:'crypto'},
-  {id:'s_social', name:'SocialSphere',       ticker:'SOCL', basePrice:200,  volatility:0.18, sector:'media'},
-  {id:'s_ai',     name:'AI Corporation',     ticker:'AICO', basePrice:500,  volatility:0.25, sector:'ai'},
-  {id:'s_quantum',name:'Quantum Networks',   ticker:'QNTM', basePrice:1500, volatility:0.30, sector:'tech'},
+  {id:'s_meme',   name:'MemeForge Holdings',     ticker:'MEME', basePrice:8.40,   volatility:0.04, sector:'media',  drift:0.0003},
+  {id:'s_app',    name:'AppWorks Technologies',  ticker:'AWRX', basePrice:34.20,  volatility:0.03, sector:'tech',   drift:0.0004},
+  {id:'s_social', name:'SocialSphere Inc.',      ticker:'SOCS', basePrice:142.75, volatility:0.035,sector:'media',  drift:0.0003},
+  {id:'s_crypto', name:'CryptoExchange Group',   ticker:'CRYX', basePrice:67.90,  volatility:0.09, sector:'crypto', drift:0.0002},
+  {id:'s_cloud',  name:'CloudNet Systems',       ticker:'CLDN', basePrice:215.30, volatility:0.025,sector:'tech',   drift:0.0005},
+  {id:'s_ai',     name:'NeuralCore AI',          ticker:'NCAI', basePrice:380.50, volatility:0.05, sector:'ai',     drift:0.0006},
+  {id:'s_quantum',name:'Quantum Dynamics Corp',  ticker:'QNTD', basePrice:890.00, volatility:0.06, sector:'tech',   drift:0.0005},
 ];
 const STOCK_NEWS = [
-  {sector:'ai',     text:'AI Boom! AI stocks surge!',           mult:3.0,  dur:600},
-  {sector:'media',  text:'Privacy Scandal! Media stocks crash.', mult:0.4,  dur:600},
-  {sector:'crypto', text:'Crypto Rally! Prices skyrocket!',      mult:2.5,  dur:600},
-  {sector:'crypto', text:'Crypto Winter! Massive sell-off.',     mult:0.3,  dur:600},
-  {sector:'tech',   text:'Tech Earnings Beat! Stocks rise.',     mult:1.8,  dur:600},
-  {sector:'ai',     text:'AI Regulation Fears. Stocks dip.',     mult:0.6,  dur:600},
-  {sector:'all',    text:'Market-wide Rally!',                   mult:1.5,  dur:600},
-  {sector:'all',    text:'Global Market Crash!',                 mult:0.5,  dur:600},
+  {sector:'ai',     text:'AI Sektor im Aufwind nach starken Quartalszahlen',  mult:1.4,  dur:300},
+  {sector:'media',  text:'Datenschutz-Untersuchung belastet Medienwerte',      mult:0.75, dur:300},
+  {sector:'crypto', text:'Regulierungsklarheit treibt Krypto-Kurse',          mult:1.5,  dur:300},
+  {sector:'crypto', text:'Krypto-Markt unter Druck nach Verkaufswelle',       mult:0.6,  dur:300},
+  {sector:'tech',   text:'Tech-Sektor übertrifft Erwartungen',                mult:1.3,  dur:300},
+  {sector:'ai',     text:'Regulierungssorgen belasten KI-Aktien',             mult:0.7,  dur:300},
+  {sector:'all',    text:'Breite Markterholung an allen Börsen',              mult:1.2,  dur:300},
+  {sector:'all',    text:'Marktkorrektur erfasst alle Sektoren',              mult:0.8,  dur:300},
+  {sector:'media',  text:'Werbeeinnahmen übertreffen Prognosen',              mult:1.25, dur:300},
+  {sector:'tech',   text:'Lieferkettenprobleme drücken Tech-Kurse',           mult:0.8,  dur:300},
 ];
 
 const EMPLOYEES_DEF = [
@@ -2178,7 +2514,7 @@ const REGIONS_DEF = [
    EXPANSION STATE
    ============================================================ */
 if(!G.stocks) G.stocks = {};
-STOCKS_DEF.forEach(s => { if(!G.stocks[s.id]) G.stocks[s.id]={price:s.basePrice,history:[s.basePrice],owned:0,avgCost:0}; });
+STOCKS_DEF.forEach(s => { if(!G.stocks[s.id]) G.stocks[s.id]={price:s.basePrice,fairValue:s.basePrice,history:[s.basePrice],trend:0,owned:0,avgCost:0,realizedPnl:0}; });
 if(G.employees===undefined) G.employees = {};
 EMPLOYEES_DEF.forEach(e => { if(!G.employees[e.id]) G.employees[e.id]={hired:false,level:1}; });
 if(G.skillPoints===undefined) G.skillPoints = 0;
@@ -2259,48 +2595,94 @@ const XUI = {
     if(news){
       const banner=document.createElement('div');
       banner.className='stock-news-banner '+(news.mult>1?'up':'down');
-      banner.textContent=`📰 ${news.text} (${Math.ceil(news.timeLeft)}s left)`;
+      banner.textContent=`📰 ${news.text} (${Math.ceil(news.timeLeft)}s)`;
       list.appendChild(banner);
     }
+    const totalRealized = STOCKS_DEF.reduce((s,st)=>s+(G.stocks[st.id].realizedPnl||0),0);
     const portfolio=document.createElement('div');
     portfolio.className='portfolio-summary';
-    portfolio.innerHTML=`<span>Portfolio Value</span><strong style="color:var(--neon-green)">$${fmt(XCALC.stockPortfolioValue())}</strong>`;
+    portfolio.innerHTML=`<span>Portfolio-Wert: <strong style="color:var(--neon-green)">$${fmt(XCALC.stockPortfolioValue())}</strong></span><span>Realisierter Gewinn: <strong style="color:${totalRealized>=0?'var(--neon-green)':'var(--danger)'}">${totalRealized>=0?'+':''}$${fmt(totalRealized)}</strong></span>`;
     list.appendChild(portfolio);
 
     STOCKS_DEF.forEach(s=>{
       const h=G.stocks[s.id];
       const prevPrice=h.history[h.history.length-2]||h.price;
       const changePct=((h.price-prevPrice)/prevPrice*100);
+      const dayChangePct=((h.price-(h.history[0]||h.price))/(h.history[0]||h.price)*100);
       const affected=news&&(news.sector===s.sector||news.sector==='all');
       const card=document.createElement('div');
       card.className='stock-card'+(affected?(news.mult>1?' news-up':' news-down'):'');
-      const barsHtml=h.history.slice(-20).map((p,i,arr)=>{
-        const max=Math.max(...arr), min=Math.min(...arr);
-        const range=max-min||1;
-        const heightPct=Math.max(((p-min)/range)*100,5);
-        const isUp=i>0?p>=arr[i-1]:true;
-        return `<div class="stock-bar" style="height:${heightPct}%;background:${isUp?'var(--neon-green)':'var(--danger)'}"></div>`;
-      }).join('');
+
+      // Real SVG line chart instead of bar chart
+      const hist=h.history.slice(-40);
+      const max=Math.max(...hist), min=Math.min(...hist);
+      const range=(max-min)||1;
+      const w=280,ht=50;
+      const points=hist.map((p,i)=>{
+        const x=(i/(hist.length-1||1))*w;
+        const y=ht-((p-min)/range)*ht;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+      const lineColor = hist[hist.length-1]>=hist[0] ? 'var(--neon-green)' : 'var(--danger)';
+      const fillId = 'fill-'+s.id;
+      const chartSvg = `<svg viewBox="0 0 ${w} ${ht}" style="width:100%;height:50px;display:block">
+        <defs><linearGradient id="${fillId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+        </linearGradient></defs>
+        <polyline points="0,${ht} ${points} ${w},${ht}" fill="url(#${fillId})" stroke="none"/>
+        <polyline points="${points}" fill="none" stroke="${lineColor}" stroke-width="1.5"/>
+      </svg>`;
+
+      const qtyId=`stockqty-${s.id}`;
+      const maxAfford = Math.floor(G.cash / h.price);
+      const unrealizedPnl = h.owned>0 ? (h.price-h.avgCost)*h.owned : 0;
+
       card.innerHTML=`
         <div class="stock-head">
-          <div><div class="stock-name">${s.name}</div><div class="stock-ticker">${s.ticker}</div></div>
-          <div style="text-align:right"><div class="stock-price">$${h.price.toFixed(2)}</div><div class="stock-change ${changePct>=0?'up':'down'}">${changePct>=0?'+':''}${changePct.toFixed(2)}%</div></div>
+          <div><div class="stock-name">${s.name}</div><div class="stock-ticker">$${s.ticker}</div></div>
+          <div style="text-align:right"><div class="stock-price">$${h.price.toFixed(2)}</div>
+            <div class="stock-change ${changePct>=0?'up':'down'}">${changePct>=0?'▲':'▼'} ${Math.abs(changePct).toFixed(2)}%</div></div>
         </div>
-        <div class="stock-chart">${barsHtml}</div>
+        <div class="stock-chart">${chartSvg}</div>
         <div class="stock-actions">
-          <input class="stock-input" type="text" id="stockqty-${s.id}" placeholder="Qty" value="10">
-          <button class="btn-stock buy" data-buy="${s.id}">Buy</button>
-          <button class="btn-stock sell" data-sell="${s.id}" ${h.owned<=0?'disabled':''}>Sell</button>
+          <input class="stock-input" type="text" id="${qtyId}" placeholder="Menge" value="10">
+          <button class="buy-x-btn" data-setqty="${s.id}" data-qty="10">10</button>
+          <button class="buy-x-btn" data-setqty="${s.id}" data-qty="100">100</button>
+          <button class="buy-x-btn" data-setmax="${s.id}">MAX</button>
         </div>
-        ${h.owned>0?`<div class="stock-holding">Holding: ${h.owned} shares (avg $${h.avgCost.toFixed(2)}) · Value: $${fmt(h.owned*h.price)}</div>`:''}`;
+        <div class="stock-actions">
+          <button class="btn-stock buy" data-buy="${s.id}" style="flex:1">Kaufen</button>
+          <button class="btn-stock sell" data-sell="${s.id}" style="flex:1" ${h.owned<=0?'disabled':''}>Verkaufen</button>
+          <button class="btn-stock sell" data-sellmax="${s.id}" style="flex:1" ${h.owned<=0?'disabled':''}>Alles verkaufen</button>
+        </div>
+        ${h.owned>0?`<div class="stock-holding">📊 ${h.owned} Anteile · Ø-Kurs $${h.avgCost.toFixed(2)} · Wert $${fmt(h.owned*h.price)} ·
+          <span style="color:${unrealizedPnl>=0?'var(--neon-green)':'var(--danger)'}">${unrealizedPnl>=0?'+':''}$${fmt(unrealizedPnl)} unrealisiert</span></div>`:''}`;
       list.appendChild(card);
     });
 
+    list.querySelectorAll('[data-setqty]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const input=document.getElementById('stockqty-'+btn.dataset.setqty);
+        if(input) input.value=btn.dataset.qty;
+      });
+    });
+    list.querySelectorAll('[data-setmax]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const id=btn.dataset.setmax;
+        const h=G.stocks[id];
+        const input=document.getElementById('stockqty-'+id);
+        if(input) input.value=Math.max(1,Math.floor(G.cash/h.price));
+      });
+    });
     list.querySelectorAll('[data-buy]').forEach(btn=>{
       btn.addEventListener('click',()=>XGAME.buyStock(btn.dataset.buy));
     });
     list.querySelectorAll('[data-sell]').forEach(btn=>{
       btn.addEventListener('click',()=>XGAME.sellStock(btn.dataset.sell));
+    });
+    list.querySelectorAll('[data-sellmax]').forEach(btn=>{
+      btn.addEventListener('click',()=>XGAME.sellStock(btn.dataset.sellmax,true));
     });
   },
 
@@ -2498,28 +2880,31 @@ const XGAME = {
     const s=STOCKS_DEF.find(s=>s.id===id);
     const h=G.stocks[id];
     const qtyInput=document.getElementById('stockqty-'+id);
-    const qty=Math.max(1,Math.floor(parseFloat(qtyInput?.value)||1));
+    let qty=Math.max(1,Math.floor(parseFloat(qtyInput?.value)||1));
+    const maxAfford=Math.floor(G.cash/h.price);
+    if(maxAfford<=0){ UI.toast('❌ Nicht genug Cash!','danger'); return; }
+    if(qty>maxAfford){ qty=maxAfford; UI.toast(`ℹ️ Auf maximal kaufbare Menge (${qty}) reduziert`); }
     const cost=qty*h.price;
-    if(G.cash<cost){ UI.toast('❌ Not enough cash!','danger'); return; }
     G.cash-=cost;
     h.avgCost=((h.avgCost*h.owned)+cost)/(h.owned+qty);
     h.owned+=qty;
-    UI.toast(`📈 Bought ${qty}× ${s.ticker} for $${fmt(cost)}`);
+    UI.toast(`📈 ${qty}× $${s.ticker} gekauft für $${fmt(cost)}`);
     if(GAME.checkAchievements) GAME.checkAchievements();
     XUI.renderStocks();
   },
-  sellStock(id){
+  sellStock(id, sellAll){
     const s=STOCKS_DEF.find(s=>s.id===id);
     const h=G.stocks[id];
     const qtyInput=document.getElementById('stockqty-'+id);
-    const qty=Math.min(h.owned,Math.max(1,Math.floor(parseFloat(qtyInput?.value)||1)));
+    const qty=sellAll ? h.owned : Math.min(h.owned,Math.max(1,Math.floor(parseFloat(qtyInput?.value)||1)));
     if(qty<=0||h.owned<=0) return;
     const proceeds=qty*h.price;
     const profit=(h.price-h.avgCost)*qty;
     G.cash+=proceeds;
     h.owned-=qty;
+    h.realizedPnl=(h.realizedPnl||0)+profit;
     if(h.owned===0) h.avgCost=0;
-    UI.toast(profit>=0?`📈 Sold ${qty}× ${s.ticker} for +$${fmt(proceeds)} (profit $${fmt(profit)})`:`📉 Sold ${qty}× ${s.ticker} for $${fmt(proceeds)} (loss $${fmt(Math.abs(profit))})`,profit>=0?'achievement':'danger');
+    UI.toast(profit>=0?`📈 ${qty}× $${s.ticker} verkauft für +$${fmt(proceeds)} (Gewinn $${fmt(profit)})`:`📉 ${qty}× $${s.ticker} verkauft für $${fmt(proceeds)} (Verlust $${fmt(Math.abs(profit))})`,profit>=0?'achievement':'danger');
     XUI.renderStocks();
   },
 
@@ -2620,16 +3005,30 @@ const XGAME = {
   tickStocks(dt){
     STOCKS_DEF.forEach(s=>{
       const h=G.stocks[s.id];
-      let drift=(Math.random()-0.48)*s.volatility;
+      // News shifts the FAIR VALUE (not the price directly) — creates a target the price drifts toward
       if(G.activeNews&&(G.activeNews.sector===s.sector||G.activeNews.sector==='all')){
-        drift += (G.activeNews.mult-1) * 0.02;
+        const targetFV = s.basePrice * G.activeNews.mult;
+        h.fairValue += (targetFV - h.fairValue) * 0.002 * dt * 60;
+      } else {
+        // Fair value slowly drifts back toward base price (long-term anchor) with slight organic growth
+        const growthAnchor = s.basePrice * (1 + s.drift * (G.playtime||0) * 0.1);
+        h.fairValue += (growthAnchor - h.fairValue) * 0.0008 * dt * 60;
       }
+      // Trend = short-term momentum (mean-reverting random walk, clamped)
       const stockGainSkill=XCALC.skillBonus('stockgain');
-      if(drift>0) drift*=(1+stockGainSkill);
-      h.price=Math.max(0.5, h.price*(1+drift*dt));
+      const shock = (Math.random()-0.5) * s.volatility * (1+stockGainSkill*0.3);
+      h.trend = h.trend*0.9 + shock*0.1; // smooth momentum
+      h.trend = Math.max(-s.volatility*1.5, Math.min(s.volatility*1.5, h.trend));
+
+      // Price moves toward fairValue (mean reversion) PLUS momentum, but capped per-tick
+      const pullToFair = (h.fairValue - h.price) * 0.015;
+      const rawChange = (pullToFair/Math.max(h.price,0.01)) + h.trend*dt*2;
+      const cappedChange = Math.max(-0.04, Math.min(0.04, rawChange)); // hard cap: max ±4% per tick-batch
+      h.price = Math.max(0.5, h.price * (1 + cappedChange*dt*10));
+
       if(Math.random()<dt*2){
         h.history.push(h.price);
-        if(h.history.length>30) h.history.shift();
+        if(h.history.length>40) h.history.shift();
       }
     });
     if(G.activeNews){
@@ -2787,7 +3186,7 @@ const XGAME = {
         if(d.faction!==undefined) G.faction=d.faction;
         if(d.regions) G.regions=d.regions;
       }
-      STOCKS_DEF.forEach(s => { if(!G.stocks[s.id]) G.stocks[s.id]={price:s.basePrice,history:[s.basePrice],owned:0,avgCost:0}; });
+      STOCKS_DEF.forEach(s => { if(!G.stocks[s.id]) G.stocks[s.id]={price:s.basePrice,fairValue:s.basePrice,history:[s.basePrice],trend:0,owned:0,avgCost:0,realizedPnl:0}; else { if(G.stocks[s.id].fairValue===undefined) G.stocks[s.id].fairValue=G.stocks[s.id].price; if(G.stocks[s.id].trend===undefined) G.stocks[s.id].trend=0; if(G.stocks[s.id].realizedPnl===undefined) G.stocks[s.id].realizedPnl=0; } });
       EMPLOYEES_DEF.forEach(e => { if(!G.employees[e.id]) G.employees[e.id]={hired:false,level:1}; });
       SKILL_BRANCHES.forEach(b => b.nodes.forEach(n => { if(G.skills[n.id]===undefined) G.skills[n.id]=0; }));
       MERGERS_DEF.forEach(m => { if(G.mergers[m.id]===undefined) G.mergers[m.id]=false; });
@@ -2797,9 +3196,253 @@ const XGAME = {
   };
 })();
 
-document.addEventListener('DOMContentLoaded',()=>{
-  setTimeout(()=>XGAME.init(),50);
+// XGAME.init() is also triggered by the Auth module below, chained after GAME.init().
+window.GAME = GAME;
+window.XGAME = XGAME;
+window.UI = UI;
+
+/* ============================================================
+   FIREBASE AUTH & CLOUD SAVE MODULE
+   ============================================================ */
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, getDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBDDouu-3L4s7Wwrt398F5jUkU1OfZRQ3o",
+  authDomain: "it-game-farhan.firebaseapp.com",
+  projectId: "it-game-farhan",
+  storageBucket: "it-game-farhan.firebasestorage.app",
+  messagingSenderId: "397909870460",
+  appId: "1:397909870460:web:16f18980a8ab8c35cc46f9",
+  measurementId: "G-2LBSZSNHEL"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+
+let currentUser = null;
+let authMode = 'login'; // 'login' | 'register'
+let cloudSyncInterval = null;
+let isGuestMode = false;
+let isApplyingCloudSave = false;
+
+/* ---- Helpers exposed for the main game script (loaded as non-module, so we bridge via window) ---- */
+window.CloudSave = {
+  isLoggedIn(){ return !!currentUser; },
+  getUserEmail(){ return currentUser ? currentUser.email : null; },
+};
+
+function showAuthError(msg){
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+}
+
+function setAuthLoading(loading){
+  const btn = document.getElementById('auth-submit-btn');
+  btn.disabled = loading;
+  btn.textContent = loading ? 'Bitte warten…' : (authMode==='login' ? 'Anmelden' : 'Registrieren');
+}
+
+function friendlyAuthError(code){
+  const map = {
+    'auth/invalid-email': 'Ungültige E-Mail-Adresse.',
+    'auth/user-not-found': 'Kein Account mit dieser E-Mail gefunden.',
+    'auth/wrong-password': 'Falsches Passwort.',
+    'auth/invalid-credential': 'E-Mail oder Passwort ist falsch.',
+    'auth/email-already-in-use': 'Diese E-Mail wird bereits verwendet.',
+    'auth/weak-password': 'Passwort muss mindestens 6 Zeichen haben.',
+    'auth/too-many-requests': 'Zu viele Versuche. Bitte später erneut versuchen.',
+    'auth/network-request-failed': 'Netzwerkfehler. Prüfe deine Verbindung.',
+  };
+  return map[code] || ('Fehler: ' + code);
+}
+
+/* ---- Tab switching ---- */
+document.getElementById('auth-tab-login').addEventListener('click', () => {
+  authMode = 'login';
+  document.getElementById('auth-tab-login').classList.add('active');
+  document.getElementById('auth-tab-register').classList.remove('active');
+  document.getElementById('auth-submit-btn').textContent = 'Anmelden';
+  showAuthError('');
 });
+document.getElementById('auth-tab-register').addEventListener('click', () => {
+  authMode = 'register';
+  document.getElementById('auth-tab-register').classList.add('active');
+  document.getElementById('auth-tab-login').classList.remove('active');
+  document.getElementById('auth-submit-btn').textContent = 'Registrieren';
+  showAuthError('');
+});
+
+/* ---- Submit (login or register) ---- */
+document.getElementById('auth-submit-btn').addEventListener('click', async () => {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  showAuthError('');
+  if(!email || !password){ showAuthError('Bitte E-Mail und Passwort eingeben.'); return; }
+  if(password.length < 6){ showAuthError('Passwort muss mindestens 6 Zeichen haben.'); return; }
+
+  setAuthLoading(true);
+  try {
+    if(authMode === 'login'){
+      await signInWithEmailAndPassword(auth, email, password);
+    } else {
+      await createUserWithEmailAndPassword(auth, email, password);
+    }
+    // onAuthStateChanged will handle the rest (loading save, hiding overlay)
+  } catch(err){
+    setAuthLoading(false);
+    showAuthError(friendlyAuthError(err.code));
+  }
+});
+
+/* Allow Enter key to submit */
+['auth-email','auth-password'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if(e.key === 'Enter') document.getElementById('auth-submit-btn').click();
+  });
+});
+
+/* ---- Guest mode (skip login, local-only save) ---- */
+document.getElementById('auth-guest-btn').addEventListener('click', () => {
+  isGuestMode = true;
+  hideAuthOverlay();
+  startGameAfterAuth();
+});
+
+function hideAuthOverlay(){
+  const overlay = document.getElementById('auth-overlay');
+  overlay.style.transition = 'opacity .3s';
+  overlay.style.opacity = '0';
+  setTimeout(() => overlay.remove(), 300);
+}
+
+function updateUserBadge(){
+  const badge = document.getElementById('user-badge');
+  if(!badge) return;
+  if(currentUser){
+    badge.textContent = '👤 ' + currentUser.email;
+    badge.title = 'Klicken um dich abzumelden';
+  } else {
+    badge.textContent = '👤 Gast (nur lokal)';
+    badge.title = 'Nicht angemeldet — Fortschritt wird nur lokal gespeichert';
+  }
+}
+
+document.getElementById('user-badge')?.addEventListener('click', async () => {
+  if(currentUser){
+    if(confirm('Möchtest du dich abmelden? Dein Fortschritt wird vorher in der Cloud gespeichert.')){
+      await pushCloudSave(true);
+      await signOut(auth);
+      location.reload();
+    }
+  } else {
+    UI?.toast && UI.toast('ℹ️ Du bist als Gast unterwegs. Melde dich an, um in der Cloud zu speichern.');
+  }
+});
+
+/* ---- Cloud save push/pull ---- */
+async function pushCloudSave(force){
+  if(!currentUser) return;
+  if(isApplyingCloudSave && !force) return;
+  try {
+    const raw = localStorage.getItem('ie_v2');
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    await setDoc(doc(db, 'saves', currentUser.uid), {
+      payload: JSON.stringify(data),
+      updatedAt: serverTimestamp(),
+      email: currentUser.email,
+      totalCashEarned: data.totalCashEarned || 0,
+      prestigeCount: data.prestigeCount || 0,
+      accountLevel: data.accountLevel || 1,
+    });
+  } catch(e){ console.warn('Cloud save failed', e); }
+}
+
+async function pullCloudSave(){
+  if(!currentUser) return null;
+  try {
+    const snap = await getDoc(doc(db, 'saves', currentUser.uid));
+    if(snap.exists()){
+      const d = snap.data();
+      return d.payload ? JSON.parse(d.payload) : null;
+    }
+  } catch(e){ console.warn('Cloud load failed', e); }
+  return null;
+}
+
+/* ---- Auth state listener: drives the whole startup flow ---- */
+onAuthStateChanged(auth, async (user) => {
+  if(user){
+    currentUser = user;
+    isGuestMode = false;
+    updateUserBadge();
+
+    // Pull cloud save and compare with local save; use whichever is more advanced (by totalCashEarned)
+    const localRaw = localStorage.getItem('ie_v2');
+    const localData = localRaw ? JSON.parse(localRaw) : null;
+    const cloudData = await pullCloudSave();
+
+    let useCloud = false;
+    if(cloudData && !localData) useCloud = true;
+    else if(cloudData && localData){
+      const cloudScore = (cloudData.totalCashEarned||0) + (cloudData.prestigeCount||0)*1e18;
+      const localScore = (localData.totalCashEarned||0) + (localData.prestigeCount||0)*1e18;
+      useCloud = cloudScore > localScore;
+    }
+    if(useCloud){
+      isApplyingCloudSave = true;
+      localStorage.setItem('ie_v2', JSON.stringify(cloudData));
+      isApplyingCloudSave = false;
+    }
+
+    hideAuthOverlay();
+    startGameAfterAuth();
+
+    // Periodic cloud sync every 30s + on page hide
+    if(cloudSyncInterval) clearInterval(cloudSyncInterval);
+    cloudSyncInterval = setInterval(() => pushCloudSave(), 30000);
+    window.addEventListener('beforeunload', () => pushCloudSave(true));
+    document.addEventListener('visibilitychange', () => {
+      if(document.visibilityState === 'hidden') pushCloudSave(true);
+    });
+  } else {
+    currentUser = null;
+    updateUserBadge();
+    // If not in guest mode and overlay still visible, do nothing — wait for user action
+  }
+});
+
+let gameStarted = false;
+function startGameAfterAuth(){
+  if(gameStarted) return;
+  gameStarted = true;
+  window.GAME.init();
+  setTimeout(() => window.XGAME.init(), 50);
+}
+
+// Fallback: if Firebase can't reach the network within 6s, let the player continue as guest
+setTimeout(() => {
+  if(!gameStarted && !document.getElementById('auth-overlay')){
+    // overlay already gone, game already started via some path — nothing to do
+    return;
+  }
+  if(!gameStarted){
+    const errEl = document.getElementById('auth-error');
+    if(errEl && !currentUser) {
+      errEl.textContent = 'Firebase reagiert nicht. Du kannst als Gast weiterspielen.';
+    }
+  }
+}, 6000);
 </script>
 </body>
 </html>
