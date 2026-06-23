@@ -295,6 +295,51 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .auth-loading{text-align:center;color:var(--text-muted);font-size:13px;padding:30px 0}
 #user-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);padding:4px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;cursor:pointer}
 #user-badge:hover{border-color:var(--neon-blue)}
+
+/* LEADERBOARD */
+.leaderboard-list{padding:10px;display:flex;flex-direction:column;gap:6px}
+.lb-row{display:flex;align-items:center;gap:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;cursor:pointer;transition:border-color .2s,background .2s}
+.lb-row:hover{border-color:var(--neon-blue);background:var(--bg-hover)}
+.lb-row.is-me{border-color:var(--neon-gold);background:rgba(255,215,0,.05)}
+.lb-rank{font-size:16px;font-weight:800;width:32px;text-align:center;color:var(--text-muted)}
+.lb-rank.top1{color:var(--neon-gold)}
+.lb-rank.top2{color:#c0c0c0}
+.lb-rank.top3{color:#cd7f32}
+.lb-info{flex:1}
+.lb-email{font-size:12px;font-weight:700}
+.lb-stats{font-size:10px;color:var(--text-muted)}
+.lb-cash{font-size:13px;font-weight:800;color:var(--neon-green);text-align:right}
+.lb-loading{text-align:center;padding:30px;color:var(--text-muted);font-size:13px}
+.lb-refresh-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px}
+.lb-refresh-btn{padding:6px 12px;border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:11px}
+.lb-refresh-btn:hover{border-color:var(--neon-blue);color:var(--neon-blue)}
+
+/* PLAYER ACTION MODAL */
+.player-action-grid{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}
+.player-action-btn{display:flex;align-items:center;gap:10px;padding:12px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-card);text-align:left;transition:border-color .2s}
+.player-action-btn:hover{border-color:var(--neon-blue)}
+.player-action-btn.gift-action:hover{border-color:var(--neon-green)}
+.player-action-btn.rob-action:hover{border-color:var(--danger)}
+.player-action-btn.invest-action:hover{border-color:var(--neon-purple)}
+.pa-icon{font-size:22px}
+.pa-text{flex:1}
+.pa-title{font-size:12px;font-weight:700}
+.pa-desc{font-size:10px;color:var(--text-muted)}
+
+/* INBOX NOTIFICATIONS */
+.inbox-badge{position:relative}
+.inbox-dot{position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:var(--danger);border-radius:50%}
+.inbox-list{padding:10px;display:flex;flex-direction:column;gap:6px}
+.inbox-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;font-size:11px}
+.inbox-item.gift-item{border-color:var(--neon-green)}
+.inbox-item.rob-item{border-color:var(--danger)}
+.inbox-item.invest-item{border-color:var(--neon-purple)}
+.inbox-time{color:var(--text-muted);font-size:9px;margin-top:3px}
+
+/* INVESTMENT TRACKER */
+.investment-card{background:var(--bg-card);border:1px solid var(--neon-purple);border-radius:var(--radius-md);padding:10px;margin-bottom:6px}
+.inv-progress-wrap{height:5px;background:var(--bg-deep);border-radius:3px;overflow:hidden;margin-top:5px}
+.inv-progress-fill{height:100%;background:var(--neon-purple)}
 </style>
 </head>
 <body>
@@ -360,6 +405,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     <button class="tab-btn" data-tab="gambling">🎰 Casino</button>
     <button class="tab-btn" data-tab="prestige">✨ Prestige</button>
     <button class="tab-btn" data-tab="stats">📊 Stats</button>
+    <button class="tab-btn" data-tab="leaderboard">🌍 Leaderboard</button>
   </nav>
 
   <div id="tab-click">
@@ -584,15 +630,29 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
   <div id="tab-stats" style="display:none">
     <div id="stats-list"></div>
   </div>
+
+  <div id="tab-leaderboard" style="display:none">
+    <div class="lb-refresh-row">
+      <div class="section-title" style="padding:0">🏆 Globales Leaderboard — Top Spieler (nach Gesamtverdienst)</div>
+      <button class="lb-refresh-btn" id="lb-refresh-btn">🔄 Aktualisieren</button>
+    </div>
+    <div class="leaderboard-list" id="leaderboard-list">
+      <div class="lb-loading">Lade Leaderboard…</div>
+    </div>
+  </div>
 </section>
 
 <section id="right-panel">
   <nav class="tab-nav" id="right-tabs">
     <button class="tab-btn active" data-tab="achievements">🏆 Achiev.</button>
     <button class="tab-btn" data-tab="missions">📋 Missions</button>
+    <button class="tab-btn inbox-badge" data-tab="inbox" id="inbox-tab-btn">📬 Postfach</button>
   </nav>
   <div id="rtab-achievements"><div class="achievement-list" id="achievement-list"></div></div>
   <div id="rtab-missions" style="display:none"><div id="missions-list" style="padding:8px"></div></div>
+  <div id="rtab-inbox" style="display:none">
+    <div class="inbox-list" id="inbox-list"><div class="lb-loading">Melde dich an, um dein Postfach zu sehen.</div></div>
+  </div>
 </section>
 
 <footer id="footer">
@@ -808,6 +868,9 @@ const ACHIEVEMENTS_DEF = [
   {id:'pt2',  name:'Committed',           icon:'📅',desc:'1 hour played',        type:'playtime',threshold:3600, reward:2},
   {id:'pt3',  name:'Addicted',            icon:'😵',desc:'24 hours played',      type:'playtime',threshold:86400,reward:10},
   {id:'egg',  name:'Secret Found',        icon:'🥚',desc:'Found the Easter egg!', type:'easter', threshold:1,    reward:25},
+  {id:'phil', name:'Philanthrop',         icon:'🎁',desc:'Sende 10 Geschenke an andere Spieler', type:'gifts', threshold:10, reward:30},
+  {id:'thief',name:'Meisterdieb',         icon:'🦹',desc:'Führe 15 erfolgreiche Raubzüge durch', type:'robs',  threshold:15, reward:40},
+  {id:'vc',   name:'Wall Street Tycoon',  icon:'📈',desc:'Erziele 5 profitable Spieler-Investments',type:'profinvest',threshold:5,reward:50},
 ];
 
 /* ============================================================
@@ -901,6 +964,7 @@ let G = {
   easterFound: false,
   offlineEfficiency: 0.5,
   redeemedCodes: [],
+  giftsSent: 0, successfulRobs: 0, profitableInvestments: 0, totalInvested: 0,
 };
 
 BUSINESSES_DEF.forEach(b => { G.businesses[b.id] = {level:0, autoEnabled:false, progress:0}; });
@@ -936,6 +1000,8 @@ const SAVE = {
         dailyMissions:G.dailyMissions, gambling:G.gambling,
         easterFound:G.easterFound, offlineBonus:G.offlineBonus,
         offlineEfficiency:G.offlineEfficiency, redeemedCodes:G.redeemedCodes,
+        giftsSent:G.giftsSent, successfulRobs:G.successfulRobs,
+        profitableInvestments:G.profitableInvestments, totalInvested:G.totalInvested,
       };
       localStorage.setItem(this.KEY, JSON.stringify(d));
     } catch(e) {}
@@ -1842,7 +1908,7 @@ const GAME = {
       const btn=e.target.closest('.tab-btn'); if(!btn) return;
       const tab=btn.dataset.tab;
       document.querySelectorAll('#center-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
-      ['click','upgrades','research','cards','gambling','prestige','stats'].forEach(t=>{
+      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard'].forEach(t=>{
         document.getElementById('tab-'+t).style.display=t===tab?'':'none';
       });
       if(tab==='stats')    UI.renderStats();
@@ -1850,6 +1916,7 @@ const GAME = {
       if(tab==='cards')    UI.renderCards();
       if(tab==='upgrades') UI.renderUpgrades(this._upgradeFilter);
       if(tab==='research') UI.renderResearch();
+      if(tab==='leaderboard' && window.LeaderboardModule) window.LeaderboardModule.refresh();
     });
 
     document.getElementById('right-tabs').addEventListener('click',e=>{
@@ -2242,6 +2309,9 @@ const GAME = {
       else if(a.type==='streak')  val=G.gambling.maxStreak;
       else if(a.type==='mythic')  val=CARDS_DEF.filter(c=>c.rarity==='mythic'&&G.cards[c.id]>0).length;
       else if(a.type==='research')val=CALC.researchDone();
+      else if(a.type==='gifts')   val=G.giftsSent||0;
+      else if(a.type==='robs')    val=G.successfulRobs||0;
+      else if(a.type==='profinvest')val=G.profitableInvestments||0;
       if(val>=a.threshold) this.earnAchievement(a.id);
     });
   },
@@ -2868,7 +2938,7 @@ const XGAME = {
       const xTabs=['stocks','employees','skills','mergers','factions','regions'];
       if(!xTabs.includes(tab)) return;
       document.querySelectorAll('#center-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
-      ['click','upgrades','research','cards','gambling','prestige','stats',...xTabs].forEach(t=>{
+      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard',...xTabs].forEach(t=>{
         const el=document.getElementById('tab-'+t);
         if(el) el.style.display=(t===tab)?'':'none';
       });
@@ -3200,6 +3270,9 @@ const XGAME = {
 window.GAME = GAME;
 window.XGAME = XGAME;
 window.UI = UI;
+window.G = G;
+window.fmt = fmt;
+window.CALC = CALC;
 
 /* ============================================================
    FIREBASE AUTH & CLOUD SAVE MODULE
@@ -3212,7 +3285,9 @@ import {
   signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
-  getFirestore, doc, setDoc, getDoc, serverTimestamp
+  getFirestore, doc, setDoc, getDoc, serverTimestamp,
+  collection, query, orderBy, limit, getDocs,
+  runTransaction, addDoc, deleteDoc, onSnapshot, increment, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -3365,6 +3440,15 @@ async function pushCloudSave(force){
       prestigeCount: data.prestigeCount || 0,
       accountLevel: data.accountLevel || 1,
     });
+    // Public leaderboard entry — readable by everyone, only writable by the owning user.
+    await setDoc(doc(db, 'leaderboard', currentUser.uid), {
+      email: currentUser.email,
+      totalCashEarned: data.totalCashEarned || 0,
+      prestigeCount: data.prestigeCount || 0,
+      accountLevel: data.accountLevel || 1,
+      cash: data.cash || 0,
+      updatedAt: serverTimestamp(),
+    });
   } catch(e){ console.warn('Cloud save failed', e); }
 }
 
@@ -3428,6 +3512,7 @@ function startGameAfterAuth(){
   gameStarted = true;
   window.GAME.init();
   setTimeout(() => window.XGAME.init(), 50);
+  if(currentUser) setTimeout(() => checkInbox(), 800);
 }
 
 // Fallback: if Firebase can't reach the network within 6s, let the player continue as guest
@@ -3443,6 +3528,389 @@ setTimeout(() => {
     }
   }
 }, 6000);
+
+/* ============================================================
+   LEADERBOARD & PLAYER INTERACTIONS MODULE
+   ============================================================ */
+
+function maskEmail(email){
+  if(!email) return 'Unbekannt';
+  const [user, domain] = email.split('@');
+  if(!domain) return email;
+  const visible = user.slice(0, Math.min(3, user.length));
+  return `${visible}${'*'.repeat(Math.max(3,user.length-visible.length))}@${domain}`;
+}
+
+function timeAgo(ts){
+  if(!ts) return '';
+  const date = ts.toDate ? ts.toDate() : new Date(ts);
+  const secs = Math.floor((Date.now()-date.getTime())/1000);
+  if(secs<60) return 'vor wenigen Sekunden';
+  if(secs<3600) return `vor ${Math.floor(secs/60)} Min.`;
+  if(secs<86400) return `vor ${Math.floor(secs/3600)} Std.`;
+  return `vor ${Math.floor(secs/86400)} Tagen`;
+}
+
+const ROB_COOLDOWN_MS = 60*60*1000; // 1 hour per target
+const INVEST_DURATION_MS = 24*60*60*1000; // 24 hours
+const robCooldowns = {}; // local cache: targetUid -> timestamp
+
+let leaderboardCache = [];
+
+async function fetchLeaderboard(){
+  const list = document.getElementById('leaderboard-list');
+  list.innerHTML = '<div class="lb-loading">Lade Leaderboard…</div>';
+  try {
+    const q = query(collection(db, 'leaderboard'), orderBy('totalCashEarned', 'desc'), limit(50));
+    const snap = await getDocs(q);
+    leaderboardCache = [];
+    snap.forEach(d => leaderboardCache.push({ uid: d.id, ...d.data() }));
+    renderLeaderboard();
+  } catch(e){
+    console.warn('Leaderboard fetch failed', e);
+    list.innerHTML = '<div class="lb-loading">Leaderboard konnte nicht geladen werden. Möglicherweise fehlen Firestore-Berechtigungen für die "leaderboard"-Collection.</div>';
+  }
+}
+
+function renderLeaderboard(){
+  const list = document.getElementById('leaderboard-list');
+  if(leaderboardCache.length === 0){
+    list.innerHTML = '<div class="lb-loading">Noch keine Spieler im Leaderboard. Spiele etwas und speichere, um hier zu erscheinen!</div>';
+    return;
+  }
+  list.innerHTML = '';
+  leaderboardCache.forEach((entry, i) => {
+    const isMe = currentUser && entry.uid === currentUser.uid;
+    const row = document.createElement('div');
+    row.className = 'lb-row' + (isMe ? ' is-me' : '');
+    const rankClass = i===0?'top1':i===1?'top2':i===2?'top3':'';
+    row.innerHTML = `
+      <div class="lb-rank ${rankClass}">#${i+1}</div>
+      <div class="lb-info">
+        <div class="lb-email">${maskEmail(entry.email)}${isMe?' (Du)':''}</div>
+        <div class="lb-stats">Lvl ${entry.accountLevel||1} · ${entry.prestigeCount||0}× Prestige</div>
+      </div>
+      <div class="lb-cash">$${window.fmt(entry.totalCashEarned||0)}</div>`;
+    if(!isMe){
+      row.addEventListener('click', () => showPlayerActionModal(entry));
+    }
+    list.appendChild(row);
+  });
+}
+
+document.getElementById('lb-refresh-btn')?.addEventListener('click', fetchLeaderboard);
+
+/* ---- Player action modal (Gift / Rob / Invest) ---- */
+function showPlayerActionModal(target){
+  if(!currentUser){
+    window.UI?.toast('❌ Melde dich an, um mit anderen Spielern zu interagieren.', 'danger');
+    return;
+  }
+  const cooldownUntil = robCooldowns[target.uid] || 0;
+  const onCooldown = Date.now() < cooldownUntil;
+  const cooldownMins = onCooldown ? Math.ceil((cooldownUntil-Date.now())/60000) : 0;
+
+  document.getElementById('modal-container').innerHTML = `
+  <div class="modal-overlay" id="player-action-modal">
+    <div class="modal-box">
+      <h2>${maskEmail(target.email)}</h2>
+      <p>Lvl ${target.accountLevel||1} · $${window.fmt(target.totalCashEarned||0)} verdient</p>
+      <div class="player-action-grid">
+        <button class="player-action-btn gift-action" id="pa-gift">
+          <span class="pa-icon">🎁</span>
+          <span class="pa-text"><div class="pa-title">Geschenk senden</div><div class="pa-desc">Schenke Cash ohne Risiko</div></span>
+        </button>
+        <button class="player-action-btn rob-action" id="pa-rob" ${onCooldown?'disabled':''}>
+          <span class="pa-icon">🦹</span>
+          <span class="pa-text"><div class="pa-title">Ausrauben${onCooldown?` (Cooldown: ${cooldownMins} Min.)`:''}</div><div class="pa-desc">Risiko! Kann fehlschlagen, 1h Cooldown pro Ziel</div></span>
+        </button>
+        <button class="player-action-btn invest-action" id="pa-invest">
+          <span class="pa-icon">📈</span>
+          <span class="pa-text"><div class="pa-title">Investieren</div><div class="pa-desc">Investiere Cash, erhalte nach 24h Gewinnbeteiligung</div></span>
+        </button>
+      </div>
+      <button class="btn-collect secondary" id="pa-close">Schließen</button>
+    </div>
+  </div>`;
+  document.getElementById('pa-close').onclick = () => window.UI.hideModal();
+  document.getElementById('pa-gift').onclick = () => showAmountPrompt(target, 'gift');
+  if(!onCooldown) document.getElementById('pa-rob').onclick = () => doRob(target);
+  document.getElementById('pa-invest').onclick = () => showAmountPrompt(target, 'invest');
+}
+
+function showAmountPrompt(target, action){
+  const G = window.GAME ? getGState() : null;
+  const maxCash = G ? G.cash : 0;
+  const titles = { gift: '🎁 Geschenk senden', invest: '📈 Investieren' };
+  const descs = {
+    gift: `Wie viel möchtest du ${maskEmail(target.email)} schenken? Das Geld wird sofort von deinem Konto abgezogen.`,
+    invest: `Wie viel möchtest du in ${maskEmail(target.email)} investieren? Nach 24 Stunden erhältst du dein Kapital zurück — wächst der Spieler in der Zeit, bekommst du eine Gewinnbeteiligung von 15%.`
+  };
+  document.getElementById('modal-container').innerHTML = `
+  <div class="modal-overlay" id="amount-modal">
+    <div class="modal-box">
+      <h2>${titles[action]}</h2>
+      <p>${descs[action]}</p>
+      <input class="bet-input" id="amount-input" type="text" placeholder="Betrag" style="width:100%;margin-bottom:10px;text-align:center;font-size:14px">
+      <div class="quickbet-row">
+        <button class="buy-x-btn" data-amtpct="0.1">10%</button>
+        <button class="buy-x-btn" data-amtpct="0.25">25%</button>
+        <button class="buy-x-btn" data-amtpct="0.5">50%</button>
+      </div>
+      <button class="btn-collect" id="amount-submit" style="margin-top:10px">Bestätigen</button>
+      <button class="btn-collect secondary" id="amount-cancel">Abbrechen</button>
+      <div class="auth-error" id="amount-error"></div>
+    </div>
+  </div>`;
+  document.querySelectorAll('[data-amtpct]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('amount-input').value = Math.floor(maxCash * parseFloat(btn.dataset.amtpct));
+    });
+  });
+  document.getElementById('amount-cancel').onclick = () => showPlayerActionModal(target);
+  document.getElementById('amount-submit').onclick = () => {
+    const val = parseFloat(document.getElementById('amount-input').value);
+    if(!val || val<=0){ document.getElementById('amount-error').textContent='Bitte einen gültigen Betrag eingeben.'; return; }
+    if(val > maxCash){ document.getElementById('amount-error').textContent='Du hast nicht genug Cash.'; return; }
+    if(action === 'gift') doGift(target, val);
+    else doInvest(target, val);
+  };
+}
+
+function getGState(){
+  return window.G || null;
+}
+
+async function doGift(target, amount){
+  try {
+    const G = getGState();
+    if(!G || G.cash < amount){ window.UI.toast('❌ Nicht genug Cash!', 'danger'); return; }
+    G.cash -= amount;
+    await addDoc(collection(db, 'inbox', target.uid, 'items'), {
+      type: 'gift',
+      amount,
+      fromEmail: currentUser.email,
+      createdAt: serverTimestamp(),
+      read: false,
+    });
+    window.UI.hideModal();
+    window.UI.toast(`🎁 $${window.fmt(amount)} an ${maskEmail(target.email)} geschenkt!`, 'achievement');
+    if(!G.giftsSent) G.giftsSent = 0;
+    G.giftsSent++;
+    if(window.GAME?.checkAchievements) window.GAME.checkAchievements();
+    pushCloudSave();
+  } catch(e){
+    console.warn('Gift failed', e);
+    window.UI.toast('❌ Geschenk konnte nicht gesendet werden.', 'danger');
+  }
+}
+
+async function doRob(target){
+  const G = getGState();
+  if(!G){ return; }
+  document.getElementById('pa-rob').disabled = true;
+  try {
+    // Determine success chance: based on relative account level (lower victim level = easier)
+    const myLevel = G.accountLevel || 1;
+    const targetLevel = target.accountLevel || 1;
+    const levelRatio = myLevel / Math.max(targetLevel, 1);
+    const successChance = Math.min(0.75, Math.max(0.15, 0.45 * levelRatio));
+    const success = Math.random() < successChance;
+
+    robCooldowns[target.uid] = Date.now() + ROB_COOLDOWN_MS;
+
+    if(success){
+      const stolenPct = 0.03 + Math.random()*0.05; // 3-8% of victim's current cash
+      const stolen = Math.floor((target.cash || target.totalCashEarned*0.01 || 0) * stolenPct);
+      const actualStolen = Math.max(stolen, 1000);
+      G.cash += actualStolen;
+      G.totalCashEarned += actualStolen;
+      await addDoc(collection(db, 'inbox', target.uid, 'items'), {
+        type: 'rob',
+        amount: actualStolen,
+        fromEmail: currentUser.email,
+        createdAt: serverTimestamp(),
+        read: false,
+      });
+      if(!G.successfulRobs) G.successfulRobs = 0;
+      G.successfulRobs++;
+      window.UI.toast(`🦹 Erfolgreich! Du hast $${window.fmt(actualStolen)} von ${maskEmail(target.email)} gestohlen!`, 'achievement');
+    } else {
+      const penalty = Math.floor(G.cash * 0.05); // 5% penalty for failed robbery
+      G.cash = Math.max(0, G.cash - penalty);
+      window.UI.toast(`🚨 Erwischt! Du wurdest gefasst und hast $${window.fmt(penalty)} Strafe gezahlt.`, 'danger');
+    }
+    if(window.GAME?.checkAchievements) window.GAME.checkAchievements();
+    window.UI.hideModal();
+    pushCloudSave();
+  } catch(e){
+    console.warn('Rob failed', e);
+    window.UI.toast('❌ Raub fehlgeschlagen (Verbindungsfehler).', 'danger');
+  }
+}
+
+async function doInvest(target, amount){
+  try {
+    const G = getGState();
+    if(!G || G.cash < amount){ window.UI.toast('❌ Nicht genug Cash!', 'danger'); return; }
+    G.cash -= amount;
+    const startSnapshot = target.totalCashEarned || 0;
+    await addDoc(collection(db, 'investments'), {
+      investorUid: currentUser.uid,
+      investorEmail: currentUser.email,
+      targetUid: target.uid,
+      targetEmail: target.email,
+      amount,
+      startSnapshot,
+      createdAt: serverTimestamp(),
+      maturesAt: Timestamp.fromMillis(Date.now() + INVEST_DURATION_MS),
+      resolved: false,
+    });
+    window.UI.hideModal();
+    window.UI.toast(`📈 $${window.fmt(amount)} in ${maskEmail(target.email)} investiert. Auszahlung in 24h.`, 'achievement');
+    if(!G.totalInvested) G.totalInvested = 0;
+    G.totalInvested += amount;
+    if(window.GAME?.checkAchievements) window.GAME.checkAchievements();
+    pushCloudSave();
+  } catch(e){
+    console.warn('Invest failed', e);
+    window.UI.toast('❌ Investment fehlgeschlagen.', 'danger');
+  }
+}
+
+/* ---- Inbox: collect gifts, rob notifications, matured investments ---- */
+async function checkInbox(){
+  if(!currentUser) return;
+  const badge = document.getElementById('inbox-tab-btn');
+  try {
+    const itemsSnap = await getDocs(collection(db, 'inbox', currentUser.uid, 'items'));
+    const items = [];
+    itemsSnap.forEach(d => items.push({ id: d.id, ref: d.ref, ...d.data() }));
+
+    // Check matured investments where I'm the investor
+    const investQ = query(collection(db, 'investments'));
+    const investSnap = await getDocs(investQ);
+    const maturedInvestments = [];
+    investSnap.forEach(d => {
+      const data = d.data();
+      if(data.investorUid === currentUser.uid && !data.resolved){
+        const maturesAtMs = data.maturesAt?.toMillis ? data.maturesAt.toMillis() : 0;
+        if(Date.now() >= maturesAtMs){
+          maturedInvestments.push({ id: d.id, ref: d.ref, ...data });
+        }
+      }
+    });
+
+    if(items.length > 0 || maturedInvestments.length > 0){
+      badge?.classList.add('has-items');
+      if(!document.querySelector('.inbox-dot')){
+        const dot = document.createElement('span');
+        dot.className = 'inbox-dot';
+        badge?.appendChild(dot);
+      }
+    }
+
+    renderInbox(items, maturedInvestments);
+  } catch(e){
+    console.warn('Inbox check failed', e);
+  }
+}
+
+async function renderInbox(items, maturedInvestments){
+  const list = document.getElementById('inbox-list');
+  if(!list) return;
+  if(items.length === 0 && maturedInvestments.length === 0){
+    list.innerHTML = '<div class="lb-loading">Dein Postfach ist leer.</div>';
+    return;
+  }
+  list.innerHTML = '';
+
+  for(const item of items){
+    const div = document.createElement('div');
+    if(item.type === 'gift'){
+      div.className = 'inbox-item gift-item';
+      div.innerHTML = `🎁 <strong>${maskEmail(item.fromEmail)}</strong> hat dir <strong style="color:var(--neon-green)">$${window.fmt(item.amount)}</strong> geschenkt!
+        <div class="inbox-time">${timeAgo(item.createdAt)}</div>
+        <button class="btn-train" data-collect="${item.id}" style="margin-top:6px">Abholen</button>`;
+    } else if(item.type === 'rob'){
+      div.className = 'inbox-item rob-item';
+      div.innerHTML = `🦹 <strong>${maskEmail(item.fromEmail)}</strong> hat <strong style="color:var(--danger)">$${window.fmt(item.amount)}</strong> von dir gestohlen!
+        <div class="inbox-time">${timeAgo(item.createdAt)}</div>
+        <button class="btn-train" data-collect="${item.id}" style="margin-top:6px">Zur Kenntnis nehmen</button>`;
+    }
+    list.appendChild(div);
+  }
+
+  for(const inv of maturedInvestments){
+    const div = document.createElement('div');
+    div.className = 'inbox-item invest-item';
+    div.innerHTML = `📈 Dein Investment in <strong>${maskEmail(inv.targetEmail)}</strong> ist fällig!
+      <div class="inbox-time">Investiert: $${window.fmt(inv.amount)}</div>
+      <button class="btn-train" data-claiminvest="${inv.id}" style="margin-top:6px">Auszahlung einfordern</button>`;
+    list.appendChild(div);
+  }
+
+  list.querySelectorAll('[data-collect]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const item = items.find(i => i.id === btn.dataset.collect);
+      if(!item) return;
+      if(item.type === 'gift'){
+        const G = getGState();
+        if(G){ G.cash += item.amount; G.totalCashEarned += item.amount; }
+        window.UI.toast(`💰 $${window.fmt(item.amount)} abgeholt!`);
+      }
+      await deleteDoc(item.ref);
+      pushCloudSave();
+      checkInbox();
+    });
+  });
+
+  list.querySelectorAll('[data-claiminvest]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const inv = maturedInvestments.find(i => i.id === btn.dataset.claiminvest);
+      if(!inv) return;
+      try {
+        // Look up target's current totalCashEarned to determine profit share
+        const targetLbSnap = await getDoc(doc(db, 'leaderboard', inv.targetUid));
+        const targetCurrent = targetLbSnap.exists() ? (targetLbSnap.data().totalCashEarned||0) : inv.startSnapshot;
+        const growth = Math.max(0, targetCurrent - inv.startSnapshot);
+        const profitShare = Math.floor(growth * 0.0000001 * 0.15); // tiny slice of their growth, scaled down to stay balanced
+        const payout = inv.amount + Math.min(profitShare, inv.amount * 2); // cap profit at 2x principal
+        const G = getGState();
+        if(G){ G.cash += payout; G.totalCashEarned += payout; }
+        await setDoc(inv.ref, { resolved: true }, { merge: true });
+        window.UI.toast(`📈 Investment ausgezahlt: $${window.fmt(payout)} ${payout>inv.amount?'(mit Gewinn!)':''}`, 'achievement');
+        const G2 = getGState();
+        if(G2 && payout > inv.amount){ if(!G2.profitableInvestments) G2.profitableInvestments=0; G2.profitableInvestments++; }
+        if(window.GAME?.checkAchievements) window.GAME.checkAchievements();
+        pushCloudSave();
+        checkInbox();
+      } catch(e){
+        console.warn('Investment claim failed', e);
+        window.UI.toast('❌ Auszahlung fehlgeschlagen.', 'danger');
+      }
+    });
+  });
+}
+
+document.getElementById('right-tabs')?.addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn'); if(!btn) return;
+  if(btn.dataset.tab === 'inbox'){
+    document.getElementById('rtab-achievements').style.display='none';
+    document.getElementById('rtab-missions').style.display='none';
+    document.getElementById('rtab-inbox').style.display='';
+    document.querySelectorAll('#right-tabs .tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+    document.querySelector('.inbox-dot')?.remove();
+    checkInbox();
+  }
+});
+
+window.LeaderboardModule = {
+  refresh: fetchLeaderboard,
+};
+
+// Poll inbox every 60s once logged in
+setInterval(() => { if(currentUser) checkInbox(); }, 60000);
 </script>
 </body>
 </html>
