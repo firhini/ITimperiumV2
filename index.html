@@ -340,6 +340,30 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .investment-card{background:var(--bg-card);border:1px solid var(--neon-purple);border-radius:var(--radius-md);padding:10px;margin-bottom:6px}
 .inv-progress-wrap{height:5px;background:var(--bg-deep);border-radius:3px;overflow:hidden;margin-top:5px}
 .inv-progress-fill{height:100%;background:var(--neon-purple)}
+
+/* AFFILIATE TAB */
+.affiliate-section{padding:14px}
+.affiliate-code-card{background:linear-gradient(135deg,rgba(0,255,178,.1),rgba(0,200,255,.05));border:1px solid var(--neon-green);border-radius:var(--radius-lg);padding:18px;text-align:center;margin-bottom:14px}
+.affiliate-code-display{font-size:28px;font-weight:800;letter-spacing:3px;color:var(--neon-green);margin:8px 0;font-family:var(--font-mono,monospace)}
+.affiliate-link-row{display:flex;gap:6px;margin-top:10px}
+.affiliate-link-row input{flex:1}
+.btn-copy{padding:8px 14px;border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:11px;font-weight:700}
+.btn-copy:hover{border-color:var(--neon-blue);color:var(--neon-blue)}
+.btn-change-code{padding:8px 16px;border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);font-size:11px;font-weight:700;margin-top:10px}
+.btn-change-code:hover:not(:disabled){border-color:var(--neon-purple);color:var(--neon-purple)}
+.btn-change-code:disabled{opacity:.4;cursor:not-allowed}
+.affiliate-stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;text-align:center;margin-bottom:14px}
+.affiliate-pending{font-size:24px;font-weight:800;color:var(--neon-gold)}
+.btn-claim-affiliate{width:100%;padding:12px;border-radius:var(--radius-md);background:linear-gradient(90deg,var(--neon-gold),var(--neon-orange));color:#000;font-weight:800;font-size:14px;margin-top:10px;transition:opacity .2s}
+.btn-claim-affiliate:hover:not(:disabled){opacity:.9}
+.btn-claim-affiliate:disabled{opacity:.3;cursor:not-allowed;background:var(--bg-hover);color:var(--text-muted)}
+.affiliate-members-list{display:flex;flex-direction:column;gap:6px}
+.affiliate-member-row{display:flex;align-items:center;gap:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px}
+.am-info{flex:1}
+.am-email{font-size:12px;font-weight:700}
+.am-joined{font-size:9px;color:var(--text-muted)}
+.am-cash{font-size:12px;font-weight:700;color:var(--neon-green);text-align:right}
+.referred-by-chip{display:inline-block;padding:4px 10px;border-radius:14px;background:var(--bg-card);border:1px solid var(--neon-purple);color:var(--neon-purple);font-size:11px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -358,6 +382,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     <div id="auth-form-area">
       <input class="auth-input" id="auth-email" type="email" placeholder="E-Mail" autocomplete="email">
       <input class="auth-input" id="auth-password" type="password" placeholder="Passwort" autocomplete="current-password">
+      <input class="auth-input" id="auth-ref-code" type="text" placeholder="Affiliate-Code (optional)" style="display:none;text-transform:uppercase">
       <button class="btn-auth-submit" id="auth-submit-btn">Anmelden</button>
       <div class="auth-error" id="auth-error"></div>
       <span class="auth-guest" id="auth-guest-btn">Ohne Account weiterspielen (nur lokal gespeichert)</span>
@@ -406,6 +431,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     <button class="tab-btn" data-tab="prestige">✨ Prestige</button>
     <button class="tab-btn" data-tab="stats">📊 Stats</button>
     <button class="tab-btn" data-tab="leaderboard">🌍 Leaderboard</button>
+    <button class="tab-btn" data-tab="affiliate">🔗 Affiliate</button>
   </nav>
 
   <div id="tab-click">
@@ -638,6 +664,33 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     </div>
     <div class="leaderboard-list" id="leaderboard-list">
       <div class="lb-loading">Lade Leaderboard…</div>
+    </div>
+  </div>
+
+  <div id="tab-affiliate" style="display:none">
+    <div class="affiliate-section">
+      <div class="affiliate-code-card">
+        <div style="font-size:12px;color:var(--text-muted)">Dein Affiliate-Code</div>
+        <div class="affiliate-code-display" id="affiliate-code-display">—</div>
+        <div class="affiliate-link-row">
+          <input class="bet-input" id="affiliate-link-input" readonly value="">
+          <button class="btn-copy" id="affiliate-copy-btn">📋 Kopieren</button>
+        </div>
+        <button class="btn-change-code" id="affiliate-change-btn">✏️ Code ändern</button>
+        <div id="affiliate-referred-by"></div>
+      </div>
+
+      <div class="affiliate-stat-card">
+        <div style="font-size:12px;color:var(--text-muted)">Verfügbarer Bonus (0,5% vom Verdienst deiner Mitglieder)</div>
+        <div class="affiliate-pending" id="affiliate-pending-display">$0</div>
+        <button class="btn-claim-affiliate" id="affiliate-claim-btn">💰 Bonus abholen</button>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px" id="affiliate-claim-info"></div>
+      </div>
+
+      <div class="section-title" style="padding-left:0">Deine Mitglieder (<span id="affiliate-member-count">0</span>)</div>
+      <div class="affiliate-members-list" id="affiliate-members-list">
+        <div class="lb-loading">Melde dich an, um deine Mitglieder zu sehen.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1908,7 +1961,7 @@ const GAME = {
       const btn=e.target.closest('.tab-btn'); if(!btn) return;
       const tab=btn.dataset.tab;
       document.querySelectorAll('#center-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
-      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard'].forEach(t=>{
+      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard','affiliate'].forEach(t=>{
         document.getElementById('tab-'+t).style.display=t===tab?'':'none';
       });
       if(tab==='stats')    UI.renderStats();
@@ -1917,6 +1970,7 @@ const GAME = {
       if(tab==='upgrades') UI.renderUpgrades(this._upgradeFilter);
       if(tab==='research') UI.renderResearch();
       if(tab==='leaderboard' && window.LeaderboardModule) window.LeaderboardModule.refresh();
+      if(tab==='affiliate' && window.AffiliateModule) window.AffiliateModule.refresh();
     });
 
     document.getElementById('right-tabs').addEventListener('click',e=>{
@@ -2938,7 +2992,7 @@ const XGAME = {
       const xTabs=['stocks','employees','skills','mergers','factions','regions'];
       if(!xTabs.includes(tab)) return;
       document.querySelectorAll('#center-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
-      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard',...xTabs].forEach(t=>{
+      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard','affiliate',...xTabs].forEach(t=>{
         const el=document.getElementById('tab-'+t);
         if(el) el.style.display=(t===tab)?'':'none';
       });
@@ -3309,6 +3363,8 @@ let authMode = 'login'; // 'login' | 'register'
 let cloudSyncInterval = null;
 let isGuestMode = false;
 let isApplyingCloudSave = false;
+let pendingNewUserSetup = null; // {uid, referredByUid, referredByCode} set right after registration
+let myAffiliateData = null; // {code, codeChangedAt, referredByUid, referredByCode}
 
 /* ---- Helpers exposed for the main game script (loaded as non-module, so we bridge via window) ---- */
 window.CloudSave = {
@@ -3347,6 +3403,7 @@ document.getElementById('auth-tab-login').addEventListener('click', () => {
   document.getElementById('auth-tab-login').classList.add('active');
   document.getElementById('auth-tab-register').classList.remove('active');
   document.getElementById('auth-submit-btn').textContent = 'Anmelden';
+  document.getElementById('auth-ref-code').style.display = 'none';
   showAuthError('');
 });
 document.getElementById('auth-tab-register').addEventListener('click', () => {
@@ -3354,6 +3411,7 @@ document.getElementById('auth-tab-register').addEventListener('click', () => {
   document.getElementById('auth-tab-register').classList.add('active');
   document.getElementById('auth-tab-login').classList.remove('active');
   document.getElementById('auth-submit-btn').textContent = 'Registrieren';
+  document.getElementById('auth-ref-code').style.display = '';
   showAuthError('');
 });
 
@@ -3361,6 +3419,7 @@ document.getElementById('auth-tab-register').addEventListener('click', () => {
 document.getElementById('auth-submit-btn').addEventListener('click', async () => {
   const email = document.getElementById('auth-email').value.trim();
   const password = document.getElementById('auth-password').value;
+  const refCodeRaw = document.getElementById('auth-ref-code').value.trim().toUpperCase();
   showAuthError('');
   if(!email || !password){ showAuthError('Bitte E-Mail und Passwort eingeben.'); return; }
   if(password.length < 6){ showAuthError('Passwort muss mindestens 6 Zeichen haben.'); return; }
@@ -3370,9 +3429,21 @@ document.getElementById('auth-submit-btn').addEventListener('click', async () =>
     if(authMode === 'login'){
       await signInWithEmailAndPassword(auth, email, password);
     } else {
-      await createUserWithEmailAndPassword(auth, email, password);
+      // Validate referral code BEFORE creating the account.
+      let validatedRefUid = null;
+      if(refCodeRaw){
+        const refSnap = await getDoc(doc(db, 'affiliateCodes', refCodeRaw));
+        if(!refSnap.exists()){
+          setAuthLoading(false);
+          showAuthError('Affiliate-Code nicht gefunden. Lass das Feld leer, falls du keinen hast.');
+          return;
+        }
+        validatedRefUid = refSnap.data().uid;
+      }
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      pendingNewUserSetup = { uid: cred.user.uid, referredByUid: validatedRefUid, referredByCode: refCodeRaw || null };
     }
-    // onAuthStateChanged will handle the rest (loading save, hiding overlay)
+    // onAuthStateChanged will handle the rest (loading save, hiding overlay, applying referral)
   } catch(err){
     setAuthLoading(false);
     showAuthError(friendlyAuthError(err.code));
@@ -3492,6 +3563,9 @@ onAuthStateChanged(auth, async (user) => {
     hideAuthOverlay();
     startGameAfterAuth();
 
+    // Set up affiliate account: generate own code on first login, apply pending referral if registering now.
+    await setupAffiliateAccount();
+
     // Periodic cloud sync every 30s + on page hide
     if(cloudSyncInterval) clearInterval(cloudSyncInterval);
     cloudSyncInterval = setInterval(() => pushCloudSave(), 30000);
@@ -3505,6 +3579,75 @@ onAuthStateChanged(auth, async (user) => {
     // If not in guest mode and overlay still visible, do nothing — wait for user action
   }
 });
+
+/* ---- Affiliate account setup: runs once per login session ---- */
+function generateRandomCode(len){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let out = '';
+  for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+
+async function setupAffiliateAccount(){
+  if(!currentUser) return;
+  try {
+    const affRef = doc(db, 'affiliates', currentUser.uid);
+    const affSnap = await getDoc(affRef);
+
+    if(!affSnap.exists()){
+      // Brand-new affiliate profile: generate a unique random code automatically.
+      let code = generateRandomCode(8);
+      let attempts = 0;
+      while(attempts < 5){
+        const codeSnap = await getDoc(doc(db, 'affiliateCodes', code));
+        if(!codeSnap.exists()) break;
+        code = generateRandomCode(8);
+        attempts++;
+      }
+      const referredByUid = pendingNewUserSetup?.uid === currentUser.uid ? pendingNewUserSetup.referredByUid : null;
+      const referredByCode = pendingNewUserSetup?.uid === currentUser.uid ? pendingNewUserSetup.referredByCode : null;
+
+      await setDoc(affRef, {
+        code,
+        codeChangedAt: serverTimestamp(),
+        referredByUid: referredByUid || null,
+        referredByCode: referredByCode || null,
+        pendingBonus: 0,
+        lastClaimAt: serverTimestamp(),
+        totalClaimed: 0,
+        email: currentUser.email,
+      });
+      await setDoc(doc(db, 'affiliateCodes', code), { uid: currentUser.uid, email: currentUser.email });
+
+      myAffiliateData = { code, codeChangedAt: Date.now(), referredByUid, referredByCode, pendingBonus: 0, lastClaimAt: Date.now(), totalClaimed: 0 };
+
+      if(referredByUid){
+        // Register this user as a member under the referrer for live tracking.
+        await setDoc(doc(db, 'affiliates', referredByUid, 'members', currentUser.uid), {
+          email: currentUser.email,
+          joinedAt: serverTimestamp(),
+          lastCashSnapshot: 0,
+        });
+      }
+    } else {
+      const d = affSnap.data();
+      myAffiliateData = {
+        code: d.code,
+        codeChangedAt: d.codeChangedAt?.toMillis ? d.codeChangedAt.toMillis() : Date.now(),
+        referredByUid: d.referredByUid || null,
+        referredByCode: d.referredByCode || null,
+        pendingBonus: d.pendingBonus || 0,
+        lastClaimAt: d.lastClaimAt?.toMillis ? d.lastClaimAt.toMillis() : Date.now(),
+        totalClaimed: d.totalClaimed || 0,
+      };
+    }
+    pendingNewUserSetup = null;
+    if(window.AffiliateModule) window.AffiliateModule.refresh();
+  } catch(e){
+    console.warn('Affiliate setup failed', e);
+  }
+}
+
 
 let gameStarted = false;
 function startGameAfterAuth(){
@@ -3911,6 +4054,230 @@ window.LeaderboardModule = {
 
 // Poll inbox every 60s once logged in
 setInterval(() => { if(currentUser) checkInbox(); }, 60000);
+
+/* ============================================================
+   AFFILIATE MODULE
+   ============================================================ */
+const CODE_CHANGE_COOLDOWN_MS = 7*24*60*60*1000; // 7 days
+const AFFILIATE_RATE = 0.005; // 0.5%
+
+async function renderAffiliateTab(){
+  if(!currentUser){
+    document.getElementById('affiliate-code-display').textContent = '—';
+    document.getElementById('affiliate-members-list').innerHTML = '<div class="lb-loading">Melde dich an, um das Affiliate-System zu nutzen.</div>';
+    document.getElementById('affiliate-claim-btn').disabled = true;
+    return;
+  }
+  if(!myAffiliateData){ await setupAffiliateAccount(); }
+  if(!myAffiliateData) return;
+
+  document.getElementById('affiliate-code-display').textContent = myAffiliateData.code;
+  const link = `${location.origin}${location.pathname}?ref=${myAffiliateData.code}`;
+  document.getElementById('affiliate-link-input').value = link;
+
+  const refByEl = document.getElementById('affiliate-referred-by');
+  if(myAffiliateData.referredByCode){
+    refByEl.innerHTML = `<span class="referred-by-chip">🔗 Geworben durch: ${myAffiliateData.referredByCode}</span>`;
+  } else {
+    refByEl.innerHTML = '';
+  }
+
+  const changeBtn = document.getElementById('affiliate-change-btn');
+  const cooldownLeft = CODE_CHANGE_COOLDOWN_MS - (Date.now() - myAffiliateData.codeChangedAt);
+  if(cooldownLeft > 0){
+    const daysLeft = Math.ceil(cooldownLeft / (24*60*60*1000));
+    changeBtn.disabled = true;
+    changeBtn.textContent = `✏️ Code ändern (noch ${daysLeft} Tag${daysLeft===1?'':'e'})`;
+  } else {
+    changeBtn.disabled = false;
+    changeBtn.textContent = '✏️ Code ändern';
+  }
+
+  // Compute pending bonus client-side based on members' growth since last claim,
+  // then refresh the live member list.
+  await refreshAffiliateMembers();
+}
+
+async function refreshAffiliateMembers(){
+  if(!currentUser) return;
+  const membersList = document.getElementById('affiliate-members-list');
+  try {
+    const membersSnap = await getDocs(collection(db, 'affiliates', currentUser.uid, 'members'));
+    const members = [];
+    membersSnap.forEach(d => members.push({ uid: d.id, ...d.data() }));
+    document.getElementById('affiliate-member-count').textContent = members.length;
+
+    if(members.length === 0){
+      membersList.innerHTML = '<div class="lb-loading">Noch keine Mitglieder. Teile deinen Code, um welche zu gewinnen!</div>';
+    } else {
+      // Pull each member's current totalCashEarned from the public leaderboard collection.
+      let totalGrowth = 0;
+      const rows = [];
+      for(const m of members){
+        const lbSnap = await getDoc(doc(db, 'leaderboard', m.uid));
+        const currentCash = lbSnap.exists() ? (lbSnap.data().totalCashEarned||0) : 0;
+        const growth = Math.max(0, currentCash - (m.lastCashSnapshot||0));
+        totalGrowth += growth;
+        rows.push({ email: m.email, currentCash, joinedAt: m.joinedAt });
+      }
+      rows.sort((a,b) => b.currentCash - a.currentCash);
+      membersList.innerHTML = rows.map(r => `
+        <div class="affiliate-member-row">
+          <div class="am-info">
+            <div class="am-email">${maskEmail(r.email)}</div>
+            <div class="am-joined">Beigetreten ${timeAgo(r.joinedAt)}</div>
+          </div>
+          <div class="am-cash">$${window.fmt(r.currentCash)}</div>
+        </div>`).join('');
+
+      // Update pending bonus = accumulated stored bonus + newly computed growth share (not yet stored)
+      const liveBonus = (myAffiliateData.pendingBonus||0) + totalGrowth * AFFILIATE_RATE;
+      document.getElementById('affiliate-pending-display').textContent = '$' + window.fmt(liveBonus);
+      myAffiliateData._liveGrowth = totalGrowth;
+    }
+  } catch(e){
+    console.warn('Affiliate members fetch failed', e);
+    membersList.innerHTML = '<div class="lb-loading">Mitgliederliste konnte nicht geladen werden.</div>';
+  }
+
+  // Claim button cooldown: once per hour
+  const claimBtn = document.getElementById('affiliate-claim-btn');
+  const claimInfo = document.getElementById('affiliate-claim-info');
+  const hourMs = 60*60*1000;
+  const claimCooldownLeft = hourMs - (Date.now() - myAffiliateData.lastClaimAt);
+  if(claimCooldownLeft > 0){
+    claimBtn.disabled = true;
+    const mins = Math.ceil(claimCooldownLeft/60000);
+    claimInfo.textContent = `Nächster Claim in ${mins} Minute${mins===1?'':'n'} möglich.`;
+  } else {
+    claimBtn.disabled = false;
+    claimInfo.textContent = 'Bonus ist abholbar!';
+  }
+}
+
+document.getElementById('affiliate-copy-btn')?.addEventListener('click', () => {
+  const input = document.getElementById('affiliate-link-input');
+  input.select();
+  navigator.clipboard?.writeText(input.value).then(() => {
+    window.UI?.toast('📋 Link kopiert!');
+  }).catch(() => {
+    document.execCommand('copy');
+    window.UI?.toast('📋 Link kopiert!');
+  });
+});
+
+document.getElementById('affiliate-change-btn')?.addEventListener('click', () => {
+  if(!myAffiliateData) return;
+  document.getElementById('modal-container').innerHTML = `
+  <div class="modal-overlay" id="change-code-modal">
+    <div class="modal-box">
+      <h2>✏️ Affiliate-Code ändern</h2>
+      <p>Wähle einen neuen Code (4-12 Zeichen, nur Buchstaben &amp; Zahlen). Danach musst du wieder 7 Tage warten.</p>
+      <input class="auth-input" id="new-code-input" type="text" placeholder="NEUERCODE" maxlength="12" style="text-align:center;text-transform:uppercase;font-size:16px">
+      <button class="btn-collect" id="new-code-submit" style="margin-top:10px">Ändern</button>
+      <button class="btn-collect secondary" id="new-code-cancel">Abbrechen</button>
+      <div class="auth-error" id="new-code-error"></div>
+    </div>
+  </div>`;
+  document.getElementById('new-code-cancel').onclick = () => window.UI.hideModal();
+  document.getElementById('new-code-submit').onclick = async () => {
+    const raw = document.getElementById('new-code-input').value.trim().toUpperCase();
+    const errEl = document.getElementById('new-code-error');
+    if(!/^[A-Z0-9]{4,12}$/.test(raw)){
+      errEl.textContent = 'Code muss 4-12 Zeichen lang sein (nur A-Z, 0-9).';
+      return;
+    }
+    try {
+      const codeSnap = await getDoc(doc(db, 'affiliateCodes', raw));
+      if(codeSnap.exists()){
+        errEl.textContent = 'Dieser Code ist bereits vergeben.';
+        return;
+      }
+      const oldCode = myAffiliateData.code;
+      await setDoc(doc(db, 'affiliateCodes', raw), { uid: currentUser.uid, email: currentUser.email });
+      await deleteDoc(doc(db, 'affiliateCodes', oldCode));
+      await setDoc(doc(db, 'affiliates', currentUser.uid), {
+        code: raw, codeChangedAt: serverTimestamp(),
+      }, { merge: true });
+      myAffiliateData.code = raw;
+      myAffiliateData.codeChangedAt = Date.now();
+      window.UI.hideModal();
+      window.UI.toast(`✅ Code geändert zu "${raw}"!`, 'achievement');
+      renderAffiliateTab();
+    } catch(e){
+      console.warn('Code change failed', e);
+      errEl.textContent = 'Fehler beim Ändern des Codes.';
+    }
+  };
+});
+
+document.getElementById('affiliate-claim-btn')?.addEventListener('click', async () => {
+  if(!currentUser || !myAffiliateData) return;
+  const btn = document.getElementById('affiliate-claim-btn');
+  btn.disabled = true;
+  try {
+    const growth = myAffiliateData._liveGrowth || 0;
+    const bonus = Math.floor((myAffiliateData.pendingBonus||0) + growth * AFFILIATE_RATE);
+    if(bonus <= 0){
+      window.UI.toast('ℹ️ Noch kein Bonus zum Abholen.');
+      btn.disabled = false;
+      return;
+    }
+    const G = getGState();
+    if(G){ G.cash += bonus; G.totalCashEarned += bonus; }
+
+    // Reset pendingBonus to 0, update lastClaimAt, and snapshot all members' current cash
+    // so future growth is measured from this point forward.
+    await setDoc(doc(db, 'affiliates', currentUser.uid), {
+      pendingBonus: 0,
+      lastClaimAt: serverTimestamp(),
+      totalClaimed: (myAffiliateData.totalClaimed||0) + bonus,
+    }, { merge: true });
+
+    const membersSnap = await getDocs(collection(db, 'affiliates', currentUser.uid, 'members'));
+    for(const mDoc of membersSnap.docs){
+      const lbSnap = await getDoc(doc(db, 'leaderboard', mDoc.id));
+      const currentCash = lbSnap.exists() ? (lbSnap.data().totalCashEarned||0) : 0;
+      await setDoc(doc(db, 'affiliates', currentUser.uid, 'members', mDoc.id), { lastCashSnapshot: currentCash }, { merge: true });
+    }
+
+    myAffiliateData.pendingBonus = 0;
+    myAffiliateData.lastClaimAt = Date.now();
+    myAffiliateData.totalClaimed = (myAffiliateData.totalClaimed||0) + bonus;
+    myAffiliateData._liveGrowth = 0;
+
+    window.UI.toast(`💰 Affiliate-Bonus abgeholt: $${window.fmt(bonus)}!`, 'achievement');
+    pushCloudSave();
+    renderAffiliateTab();
+  } catch(e){
+    console.warn('Affiliate claim failed', e);
+    window.UI.toast('❌ Claim fehlgeschlagen.', 'danger');
+    btn.disabled = false;
+  }
+});
+
+window.AffiliateModule = {
+  refresh: renderAffiliateTab,
+};
+
+// Refresh affiliate tab + claim cooldown display every 30s while it's open
+setInterval(() => {
+  if(currentUser && document.getElementById('tab-affiliate')?.style.display !== 'none'){
+    renderAffiliateTab();
+  }
+}, 30000);
+
+// Auto-fill affiliate code from ?ref=CODE URL parameter and switch to register tab.
+// Runs last, after all auth listeners above are registered, so the click() works correctly.
+(function applyRefParam(){
+  const params = new URLSearchParams(location.search);
+  const ref = params.get('ref');
+  if(ref){
+    const refInput = document.getElementById('auth-ref-code');
+    if(refInput) refInput.value = ref.toUpperCase();
+    document.getElementById('auth-tab-register')?.click();
+  }
+})();
 </script>
 </body>
 </html>
