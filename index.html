@@ -574,8 +574,17 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
         <div class="slots-result" id="race-result"></div>
       </div>
 
-    
-         <div class="slots-bet-row">
+      <div class="gamble-panel">
+        <div class="gamble-title">🚀 Crypto Crash</div>
+        <div class="gamble-sub">Steige aus, bevor es crasht! Je länger du wartest, desto höher der Multiplikator.</div>
+        <div class="crash-area">
+          <div class="crash-display" id="crash-display">
+            <div class="crash-mult" id="crash-mult">1.00×</div>
+            <svg viewBox="0 0 280 100" id="crash-svg" style="width:100%;height:90px">
+              <polyline id="crash-line" points="0,100" fill="none" stroke="var(--neon-green)" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="slots-bet-row">
             <input class="bet-input" id="crash-bet" type="text" value="1000" placeholder="Bet">
             <button class="btn-spin" id="crash-btn">START</button>
           </div>
