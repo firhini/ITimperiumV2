@@ -3340,7 +3340,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   getFirestore, doc, setDoc, getDoc, serverTimestamp,
-  collection, query, orderBy, limit, getDocs,
+  collection, query, where, orderBy, limit, getDocs,
   runTransaction, addDoc, deleteDoc, onSnapshot, increment, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -3925,38 +3925,42 @@ async function doInvest(target, amount){
 async function checkInbox(){
   if(!currentUser) return;
   const badge = document.getElementById('inbox-tab-btn');
+  let items = [];
+  let maturedInvestments = [];
+
   try {
     const itemsSnap = await getDocs(collection(db, 'inbox', currentUser.uid, 'items'));
-    const items = [];
     itemsSnap.forEach(d => items.push({ id: d.id, ref: d.ref, ...d.data() }));
+  } catch(e){
+    console.warn('Inbox items fetch failed', e);
+  }
 
-    // Check matured investments where I'm the investor
-    const investQ = query(collection(db, 'investments'));
+  try {
+    const investQ = query(collection(db, 'investments'), where('investorUid', '==', currentUser.uid));
     const investSnap = await getDocs(investQ);
-    const maturedInvestments = [];
     investSnap.forEach(d => {
       const data = d.data();
-      if(data.investorUid === currentUser.uid && !data.resolved){
+      if(!data.resolved){
         const maturesAtMs = data.maturesAt?.toMillis ? data.maturesAt.toMillis() : 0;
         if(Date.now() >= maturesAtMs){
           maturedInvestments.push({ id: d.id, ref: d.ref, ...data });
         }
       }
     });
-
-    if(items.length > 0 || maturedInvestments.length > 0){
-      badge?.classList.add('has-items');
-      if(!document.querySelector('.inbox-dot')){
-        const dot = document.createElement('span');
-        dot.className = 'inbox-dot';
-        badge?.appendChild(dot);
-      }
-    }
-
-    renderInbox(items, maturedInvestments);
   } catch(e){
-    console.warn('Inbox check failed', e);
+    console.warn('Investments fetch failed', e);
   }
+
+  if(items.length > 0 || maturedInvestments.length > 0){
+    badge?.classList.add('has-items');
+    if(!document.querySelector('.inbox-dot')){
+      const dot = document.createElement('span');
+      dot.className = 'inbox-dot';
+      badge?.appendChild(dot);
+    }
+  }
+
+  renderInbox(items, maturedInvestments);
 }
 
 async function renderInbox(items, maturedInvestments){
