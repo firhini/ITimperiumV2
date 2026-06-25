@@ -197,6 +197,8 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .btn-prestige{background:linear-gradient(90deg,var(--neon-purple),#7700ff);color:white;font-weight:700;padding:11px 28px;border-radius:28px;font-size:14px;box-shadow:0 0 20px rgba(180,79,255,.4);transition:opacity .2s}
 .btn-prestige:hover{opacity:.9}
 .btn-prestige:disabled{opacity:.25;cursor:not-allowed}
+.hard-prestige-card{border-color:var(--danger);background:linear-gradient(135deg,rgba(255,68,85,.12),rgba(255,140,0,.05))}
+.btn-prestige.hard-prestige-btn{background:linear-gradient(90deg,var(--danger),#aa0000);box-shadow:0 0 20px rgba(255,68,85,.4)}
 .prestige-milestone{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;margin-bottom:6px}
 .prestige-milestone.achieved{border-color:var(--neon-gold)}
 
@@ -364,6 +366,55 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .am-joined{font-size:9px;color:var(--text-muted)}
 .am-cash{font-size:12px;font-weight:700;color:var(--neon-green);text-align:right}
 .referred-by-chip{display:inline-block;padding:4px 10px;border-radius:14px;background:var(--bg-card);border:1px solid var(--neon-purple);color:var(--neon-purple);font-size:11px;margin-top:8px}
+
+/* LOOTBOXES & ITEMS */
+.lootbox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;padding:12px}
+.lootbox-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;text-align:center}
+.lootbox-card.premium-box{border-color:var(--neon-purple)}
+.lootbox-card.mythic-box{border-color:var(--mythic);box-shadow:0 0 20px rgba(255,68,170,.15)}
+.lootbox-icon{font-size:40px;margin-bottom:8px}
+.lootbox-name{font-size:13px;font-weight:800;margin-bottom:4px}
+.lootbox-odds{font-size:9px;color:var(--text-muted);margin-bottom:10px;line-height:1.6}
+.btn-openbox{width:100%;padding:10px;border-radius:var(--radius-md);background:linear-gradient(90deg,var(--neon-blue),var(--neon-purple));color:white;font-weight:700;font-size:12px}
+.btn-openbox:disabled{opacity:.3;cursor:not-allowed;background:var(--bg-hover);color:var(--text-muted)}
+
+.box-open-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:300}
+.box-open-card{background:var(--bg-panel);border-radius:var(--radius-lg);padding:30px;text-align:center;animation:boxReveal .5s ease}
+@keyframes boxReveal{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.box-open-icon{font-size:64px;margin-bottom:12px;animation:boxIconPulse 1s ease infinite}
+@keyframes boxIconPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.box-open-rarity{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.box-open-name{font-size:18px;font-weight:800;margin-bottom:6px}
+.box-open-desc{font-size:12px;color:var(--text-muted);margin-bottom:18px}
+
+.item-inventory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:12px}
+.item-card{background:var(--bg-card);border-radius:var(--radius-md);padding:12px;text-align:center;border:1px solid var(--border)}
+.item-card.common{border-color:var(--common)}
+.item-card.rare{border-color:var(--rare)}
+.item-card.epic{border-color:var(--epic)}
+.item-card.legendary{border-color:var(--legendary)}
+.item-card.mythic{border-color:var(--mythic);animation:mythicShimmer 2s infinite}
+.item-icon-big{font-size:28px;margin:4px 0}
+.item-name{font-size:11px;font-weight:700;margin-bottom:3px}
+.item-desc{font-size:10px;color:var(--text-muted);margin-bottom:6px}
+.item-count-badge{font-size:9px;color:var(--text-muted)}
+.btn-use-item{width:100%;padding:6px;border-radius:var(--radius-sm);background:var(--neon-purple);color:white;font-size:10px;font-weight:700;margin-top:6px}
+.btn-use-item:disabled{opacity:.3;cursor:not-allowed;background:var(--bg-hover);color:var(--text-muted)}
+.btn-list-item{width:100%;padding:6px;border-radius:var(--radius-sm);background:var(--bg-hover);border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:700;margin-top:4px}
+.btn-list-item:hover{border-color:var(--neon-green);color:var(--neon-green)}
+
+.market-sell-row{padding:10px;background:var(--bg-card);border-radius:var(--radius-md);margin:8px;display:flex;flex-direction:column;gap:8px}
+.market-listing-list{padding:10px;display:flex;flex-direction:column;gap:6px}
+.market-listing-card{display:flex;align-items:center;gap:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px}
+.market-listing-card.mine{border-color:var(--neon-gold)}
+.ml-icon{font-size:24px}
+.ml-info{flex:1}
+.ml-name{font-size:12px;font-weight:700}
+.ml-seller{font-size:9px;color:var(--text-muted)}
+.ml-price{font-size:13px;font-weight:800;color:var(--neon-green)}
+.btn-buy-listing{padding:6px 14px;border-radius:var(--radius-sm);background:var(--neon-green);color:#000;font-size:11px;font-weight:700}
+.btn-cancel-listing{padding:6px 14px;border-radius:var(--radius-sm);background:var(--danger);color:#fff;font-size:11px;font-weight:700}
+.market-select{background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;color:var(--text-main);font-size:12px;font-family:inherit}
 </style>
 </head>
 <body>
@@ -427,6 +478,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     <button class="tab-btn" data-tab="upgrades">⬆️ Upgrades</button>
     <button class="tab-btn" data-tab="research">🔬 Research</button>
     <button class="tab-btn" data-tab="cards">🃏 Cards</button>
+    <button class="tab-btn" data-tab="items">🎒 Items</button>
     <button class="tab-btn" data-tab="gambling">🎰 Casino</button>
     <button class="tab-btn" data-tab="prestige">✨ Prestige</button>
     <button class="tab-btn" data-tab="stats">📊 Stats</button>
@@ -472,6 +524,30 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
   <div id="tab-cards" style="display:none">
     <div class="section-title" style="padding-top:12px">Card Collection <span style="color:var(--text-muted);font-weight:400" id="card-count-display"></span></div>
     <div class="cards-grid" id="cards-grid"></div>
+  </div>
+
+  <div id="tab-items" style="display:none">
+    <div class="tab-nav" id="items-subtabs" style="border-top:none">
+      <button class="tab-btn active" data-itemtab="boxes">📦 Kisten öffnen</button>
+      <button class="tab-btn" data-itemtab="inventory">🎒 Inventar</button>
+      <button class="tab-btn" data-itemtab="market">🛒 Marktplatz</button>
+    </div>
+    <div id="itemstab-boxes">
+      <div class="lootbox-grid" id="lootbox-grid"></div>
+    </div>
+    <div id="itemstab-inventory" style="display:none">
+      <div class="item-inventory-grid" id="item-inventory-grid"></div>
+    </div>
+    <div id="itemstab-market" style="display:none">
+      <div class="lb-refresh-row">
+        <div class="section-title" style="padding:0">🛒 Spieler-Marktplatz</div>
+        <button class="lb-refresh-btn" id="market-refresh-btn">🔄 Aktualisieren</button>
+      </div>
+      <div class="section-title" style="padding-top:4px">Eigenes Angebot erstellen</div>
+      <div class="market-sell-row" id="market-sell-row"></div>
+      <div class="section-title">Aktive Angebote</div>
+      <div class="market-listing-list" id="market-listing-list"><div class="lb-loading">Melde dich an, um den Marktplatz zu nutzen.</div></div>
+    </div>
   </div>
 
   <div id="tab-gambling" style="display:none">
@@ -650,6 +726,22 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
       <div id="prestige-milestones"></div>
       <div class="section-title" style="margin-top:10px">Permanent Bonuses</div>
       <div id="prestige-bonuses"></div>
+
+      <div class="section-title" style="margin-top:18px">⚠️ Endgame</div>
+      <div class="prestige-card hard-prestige-card">
+        <div class="prestige-title" style="color:var(--danger)">💀 Hard Reset</div>
+        <div class="prestige-desc">
+          <strong style="color:var(--danger)">Löscht WIRKLICH ALLES:</strong> Cash, Businesses, Upgrades, Research,
+          Quantum Chips, Achievements, Skills, Aktien, Mitarbeiter, Fusionen, Fraktion, Regionen und alle
+          Prestige-Multiplikatoren. Du beginnst zu 100% von Null.<br><br>
+          Im Gegenzug erhältst du garantiert ein <strong style="color:var(--mythic)">Mythic-Item</strong>
+          und einen permanenten <strong style="color:var(--neon-gold)">Hard-Reset-Stern</strong> für jeden Durchlauf — sichtbar im Profil.<br><br>
+          <strong style="color:var(--neon-gold)">Erfordert $1 Sextillion total verdient.</strong>
+        </div>
+        <div class="prestige-reward" id="hard-prestige-status">Fortschritt: 0%</div>
+        <button class="btn-prestige hard-prestige-btn" id="hard-prestige-btn">💀 HARD RESET</button>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:8px">Hard Resets bisher: <strong id="hard-reset-count" style="color:var(--neon-gold)">0</strong> ⭐</div>
+      </div>
     </div>
   </div>
 
@@ -728,6 +820,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 const BALANCE = {
   clickBase: 1,
   prestigeRequirement: 1e15,   // $1 Quadrillion — much harder
+  hardPrestigeRequirement: 1e21, // $1 Sextillion — true endgame reset
   offlineMax: 12 * 3600,
   saveInterval: 10000,
   eventMinInterval: 4 * 60000,
@@ -924,6 +1017,11 @@ const ACHIEVEMENTS_DEF = [
   {id:'phil', name:'Philanthrop',         icon:'🎁',desc:'Sende 10 Geschenke an andere Spieler', type:'gifts', threshold:10, reward:30},
   {id:'thief',name:'Meisterdieb',         icon:'🦹',desc:'Führe 15 erfolgreiche Raubzüge durch', type:'robs',  threshold:15, reward:40},
   {id:'vc',   name:'Wall Street Tycoon',  icon:'📈',desc:'Erziele 5 profitable Spieler-Investments',type:'profinvest',threshold:5,reward:50},
+  {id:'it1',  name:'Sammler',             icon:'🎒',desc:'Besitze 5 verschiedene Items',          type:'itemtypes', threshold:5,  reward:5},
+  {id:'it2',  name:'Item-Connoisseur',    icon:'💎',desc:'Besitze ein Mythic-Item',               type:'mythicitem',threshold:1,  reward:25},
+  {id:'it3',  name:'Schwarzmarkt-Händler',icon:'🛒',desc:'Verkaufe 10 Items auf dem Marktplatz',  type:'itemssold',  threshold:10, reward:30},
+  {id:'hr1',  name:'Phönix aus der Asche',icon:'💀',desc:'Schließe deinen ersten Hard Reset ab',  type:'hardreset',  threshold:1,  reward:0},
+  {id:'hr2',  name:'Unsterblicher Zyklus',icon:'♻️',desc:'Schließe 3 Hard Resets ab',             type:'hardreset',  threshold:3,  reward:0},
 ];
 
 /* ============================================================
@@ -944,6 +1042,55 @@ const CARDS_DEF = [
   {id:'c_ipo',       rarity:'legendary', icon:'📈',name:'IPO Day',          bonus:'SaaS ×15',     mult:15,   target:'saas'},
   {id:'c_god',       rarity:'mythic',    icon:'👑',name:'God Mode',         bonus:'ALL ×50',      mult:50,   target:'global'},
   {id:'c_satellite', rarity:'legendary', icon:'🛰️',name:'Satellite Beam',   bonus:'Traffic ×10',  mult:10,   target:'traffic'},
+];
+
+/* ============================================================
+   ITEMS — Lootbox system (tradeable, separate from cards)
+   Each item is either:
+   - passive: permanent stat bonus while owned (like cards, but tradeable)
+   - active: triggerable ability with a cooldown
+   ============================================================ */
+const ITEMS_DEF = [
+  // COMMON — basic passive items
+  {id:'i_charger',   rarity:'common',   icon:'🔌', name:'Backup Charger',     kind:'passive', desc:'+5% Click Power',        effect:{type:'click',   mult:1.05}},
+  {id:'i_headset',   rarity:'common',   icon:'🎧', name:'Noise-Cancelling Headset', kind:'passive', desc:'+5% CPS',          effect:{type:'cps',     mult:1.05}},
+  {id:'i_notebook',  rarity:'common',   icon:'📓', name:'Idea Notebook',      kind:'passive', desc:'+5% Research Speed',     effect:{type:'rp',      mult:1.05}},
+  {id:'i_coffee',    rarity:'common',   icon:'☕', name:'Energy Drink',       kind:'active',  desc:'2× CPS für 60s',         cooldownH:4,  effect:{type:'boost',   mult:2,   durationS:60}},
+
+  // RARE
+  {id:'i_keyboard',  rarity:'rare',     icon:'⌨️', name:'Mechanical Keyboard', kind:'passive', desc:'+15% Click Power',      effect:{type:'click',   mult:1.15}},
+  {id:'i_router',    rarity:'rare',     icon:'📡', name:'Pro Router',          kind:'passive', desc:'+15% Traffic',          effect:{type:'traffic', mult:1.15}},
+  {id:'i_vpnkey',    rarity:'rare',     icon:'🔑', name:'VPN Master Key',      kind:'active',  desc:'Schützt 2h vor Raub',    cooldownH:12, effect:{type:'shield',  durationS:7200}},
+  {id:'i_redbull',   rarity:'rare',     icon:'🥤', name:'Triple Espresso',     kind:'active',  desc:'3× CPS für 90s',         cooldownH:6,  effect:{type:'boost',   mult:3,   durationS:90}},
+
+  // EPIC
+  {id:'i_gpu',       rarity:'epic',     icon:'🎮', name:'Quantum GPU',         kind:'passive', desc:'+30% CPS',              effect:{type:'cps',     mult:1.30}},
+  {id:'i_blackcard', rarity:'epic',     icon:'💳', name:'Schwarze Kreditkarte', kind:'passive', desc:'-10% Business-Kosten', effect:{type:'costdown',mult:0.10}},
+  {id:'i_lockpick',  rarity:'epic',     icon:'🗝️', name:'Digitaler Dietrich',  kind:'active',  desc:'Nächster Raub +30% Erfolgschance', cooldownH:8, effect:{type:'robboost', bonus:0.30}},
+  {id:'i_overclock', rarity:'epic',     icon:'🔥', name:'Overclock Chip',      kind:'active',  desc:'5× CPS für 2min',        cooldownH:10, effect:{type:'boost',   mult:5,   durationS:120}},
+
+  // LEGENDARY (Cash- oder Chip-Kisten, sehr selten)
+  {id:'i_aicore',    rarity:'legendary',icon:'🧠', name:'Sentient AI Core',    kind:'passive', desc:'+75% CPS',              effect:{type:'cps',     mult:1.75}},
+  {id:'i_goldenkey', rarity:'legendary',icon:'🗝️', name:'Goldener Schlüssel', kind:'passive', desc:'+50% Click Power',      effect:{type:'click',   mult:1.50}},
+  {id:'i_timewarp',  rarity:'legendary',icon:'⏳', name:'Zeitkristall',        kind:'active',  desc:'Simuliert 2h Offline-Verdienst sofort', cooldownH:24, effect:{type:'offlineburst', hours:2}},
+  {id:'i_shieldgen', rarity:'legendary',icon:'🛡️', name:'Festungs-Generator', kind:'active',  desc:'Schützt 12h vor Raub',   cooldownH:24, effect:{type:'shield',  durationS:43200}},
+
+  // MYTHIC (nur Premium-Kisten + garantiert bei Hard Reset)
+  {id:'i_singularity_core', rarity:'mythic', icon:'♾️', name:'Singularitäts-Kern',  kind:'passive', desc:'+200% CPS, +100% Click', effect:{type:'multi', cps:3.0, click:2.0}},
+  {id:'i_voidkey',          rarity:'mythic', icon:'🌌', name:'Schlüssel zur Leere', kind:'active',  desc:'10× CPS für 5min',       cooldownH:24, effect:{type:'boost', mult:10, durationS:300}},
+  {id:'i_genesis',          rarity:'mythic', icon:'🌟', name:'Genesis-Fragment',    kind:'passive', desc:'+15% Quantum-Chip-Gewinn', effect:{type:'chipgain', mult:1.15}},
+];
+
+// Lootbox definitions: which rarities drop, at what weights, and the price/currency.
+const LOOTBOXES_DEF = [
+  {id:'box_common', name:'Standard-Kiste',  icon:'📦', currency:'cash',  cost:1e6,
+    weights:{common:60, rare:30, epic:9, legendary:1, mythic:0}},
+  {id:'box_rare',   name:'Verstärkte Kiste', icon:'🎁', currency:'cash',  cost:5e8,
+    weights:{common:30, rare:45, epic:20, legendary:5, mythic:0}},
+  {id:'box_premium',name:'Premium-Kiste',   icon:'💎', currency:'chips', cost:25,
+    weights:{common:5,  rare:20, epic:40, legendary:30, mythic:5}},
+  {id:'box_mythic', name:'Mythische Kiste', icon:'🌌', currency:'chips', cost:150,
+    weights:{common:0,  rare:0,  epic:25, legendary:50, mythic:25}},
 ];
 
 /* ============================================================
@@ -1018,6 +1165,13 @@ let G = {
   offlineEfficiency: 0.5,
   redeemedCodes: [],
   giftsSent: 0, successfulRobs: 0, profitableInvestments: 0, totalInvested: 0,
+  hardResetCount: 0,
+  itemsSold: 0,
+  items: {}, // itemId -> count owned (new lootbox item system)
+  itemCooldowns: {}, // itemId -> timestamp when usable again
+  activeItemBoost: null, // {itemId, mult, expiresAt}
+  activeShield: null, // {itemId, expiresAt}
+  pendingRobBoost: 0, // temporary success-chance bonus from i_lockpick
 };
 
 BUSINESSES_DEF.forEach(b => { G.businesses[b.id] = {level:0, autoEnabled:false, progress:0}; });
@@ -1055,6 +1209,8 @@ const SAVE = {
         offlineEfficiency:G.offlineEfficiency, redeemedCodes:G.redeemedCodes,
         giftsSent:G.giftsSent, successfulRobs:G.successfulRobs,
         profitableInvestments:G.profitableInvestments, totalInvested:G.totalInvested,
+        hardResetCount:G.hardResetCount, items:G.items, itemsSold:G.itemsSold,
+        itemCooldowns:G.itemCooldowns, activeItemBoost:G.activeItemBoost, activeShield:G.activeShield,
       };
       localStorage.setItem(this.KEY, JSON.stringify(d));
     } catch(e) {}
@@ -1479,6 +1635,15 @@ const UI = {
       ['Chip Multiplier',   G.chipMultiplier.toFixed(2)+'×'],
       ['Chips Earned',      fmt(G.totalChipsEarned)+' 💎'],
     ].map(([l,v])=>`<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-value">${v}</span></div>`).join('');
+
+    // Hard prestige
+    const hardPct=Math.min(100, (G.totalCashEarned/BALANCE.hardPrestigeRequirement)*100);
+    const hardBtn=document.getElementById('hard-prestige-btn');
+    const hardStatus=document.getElementById('hard-prestige-status');
+    const hardReady=G.totalCashEarned>=BALANCE.hardPrestigeRequirement;
+    hardBtn.disabled=!hardReady;
+    hardStatus.textContent=hardReady?'Bereit für den Hard Reset!':`Fortschritt: ${hardPct.toFixed(2)}% ($${fmt(G.totalCashEarned)} / $${fmt(BALANCE.hardPrestigeRequirement)})`;
+    document.getElementById('hard-reset-count').textContent=G.hardResetCount||0;
   },
   renderStats() {
     document.getElementById('stats-list').innerHTML=[
@@ -1907,6 +2072,157 @@ const GAMBLE = {
 };
 
 /* ============================================================
+   ITEMS MODULE — Lootboxes, inventory, active abilities
+   ============================================================ */
+const ITEMS = {
+  _subtab: 'boxes',
+
+  init(){
+    document.getElementById('items-subtabs').addEventListener('click', e=>{
+      const btn=e.target.closest('.tab-btn'); if(!btn) return;
+      this._subtab = btn.dataset.itemtab;
+      document.querySelectorAll('#items-subtabs .tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      ['boxes','inventory','market'].forEach(t=>{
+        document.getElementById('itemstab-'+t).style.display = (t===this._subtab) ? '' : 'none';
+      });
+      this.renderAll();
+    });
+    document.getElementById('market-refresh-btn')?.addEventListener('click', ()=>{
+      if(window.MarketModule) window.MarketModule.refresh();
+    });
+  },
+
+  renderAll(){
+    this.renderBoxes();
+    this.renderInventory();
+    if(this._subtab==='market' && window.MarketModule) window.MarketModule.refresh();
+  },
+
+  renderBoxes(){
+    const grid=document.getElementById('lootbox-grid');
+    if(!grid) return;
+    grid.innerHTML='';
+    LOOTBOXES_DEF.forEach(box=>{
+      const have = box.currency==='cash' ? G.cash : G.quantumChips;
+      const afford = have >= box.cost;
+      const costLabel = box.currency==='cash' ? '$'+fmt(box.cost) : fmt(box.cost)+' 💎';
+      const oddsText = Object.entries(box.weights).filter(([,w])=>w>0).map(([r,w])=>`${r}: ${w}%`).join(' · ');
+      const card=document.createElement('div');
+      card.className='lootbox-card'+(box.currency==='chips'&&box.cost>=150?' mythic-box':box.currency==='chips'?' premium-box':'');
+      card.innerHTML=`
+        <div class="lootbox-icon">${box.icon}</div>
+        <div class="lootbox-name">${box.name}</div>
+        <div class="lootbox-odds">${oddsText}</div>
+        <button class="btn-openbox" data-openbox="${box.id}" ${afford?'':'disabled'}>Öffnen — ${costLabel}</button>`;
+      grid.appendChild(card);
+    });
+    grid.querySelectorAll('[data-openbox]').forEach(btn=>{
+      btn.addEventListener('click', ()=>this.openBox(btn.dataset.openbox));
+    });
+  },
+
+  openBox(boxId){
+    const box = LOOTBOXES_DEF.find(b=>b.id===boxId);
+    if(!box) return;
+    const have = box.currency==='cash' ? G.cash : G.quantumChips;
+    if(have < box.cost){ UI.toast('❌ Nicht genug Guthaben!','danger'); return; }
+    if(box.currency==='cash') G.cash -= box.cost; else G.quantumChips -= box.cost;
+
+    // Weighted rarity roll
+    const total = Object.values(box.weights).reduce((a,b)=>a+b,0);
+    let roll = Math.random()*total;
+    let chosenRarity = 'common';
+    for(const [rarity,weight] of Object.entries(box.weights)){
+      if(weight<=0) continue;
+      roll -= weight;
+      if(roll<=0){ chosenRarity = rarity; break; }
+    }
+    const pool = ITEMS_DEF.filter(i=>i.rarity===chosenRarity);
+    const item = pool[Math.floor(Math.random()*pool.length)] || ITEMS_DEF[0];
+
+    G.items[item.id] = (G.items[item.id]||0) + 1;
+    AUDIO.lootbox();
+    this.showBoxRevealModal(item);
+    GAME.checkAchievements();
+    this.renderAll();
+    UI.updateResources();
+  },
+
+  showBoxRevealModal(item){
+    const rarityColors = {common:'var(--common)',rare:'var(--rare)',epic:'var(--epic)',legendary:'var(--legendary)',mythic:'var(--mythic)'};
+    document.getElementById('modal-container').innerHTML = `
+    <div class="box-open-overlay" id="box-reveal-modal">
+      <div class="box-open-card">
+        <div class="box-open-icon">${item.icon}</div>
+        <div class="box-open-rarity" style="color:${rarityColors[item.rarity]}">${item.rarity}</div>
+        <div class="box-open-name">${item.name}</div>
+        <div class="box-open-desc">${item.desc}</div>
+        <button class="btn-collect" id="box-reveal-close">Nice!</button>
+      </div>
+    </div>`;
+    document.getElementById('box-reveal-close').onclick = ()=>UI.hideModal();
+  },
+
+  renderInventory(){
+    const grid=document.getElementById('item-inventory-grid');
+    if(!grid) return;
+    grid.innerHTML='';
+    const owned = ITEMS_DEF.filter(i=>(G.items[i.id]||0)>0);
+    if(owned.length===0){
+      grid.innerHTML='<div class="lb-loading">Noch keine Items. Öffne Kisten, um welche zu bekommen!</div>';
+      return;
+    }
+    owned.forEach(item=>{
+      const count = G.items[item.id]||0;
+      const onCooldown = (G.itemCooldowns[item.id]||0) > Date.now();
+      const cooldownMins = onCooldown ? Math.ceil((G.itemCooldowns[item.id]-Date.now())/60000) : 0;
+      const card=document.createElement('div');
+      card.className=`item-card ${item.rarity}`;
+      card.innerHTML=`
+        <div class="item-icon-big">${item.icon}</div>
+        <div class="item-name">${item.name}</div>
+        <div class="item-desc">${item.desc}</div>
+        <div class="item-count-badge">×${count}${item.kind==='passive'?' (aktiv, permanent)':''}</div>
+        ${item.kind==='active'?`<button class="btn-use-item" data-useitem="${item.id}" ${onCooldown?'disabled':''}>${onCooldown?`⏳ ${cooldownMins} Min.`:'⚡ Benutzen'}</button>`:''}
+        <button class="btn-list-item" data-listitem="${item.id}">🛒 Auf Markt anbieten</button>`;
+      grid.appendChild(card);
+    });
+    grid.querySelectorAll('[data-useitem]').forEach(btn=>{
+      btn.addEventListener('click', ()=>this.useItem(btn.dataset.useitem));
+    });
+    grid.querySelectorAll('[data-listitem]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ if(window.MarketModule) window.MarketModule.showListPrompt(btn.dataset.listitem); });
+    });
+  },
+
+  useItem(itemId){
+    const item = ITEMS_DEF.find(i=>i.id===itemId);
+    if(!item || item.kind!=='active') return;
+    if((G.items[itemId]||0)<=0) return;
+    if((G.itemCooldowns[itemId]||0) > Date.now()){ UI.toast('⏳ Noch im Cooldown!'); return; }
+
+    const eff = item.effect;
+    if(eff.type==='boost'){
+      G.activeItemBoost = { itemId, mult: eff.mult, expiresAt: Date.now()+eff.durationS*1000 };
+      UI.toast(`⚡ ${item.name} aktiviert! ${eff.mult}× CPS für ${eff.durationS}s`,'achievement');
+    } else if(eff.type==='shield'){
+      G.activeShield = { itemId, expiresAt: Date.now()+eff.durationS*1000 };
+      UI.toast(`🛡️ ${item.name} aktiviert! Schutz vor Raub für ${Math.round(eff.durationS/3600)}h`,'achievement');
+    } else if(eff.type==='robboost'){
+      G.pendingRobBoost = eff.bonus;
+      UI.toast(`🗝️ ${item.name} aktiviert! Nächster Raubzug +${Math.round(eff.bonus*100)}% Erfolgschance`,'achievement');
+    } else if(eff.type==='offlineburst'){
+      const earned = CALC.totalCps() * eff.hours * 3600 * (G.offlineEfficiency||0.5);
+      G.cash += earned; G.totalCashEarned += earned;
+      UI.toast(`⏳ ${item.name}: +$${fmt(earned)} sofort gutgeschrieben!`,'achievement');
+    }
+    G.itemCooldowns[itemId] = Date.now() + item.cooldownH*3600*1000;
+    this.renderInventory();
+    UI.updateResources();
+  },
+};
+
+/* ============================================================
    GAME LOGIC
    ============================================================ */
 const GAME = {
@@ -1921,6 +2237,7 @@ const GAME = {
     this.generateMissions();
     this.setupListeners();
     GAMBLE.initHorses();
+    ITEMS.init();
     this.render();
     if(loaded&&G.offlineEarned>0) setTimeout(()=>UI.showWelcomeBack(G.offlineEarned,G.offlineElapsed),600);
     this.startLoop();
@@ -1961,7 +2278,7 @@ const GAME = {
       const btn=e.target.closest('.tab-btn'); if(!btn) return;
       const tab=btn.dataset.tab;
       document.querySelectorAll('#center-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
-      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard','affiliate'].forEach(t=>{
+      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard','affiliate','items'].forEach(t=>{
         document.getElementById('tab-'+t).style.display=t===tab?'':'none';
       });
       if(tab==='stats')    UI.renderStats();
@@ -1971,6 +2288,7 @@ const GAME = {
       if(tab==='research') UI.renderResearch();
       if(tab==='leaderboard' && window.LeaderboardModule) window.LeaderboardModule.refresh();
       if(tab==='affiliate' && window.AffiliateModule) window.AffiliateModule.refresh();
+      if(tab==='items')     ITEMS.renderAll();
     });
 
     document.getElementById('right-tabs').addEventListener('click',e=>{
@@ -2000,6 +2318,7 @@ const GAME = {
     document.getElementById('buy-mode-1').classList.add('active');
 
     document.getElementById('prestige-btn').addEventListener('click',()=>this.doPrestige());
+    document.getElementById('hard-prestige-btn').addEventListener('click',()=>this.doHardPrestige());
 
     document.getElementById('sound-btn').addEventListener('click',()=>{
       G.soundOn=!G.soundOn;
@@ -2176,6 +2495,59 @@ const GAME = {
     });
     UI.toast(`✨ Prestige #${G.prestigeCount}! +${fmt(chips)} 💎 | Mult: ${G.prestigeMultiplier.toFixed(2)}×`,'prestige');
     this.render();
+  },
+
+  doHardPrestige() {
+    if(G.totalCashEarned < BALANCE.hardPrestigeRequirement) {
+      UI.toast(`❌ Hard Reset braucht $${fmt(BALANCE.hardPrestigeRequirement)} total verdient!`,'danger');
+      return;
+    }
+    if(!confirm('⚠️ WIRKLICH ALLES zurücksetzen? Cash, Chips, Achievements, Aktien, Skills, Items, Fraktion — ALLES geht verloren. Das kann NICHT rückgängig gemacht werden!')) return;
+
+    // --- Core resources ---
+    G.cash=0; G.totalCashEarned=0; G.traffic=0; G.totalTrafficEarned=0;
+    G.quantumChips=0; G.totalChipsEarned=0; G.researchPoints=0; G.totalRpEarned=0;
+    G.clickCount=0; G.totalClicks=0;
+    G.prestigeCount=0; G.prestigeMultiplier=1; G.clickMultiplier=1; G.chipMultiplier=1;
+    G.researchMultiplier=1; G.synergyMultiplier=1; G.autoLevelThreshold=25;
+    G.boostActive=false; G.boostTimer=0; G.boostMult=1;
+    G.giftsSent=0; G.successfulRobs=0; G.profitableInvestments=0; G.totalInvested=0;
+    G.redeemedCodes=[]; G.easterFound=false;
+    G.pendingRobBoost=0; G.activeItemBoost=null; G.activeShield=null; G.itemCooldowns={};
+
+    // --- Businesses, upgrades, research, achievements, cards ---
+    BUSINESSES_DEF.forEach(b=>{ G.businesses[b.id]={level:0,autoEnabled:false,progress:0}; });
+    UPGRADES_DEF.forEach(u=>{ G.upgrades[u.id]=false; });
+    RESEARCH_DEF.forEach(r=>{ G.research[r.id]={done:false,progress:0,active:false}; });
+    ACHIEVEMENTS_DEF.forEach(a=>{ G.achievements[a.id]=false; });
+    CARDS_DEF.forEach(c=>{ G.cards[c.id]=0; });
+    G.items={};
+
+    // --- Expansion systems (stocks, employees, skills, mergers, faction, regions) ---
+    if(typeof STOCKS_DEF!=='undefined') STOCKS_DEF.forEach(s=>{ G.stocks[s.id]={price:s.basePrice,fairValue:s.basePrice,history:[s.basePrice],trend:0,owned:0,avgCost:0,realizedPnl:0}; });
+    if(typeof EMPLOYEES_DEF!=='undefined') EMPLOYEES_DEF.forEach(e=>{ G.employees[e.id]={hired:false,level:1}; });
+    if(typeof SKILL_BRANCHES!=='undefined') SKILL_BRANCHES.forEach(b=>b.nodes.forEach(n=>{ G.skills[n.id]=0; }));
+    if(typeof MERGERS_DEF!=='undefined') MERGERS_DEF.forEach(m=>{ G.mergers[m.id]=false; });
+    G.skillPoints=0; G.totalSkillPoints=0; G.accountXp=0; G.accountLevel=1;
+    G.faction=null;
+    G.regions={r_local:true};
+
+    // --- Mission reset ---
+    G.dailyMissions=[];
+    this.generateMissions();
+
+    // --- Reward: guaranteed mythic item + permanent hard-reset star ---
+    G.hardResetCount=(G.hardResetCount||0)+1;
+    const mythicPool = ITEMS_DEF.filter(i=>i.rarity==='mythic');
+    const rewardItem = mythicPool[Math.floor(Math.random()*mythicPool.length)];
+    G.items[rewardItem.id] = (G.items[rewardItem.id]||0) + 1;
+
+    AUDIO.prestige();
+    UI.toast(`💀 HARD RESET #${G.hardResetCount}! Alles gelöscht. Du erhältst: ${rewardItem.icon} ${rewardItem.name}!`,'prestige',6000);
+    ITEMS.showBoxRevealModal(rewardItem);
+    this.render();
+    if(window.XUI) window.XUI.renderAll && window.XUI.renderAll();
+    if(window.ITEMS) window.ITEMS.renderAll();
   },
 
   collectOffline(mult) {
@@ -2366,6 +2738,10 @@ const GAME = {
       else if(a.type==='gifts')   val=G.giftsSent||0;
       else if(a.type==='robs')    val=G.successfulRobs||0;
       else if(a.type==='profinvest')val=G.profitableInvestments||0;
+      else if(a.type==='itemtypes')val=ITEMS_DEF.filter(i=>(G.items[i.id]||0)>0).length;
+      else if(a.type==='mythicitem')val=ITEMS_DEF.filter(i=>i.rarity==='mythic'&&(G.items[i.id]||0)>0).length;
+      else if(a.type==='itemssold')val=G.itemsSold||0;
+      else if(a.type==='hardreset')val=G.hardResetCount||0;
       if(val>=a.threshold) this.earnAchievement(a.id);
     });
   },
@@ -2992,7 +3368,7 @@ const XGAME = {
       const xTabs=['stocks','employees','skills','mergers','factions','regions'];
       if(!xTabs.includes(tab)) return;
       document.querySelectorAll('#center-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
-      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard','affiliate',...xTabs].forEach(t=>{
+      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard','affiliate','items',...xTabs].forEach(t=>{
         const el=document.getElementById('tab-'+t);
         if(el) el.style.display=(t===tab)?'':'none';
       });
@@ -3180,6 +3556,31 @@ const XGAME = {
    HOOK INTO EXISTING CALC (monkey-patch additively)
    ============================================================ */
 (function patchCalc(){
+  // Sum of all passive item bonuses for a given effect type
+  XCALC.itemPassiveBonus = function(type){
+    let total = 0;
+    ITEMS_DEF.forEach(item=>{
+      if(item.kind!=='passive') return;
+      const count = G.items[item.id]||0;
+      if(count<=0) return;
+      const eff = item.effect;
+      if(eff.type===type){
+        total += (eff.mult-1) * count; // stacks additively per copy owned
+      } else if(eff.type==='multi' && type==='cps' && eff.cps){
+        total += (eff.cps-1) * count;
+      } else if(eff.type==='multi' && type==='click' && eff.click){
+        total += (eff.click-1) * count;
+      }
+    });
+    return total;
+  };
+  // Active temporary boost multiplier (e.g. Energy Drink, Overclock Chip)
+  XCALC.activeBoostMult = function(){
+    if(G.activeItemBoost && G.activeItemBoost.expiresAt > Date.now()) return G.activeItemBoost.mult;
+    if(G.activeItemBoost && G.activeItemBoost.expiresAt <= Date.now()) G.activeItemBoost = null;
+    return 1;
+  };
+
   const origBusinessCps = CALC.businessCps.bind(CALC);
   CALC.businessCps = function(id){
     let cps = origBusinessCps(id);
@@ -3192,6 +3593,8 @@ const XGAME = {
     const fx = XCALC.factionEffect('cps');
     if(fx) cps *= fx.mult;
     cps *= XCALC.regionCpsMult();
+    cps *= (1 + XCALC.itemPassiveBonus('cps'));
+    cps *= XCALC.activeBoostMult();
     return cps;
   };
 
@@ -3200,6 +3603,7 @@ const XGAME = {
     let v = origClickValue();
     v *= (1 + XCALC.employeeBonus('click','global'));
     v *= (1 + XCALC.skillBonus('click'));
+    v *= (1 + XCALC.itemPassiveBonus('click'));
     return v;
   };
 
@@ -3210,6 +3614,7 @@ const XGAME = {
     t *= (1 + XCALC.skillBonus('traffic'));
     const fx = XCALC.factionEffect('traffic');
     if(fx) t *= fx.mult;
+    t *= (1 + XCALC.itemPassiveBonus('traffic'));
     return t;
   };
 
@@ -3225,7 +3630,8 @@ const XGAME = {
     let cost = origBusinessCost(id,qty);
     const costDown = XCALC.skillBonus('costdown');
     const empCostDown = XCALC.employeeBonus('cost','global');
-    cost *= Math.max(0.1, 1 - costDown - empCostDown);
+    const itemCostDown = XCALC.itemPassiveBonus('costdown') * -1; // stored as negative-style discount
+    cost *= Math.max(0.1, 1 - costDown - empCostDown - itemCostDown);
     return Math.floor(cost);
   };
 
@@ -3233,6 +3639,7 @@ const XGAME = {
   CALC.prestigeChips = function(){
     let chips = origPrestigeChips();
     chips *= (1 + XCALC.skillBonus('chipgain'));
+    chips *= (1 + XCALC.itemPassiveBonus('chipgain'));
     const fx = XCALC.factionEffect('chips');
     if(fx) chips *= fx.mult;
     let ceoBonus = 0;
@@ -3327,6 +3734,8 @@ window.UI = UI;
 window.G = G;
 window.fmt = fmt;
 window.CALC = CALC;
+window.ITEMS_DEF = ITEMS_DEF;
+window.ITEMS = ITEMS;
 
 /* ============================================================
    FIREBASE AUTH & CLOUD SAVE MODULE
@@ -3518,6 +3927,7 @@ async function pushCloudSave(force){
       prestigeCount: data.prestigeCount || 0,
       accountLevel: data.accountLevel || 1,
       cash: data.cash || 0,
+      shieldUntil: data.activeShield?.expiresAt || 0,
       updatedAt: serverTimestamp(),
     });
   } catch(e){ console.warn('Cloud save failed', e); }
@@ -3853,12 +4263,24 @@ async function doRob(target){
   if(!G){ return; }
   document.getElementById('pa-rob').disabled = true;
   try {
+    // Check victim's active shield (from i_vpnkey / i_shieldgen items) before attempting.
+    const targetLbSnap = await getDoc(doc(db, 'leaderboard', target.uid));
+    const targetShieldUntil = targetLbSnap.exists() ? (targetLbSnap.data().shieldUntil||0) : 0;
+    if(targetShieldUntil > Date.now()){
+      window.UI.toast(`🛡️ ${maskEmail(target.email)} ist aktuell durch ein Schutz-Item geschützt!`, 'danger');
+      document.getElementById('pa-rob').disabled = false;
+      window.UI.hideModal();
+      return;
+    }
+
     // Determine success chance: based on relative account level (lower victim level = easier)
     const myLevel = G.accountLevel || 1;
     const targetLevel = target.accountLevel || 1;
     const levelRatio = myLevel / Math.max(targetLevel, 1);
-    const successChance = Math.min(0.75, Math.max(0.15, 0.45 * levelRatio));
+    const itemBoost = G.pendingRobBoost || 0;
+    const successChance = Math.min(0.9, Math.max(0.15, 0.45 * levelRatio) + itemBoost);
     const success = Math.random() < successChance;
+    if(itemBoost > 0) G.pendingRobBoost = 0; // one-time use
 
     robCooldowns[target.uid] = Date.now() + ROB_COOLDOWN_MS;
 
@@ -4003,7 +4425,13 @@ async function renderInbox(items, maturedInvestments){
       if(!item) return;
       if(item.type === 'gift'){
         const G = getGState();
-        if(G){ G.cash += item.amount; G.totalCashEarned += item.amount; }
+        if(G){
+          G.cash += item.amount; G.totalCashEarned += item.amount;
+          if(item.fromEmail && item.fromEmail.startsWith('Marktplatz-Verkauf')){
+            G.itemsSold = (G.itemsSold||0) + 1;
+            if(window.GAME?.checkAchievements) window.GAME.checkAchievements();
+          }
+        }
         window.UI.toast(`💰 $${window.fmt(item.amount)} abgeholt!`);
       }
       await deleteDoc(item.ref);
@@ -4270,6 +4698,182 @@ setInterval(() => {
     renderAffiliateTab();
   }
 }, 30000);
+
+/* ============================================================
+   P2P MARKETPLACE — trade items between players
+   ============================================================ */
+async function renderMarketSellRow(){
+  const row = document.getElementById('market-sell-row');
+  if(!row) return;
+  if(!currentUser){
+    row.innerHTML = '<div class="lb-loading">Melde dich an, um Items zu verkaufen.</div>';
+    return;
+  }
+  const G = getGState();
+  if(!G){ row.innerHTML=''; return; }
+  const ITEMS_DEF_REF = window.ITEMS_DEF;
+  if(!ITEMS_DEF_REF){ row.innerHTML=''; return; }
+
+  const owned = ITEMS_DEF_REF.filter(i => (G.items[i.id]||0) > 0);
+  if(owned.length === 0){
+    row.innerHTML = '<div class="lb-loading">Du besitzt keine Items zum Verkaufen. Öffne Kisten im Items-Tab!</div>';
+    return;
+  }
+  row.innerHTML = `
+    <select class="market-select" id="market-sell-item">
+      ${owned.map(i => `<option value="${i.id}">${i.icon} ${i.name} (×${G.items[i.id]})</option>`).join('')}
+    </select>
+    <div class="slots-bet-row">
+      <input class="bet-input" id="market-sell-price" type="text" placeholder="Preis in $">
+      <button class="btn-spin" id="market-sell-submit">Anbieten</button>
+    </div>`;
+  document.getElementById('market-sell-submit').onclick = async () => {
+    const itemId = document.getElementById('market-sell-item').value;
+    const price = parseFloat(document.getElementById('market-sell-price').value);
+    if(!price || price <= 0){ window.UI.toast('❌ Bitte einen gültigen Preis eingeben.', 'danger'); return; }
+    const G2 = getGState();
+    if(!G2 || (G2.items[itemId]||0) <= 0){ window.UI.toast('❌ Item nicht mehr verfügbar.', 'danger'); return; }
+    try {
+      G2.items[itemId]--; // remove from inventory immediately (escrow-style)
+      await addDoc(collection(db, 'marketListings'), {
+        sellerUid: currentUser.uid,
+        sellerEmail: currentUser.email,
+        itemId,
+        price,
+        createdAt: serverTimestamp(),
+        status: 'active',
+      });
+      window.UI.toast('🛒 Item auf den Markt gestellt!', 'achievement');
+      window.UI.hideModal();
+      if(window.ITEMS) window.ITEMS.renderAll();
+      window.MarketModule.refresh();
+      pushCloudSave();
+    } catch(e){
+      console.warn('Listing failed', e);
+      G2.items[itemId] = (G2.items[itemId]||0) + 1; // rollback
+      window.UI.toast('❌ Angebot konnte nicht erstellt werden.', 'danger');
+    }
+  };
+}
+
+async function fetchMarketListings(){
+  const list = document.getElementById('market-listing-list');
+  if(!list) return;
+  if(!currentUser){
+    list.innerHTML = '<div class="lb-loading">Melde dich an, um den Marktplatz zu nutzen.</div>';
+    return;
+  }
+  list.innerHTML = '<div class="lb-loading">Lade Angebote…</div>';
+  try {
+    const q = query(collection(db, 'marketListings'), where('status', '==', 'active'), orderBy('createdAt', 'desc'), limit(50));
+    const snap = await getDocs(q);
+    const listings = [];
+    snap.forEach(d => listings.push({ id: d.id, ...d.data() }));
+
+    if(listings.length === 0){
+      list.innerHTML = '<div class="lb-loading">Keine aktiven Angebote. Sei der Erste!</div>';
+      return;
+    }
+    const ITEMS_DEF_REF = window.ITEMS_DEF || [];
+    list.innerHTML = listings.map(l => {
+      const itemDef = ITEMS_DEF_REF.find(i => i.id === l.itemId);
+      const isMine = l.sellerUid === currentUser.uid;
+      return `<div class="market-listing-card${isMine?' mine':''}">
+        <div class="ml-icon">${itemDef?.icon || '❓'}</div>
+        <div class="ml-info">
+          <div class="ml-name">${itemDef?.name || l.itemId}${isMine?' (Dein Angebot)':''}</div>
+          <div class="ml-seller">Verkäufer: ${maskEmail(l.sellerEmail)}</div>
+        </div>
+        <div class="ml-price">$${window.fmt(l.price)}</div>
+        ${isMine
+          ? `<button class="btn-cancel-listing" data-cancel="${l.id}" data-item="${l.itemId}">Zurückziehen</button>`
+          : `<button class="btn-buy-listing" data-buy="${l.id}" data-item="${l.itemId}" data-price="${l.price}" data-seller="${l.sellerUid}">Kaufen</button>`}
+      </div>`;
+    }).join('');
+
+    list.querySelectorAll('[data-buy]').forEach(btn => {
+      btn.addEventListener('click', () => buyListing(btn.dataset.buy, btn.dataset.item, parseFloat(btn.dataset.price), btn.dataset.seller));
+    });
+    list.querySelectorAll('[data-cancel]').forEach(btn => {
+      btn.addEventListener('click', () => cancelListing(btn.dataset.cancel, btn.dataset.item));
+    });
+  } catch(e){
+    console.warn('Market fetch failed', e);
+    list.innerHTML = '<div class="lb-loading">Marktplatz konnte nicht geladen werden.</div>';
+  }
+}
+
+async function buyListing(listingId, itemId, price, sellerUid){
+  const G = getGState();
+  if(!G){ return; }
+  if(G.cash < price){ window.UI.toast('❌ Nicht genug Cash!', 'danger'); return; }
+  try {
+    // Use a transaction to atomically claim the listing — prevents two buyers
+    // from both purchasing the same item if they click at the same time.
+    await runTransaction(db, async (tx) => {
+      const listingRef = doc(db, 'marketListings', listingId);
+      const snap = await tx.get(listingRef);
+      if(!snap.exists() || snap.data().status !== 'active'){
+        throw new Error('Dieses Angebot ist nicht mehr verfügbar.');
+      }
+      tx.update(listingRef, { status: 'sold', buyerUid: currentUser.uid, soldAt: serverTimestamp() });
+    });
+
+    G.cash -= price;
+    G.items[itemId] = (G.items[itemId]||0) + 1;
+
+    // Deliver proceeds to the seller via their inbox (same pattern as gifts).
+    await addDoc(collection(db, 'inbox', sellerUid, 'items'), {
+      type: 'gift',
+      amount: price,
+      fromEmail: `Marktplatz-Verkauf (${currentUser.email})`,
+      createdAt: serverTimestamp(),
+      read: false,
+    });
+
+    window.UI.toast(`🛒 Item gekauft für $${window.fmt(price)}!`, 'achievement');
+    if(window.ITEMS) window.ITEMS.renderAll();
+    window.MarketModule.refresh();
+    pushCloudSave();
+  } catch(e){
+    console.warn('Purchase failed', e);
+    window.UI.toast('❌ ' + (e.message || 'Kauf fehlgeschlagen.'), 'danger');
+    window.MarketModule.refresh();
+  }
+}
+
+async function cancelListing(listingId, itemId){
+  const G = getGState();
+  if(!G){ return; }
+  try {
+    await setDoc(doc(db, 'marketListings', listingId), { status: 'cancelled' }, { merge: true });
+    G.items[itemId] = (G.items[itemId]||0) + 1; // return item to inventory
+    window.UI.toast('↩️ Angebot zurückgezogen.');
+    if(window.ITEMS) window.ITEMS.renderAll();
+    window.MarketModule.refresh();
+    pushCloudSave();
+  } catch(e){
+    console.warn('Cancel failed', e);
+    window.UI.toast('❌ Konnte nicht zurückgezogen werden.', 'danger');
+  }
+}
+
+function showListPromptFromInventory(itemId){
+  // Switch to the market sub-tab and pre-select the item for convenience.
+  document.querySelector('[data-itemtab="market"]')?.click();
+  setTimeout(() => {
+    const sel = document.getElementById('market-sell-item');
+    if(sel) sel.value = itemId;
+  }, 100);
+}
+
+window.MarketModule = {
+  refresh(){
+    renderMarketSellRow();
+    fetchMarketListings();
+  },
+  showListPrompt: showListPromptFromInventory,
+};
 
 // Auto-fill affiliate code from ?ref=CODE URL parameter and switch to register tab.
 // Runs last, after all auth listeners above are registered, so the click() works correctly.
