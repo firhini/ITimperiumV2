@@ -718,7 +718,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     <div id="prestige-section">
       <div class="prestige-card">
         <div class="prestige-title">✨ Digital Reset</div>
-        <div class="prestige-desc">Reset your empire for permanent power.<br>Businesses, cash &amp; upgrades reset. Chips &amp; research stay.<br><strong style="color:var(--neon-gold)">Requires $1 Quadrillion total earned.</strong></div>
+        <div class="prestige-desc">Reset your empire for permanent power.<br>Businesses, cash &amp; upgrades reset. Chips &amp; research stay.<br><strong style="color:var(--neon-gold)">Requires $1.8 Quintillion total earned.</strong></div>
         <div class="prestige-reward" id="prestige-chips-gain">You'll gain: 0 💎</div>
         <button class="btn-prestige" id="prestige-btn">RESET &amp; ASCEND</button>
       </div>
@@ -736,7 +736,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
           Prestige-Multiplikatoren. Du beginnst zu 100% von Null.<br><br>
           Im Gegenzug erhältst du garantiert ein <strong style="color:var(--mythic)">Mythic-Item</strong>
           und einen permanenten <strong style="color:var(--neon-gold)">Hard-Reset-Stern</strong> für jeden Durchlauf — sichtbar im Profil.<br><br>
-          <strong style="color:var(--neon-gold)">Erfordert $1 Sextillion total verdient.</strong>
+          <strong style="color:var(--neon-gold)">Erfordert $1.8 Septillion total verdient.</strong>
         </div>
         <div class="prestige-reward" id="hard-prestige-status">Fortschritt: 0%</div>
         <button class="btn-prestige hard-prestige-btn" id="hard-prestige-btn">💀 HARD RESET</button>
@@ -819,15 +819,15 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
    ============================================================ */
 const BALANCE = {
   clickBase: 1,
-  prestigeRequirement: 1e15,   // $1 Quadrillion — much harder
-  hardPrestigeRequirement: 1e21, // $1 Sextillion — true endgame reset
+  prestigeRequirement: 1.8e18,   // raised again — moderately harder on top of the previous pass
+  hardPrestigeRequirement: 1.8e24, // scaled proportionally
   offlineMax: 12 * 3600,
   saveInterval: 10000,
   eventMinInterval: 4 * 60000,
   eventMaxInterval: 12 * 60000,
-  costScale: 1.18,             // steeper cost scaling than before
+  costScale: 1.227,             // raised from 1.22 — compounds to roughly 1.7-1.8x slower overall
   rpPerTraffic: 0.001,
-  chipFormula: (earned) => Math.floor(Math.pow(earned / 1e12, 0.6) * 3),
+  chipFormula: (earned) => Math.floor(Math.pow(earned / 1.8e15, 0.55) * 3), // rescaled to match new threshold
 };
 
 const RANKS = [
@@ -2474,7 +2474,9 @@ const GAME = {
     const chips=CALC.prestigeChips();
     G.quantumChips+=chips; G.totalChipsEarned+=chips;
     G.prestigeCount++;
-    G.prestigeMultiplier=1+(G.prestigeCount*0.75);
+    // Diminishing returns: each prestige adds less than the last (square-root growth instead of linear),
+    // so the multiplier can't spiral into the trillions after a handful of resets.
+    G.prestigeMultiplier=1+Math.sqrt(G.prestigeCount)*0.5;
 
     PRESTIGE_MILESTONES.forEach(m=>{
       if(G.prestigeCount===m.count&&m.chipBonus) {
@@ -2483,9 +2485,25 @@ const GAME = {
       }
     });
 
+    // --- Core reset (unchanged) ---
     G.cash=0; G.traffic=0; G.totalCashEarned=0; G.researchPoints=0;
     BUSINESSES_DEF.forEach(b=>{ G.businesses[b.id]={level:0,autoEnabled:false,progress:0}; });
     UPGRADES_DEF.forEach(u=>{ G.upgrades[u.id]=false; });
+
+    // --- Fix: these were NOT being reset before, causing runaway multiplier stacking ---
+    // Stock portfolio: sell everything, no carry-over value or realized P&L across resets.
+    if(typeof STOCKS_DEF!=='undefined') STOCKS_DEF.forEach(s=>{
+      G.stocks[s.id]={price:s.basePrice,fairValue:s.basePrice,history:[s.basePrice],trend:0,owned:0,avgCost:0,realizedPnl:0};
+    });
+    // Employees: must be re-hired and re-trained each prestige.
+    if(typeof EMPLOYEES_DEF!=='undefined') EMPLOYEES_DEF.forEach(e=>{ G.employees[e.id]={hired:false,level:1}; });
+    // Company mergers: must be re-formed each prestige (they require business levels, which just reset anyway).
+    if(typeof MERGERS_DEF!=='undefined') MERGERS_DEF.forEach(m=>{ G.mergers[m.id]=false; });
+    // Active item effects/cooldowns clear (a fresh run shouldn't start mid-boost).
+    G.activeItemBoost=null; G.pendingRobBoost=0;
+    // NOTE: Skills, Faction, and World Regions are intentionally KEPT — they're meant to be
+    // permanent meta-progression paid for with Skill Points / one-time Cash, not part of the
+    // per-run economy snowball. Quantum Chips, Research, Cards, Items, and Achievements also persist.
 
     this._applyPrestigeMilestones();
     AUDIO.prestige();
@@ -2495,6 +2513,8 @@ const GAME = {
     });
     UI.toast(`✨ Prestige #${G.prestigeCount}! +${fmt(chips)} 💎 | Mult: ${G.prestigeMultiplier.toFixed(2)}×`,'prestige');
     this.render();
+    if(window.XUI) window.XUI.renderAll();
+    if(window.ITEMS) window.ITEMS.renderAll();
   },
 
   doHardPrestige() {
@@ -3514,17 +3534,27 @@ const XGAME = {
         const growthAnchor = s.basePrice * (1 + s.drift * (G.playtime||0) * 0.1);
         h.fairValue += (growthAnchor - h.fairValue) * 0.0008 * dt * 60;
       }
+      // Hard ceiling on fair value itself: a stock can never be "worth" more than 5x its base
+      // price from organic drift alone. News events can temporarily push beyond this, but the
+      // anchor above will always pull it back down once the news expires.
+      h.fairValue = Math.min(h.fairValue, s.basePrice * 5);
+
       // Trend = short-term momentum (mean-reverting random walk, clamped)
       const stockGainSkill=XCALC.skillBonus('stockgain');
       const shock = (Math.random()-0.5) * s.volatility * (1+stockGainSkill*0.3);
       h.trend = h.trend*0.9 + shock*0.1; // smooth momentum
       h.trend = Math.max(-s.volatility*1.5, Math.min(s.volatility*1.5, h.trend));
 
-      // Price moves toward fairValue (mean reversion) PLUS momentum, but capped per-tick
+      // Price moves toward fairValue (mean reversion) PLUS momentum.
+      // Cap is expressed as "max % change per real second" — NOT per animation frame — so a lag
+      // spike or large dt (e.g. returning from a backgrounded tab) can't compound into a runaway price.
       const pullToFair = (h.fairValue - h.price) * 0.015;
-      const rawChange = (pullToFair/Math.max(h.price,0.01)) + h.trend*dt*2;
-      const cappedChange = Math.max(-0.04, Math.min(0.04, rawChange)); // hard cap: max ±4% per tick-batch
-      h.price = Math.max(0.5, h.price * (1 + cappedChange*dt*10));
+      const changePerSecond = (pullToFair/Math.max(h.price,0.01)) + h.trend*2;
+      const MAX_CHANGE_PER_SECOND = 0.006; // ≈0.6%/s → roughly ±2% per realistic 3-4s render batch
+      const cappedChangePerSecond = Math.max(-MAX_CHANGE_PER_SECOND, Math.min(MAX_CHANGE_PER_SECOND, changePerSecond));
+      h.price = h.price * (1 + cappedChangePerSecond * Math.min(dt, 1)); // also clamp dt itself defensively
+      // Absolute band: price can never wander more than 8x away from base price in either direction.
+      h.price = Math.max(s.basePrice * 0.15, Math.min(s.basePrice * 8, h.price));
 
       if(Math.random()<dt*2){
         h.history.push(h.price);
@@ -3946,11 +3976,46 @@ async function pullCloudSave(){
 }
 
 /* ---- Auth state listener: drives the whole startup flow ---- */
+const LOCAL_RESET_MARKER_KEY = 'ie_v2_last_global_reset'; // survives even a full localStorage.removeItem('ie_v2')
+
+async function checkGlobalForceReset(){
+  try {
+    const cfgSnap = await getDoc(doc(db, 'config', 'globalReset'));
+    if(!cfgSnap.exists()) return;
+    const resetAtMs = cfgSnap.data().resetAt?.toMillis ? cfgSnap.data().resetAt.toMillis() : 0;
+    if(!resetAtMs) return;
+
+    const lastAppliedMs = parseInt(localStorage.getItem(LOCAL_RESET_MARKER_KEY) || '0', 10);
+    if(resetAtMs > lastAppliedMs){
+      // Wipe local save completely
+      localStorage.removeItem('ie_v2');
+      // Wipe this user's cloud save + public leaderboard entry too, so a stale
+      // cloud copy can't repopulate localStorage on a future login.
+      if(currentUser){
+        try { await deleteDoc(doc(db, 'saves', currentUser.uid)); } catch(e){}
+        try { await deleteDoc(doc(db, 'leaderboard', currentUser.uid)); } catch(e){}
+      }
+      localStorage.setItem(LOCAL_RESET_MARKER_KEY, String(resetAtMs));
+      console.log('Global reset applied — local and cloud save wiped.');
+    }
+  } catch(e){
+    console.warn('Global reset check failed (this is fine if config/globalReset was never created)', e);
+  }
+}
+
 onAuthStateChanged(auth, async (user) => {
   if(user){
     currentUser = user;
     isGuestMode = false;
     updateUserBadge();
+
+    // --- Global force-reset check ---
+    // An admin can wipe EVERY player's progress (even though it's stored locally in
+    // each browser's localStorage) by writing a newer timestamp into config/globalReset.
+    // Every client compares that timestamp against the last reset it already applied
+    // (stored under a separate localStorage key that survives a save wipe) and, if the
+    // server-side reset is newer, force-clears local + cloud save before doing anything else.
+    await checkGlobalForceReset();
 
     // Pull cloud save and compare with local save; use whichever is more advanced (by totalCashEarned)
     const localRaw = localStorage.getItem('ie_v2');
