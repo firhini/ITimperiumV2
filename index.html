@@ -241,6 +241,18 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .btn-collect:hover{opacity:.9}
 .btn-collect.secondary{background:rgba(255,215,0,.12);border:1px solid var(--neon-gold);color:var(--neon-gold)}
 
+/* TUTORIAL */
+.tutorial-box{max-width:420px}
+.tutorial-icon{font-size:42px;margin-bottom:10px}
+.tutorial-dots{display:flex;justify-content:center;gap:6px;margin:14px 0}
+.tutorial-dot{width:7px;height:7px;border-radius:50%;background:var(--border)}
+.tutorial-dot.active{background:var(--neon-blue);width:18px;border-radius:4px;transition:all .2s}
+.tutorial-nav{display:flex;gap:8px;margin-top:6px}
+.tutorial-nav .btn-collect{margin-bottom:0}
+.tutorial-skip{display:block;text-align:center;font-size:11px;color:var(--text-muted);margin-top:12px;cursor:pointer;text-decoration:underline}
+.tutorial-skip:hover{color:var(--neon-blue)}
+.btn-help{width:32px;height:32px}
+
 .float-num{position:fixed;font-weight:800;font-size:15px;color:var(--neon-green);pointer-events:none;z-index:999;animation:floatUp 1.2s ease forwards;text-shadow:0 0 10px currentColor}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}70%{opacity:1;transform:translateY(-55px) scale(1.1)}100%{opacity:0;transform:translateY(-85px) scale(.8)}}
 
@@ -297,6 +309,19 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .auth-loading{text-align:center;color:var(--text-muted);font-size:13px;padding:30px 0}
 #user-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);padding:4px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;cursor:pointer}
 #user-badge:hover{border-color:var(--neon-blue)}
+
+/* PROFILE CHIPS (reused everywhere a player is shown) */
+.profile-chip{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+.profile-chip:hover .profile-chip-name{text-decoration:underline}
+.profile-chip-name{font-weight:700}
+.profile-chip-flair{font-size:13px}
+.avatar-preset-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0}
+.avatar-preset-btn{font-size:22px;padding:6px;border-radius:var(--radius-sm);border:2px solid var(--border);background:var(--bg-card)}
+.avatar-preset-btn.selected{border-color:var(--neon-blue)}
+.flair-select-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.flair-pill{padding:5px 10px;border-radius:14px;font-size:11px;font-weight:700;border:1px solid var(--border);background:var(--bg-card);color:var(--text-main)}
+.flair-pill.selected{border-color:var(--neon-gold);color:var(--neon-gold);background:rgba(255,215,0,.1)}
+.flair-pill.locked{opacity:.6;color:var(--text-muted)}
 
 /* LEADERBOARD */
 .leaderboard-list{padding:10px;display:flex;flex-direction:column;gap:6px}
@@ -378,14 +403,58 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .btn-openbox{width:100%;padding:10px;border-radius:var(--radius-md);background:linear-gradient(90deg,var(--neon-blue),var(--neon-purple));color:white;font-weight:700;font-size:12px}
 .btn-openbox:disabled{opacity:.3;cursor:not-allowed;background:var(--bg-hover);color:var(--text-muted)}
 
-.box-open-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:300}
-.box-open-card{background:var(--bg-panel);border-radius:var(--radius-lg);padding:30px;text-align:center;animation:boxReveal .5s ease}
-@keyframes boxReveal{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.box-open-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:300}
+.box-open-card{background:var(--bg-panel);border-radius:var(--radius-lg);padding:24px;text-align:center;animation:boxReveal .4s ease;max-width:480px;width:94%}
+@keyframes boxReveal{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 .box-open-icon{font-size:64px;margin-bottom:12px;animation:boxIconPulse 1s ease infinite}
 @keyframes boxIconPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 .box-open-rarity{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
 .box-open-name{font-size:18px;font-weight:800;margin-bottom:6px}
 .box-open-desc{font-size:12px;color:var(--text-muted);margin-bottom:18px}
+
+/* SLOT-REEL OPENING ANIMATION (PackDraw-style) */
+.reel-viewport{position:relative;width:100%;height:110px;overflow:hidden;background:var(--bg-deep);border-radius:var(--radius-md);margin-bottom:16px;border:2px solid var(--border)}
+.reel-viewport::before,.reel-viewport::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:5;pointer-events:none}
+.reel-viewport::before{left:0;background:linear-gradient(90deg,var(--bg-panel),transparent)}
+.reel-viewport::after{right:0;background:linear-gradient(270deg,var(--bg-panel),transparent)}
+.reel-pointer{position:absolute;left:50%;top:0;bottom:0;width:3px;background:var(--neon-gold);z-index:6;box-shadow:0 0 12px var(--neon-gold);transform:translateX(-50%)}
+.reel-pointer::before,.reel-pointer::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border-style:solid}
+.reel-pointer::before{top:0;border-width:8px 6px 0 6px;border-color:var(--neon-gold) transparent transparent transparent}
+.reel-pointer::after{bottom:0;border-width:0 6px 8px 6px;border-color:transparent transparent var(--neon-gold) transparent}
+.reel-track{display:flex;position:absolute;top:0;left:0;height:100%;align-items:center;will-change:transform}
+.reel-item{width:96px;height:96px;flex-shrink:0;margin:0 4px;border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;border:2px solid var(--border);background:var(--bg-card)}
+.reel-item.common{border-color:var(--common)}
+.reel-item.rare{border-color:var(--rare)}
+.reel-item.epic{border-color:var(--epic)}
+.reel-item.legendary{border-color:var(--legendary);box-shadow:0 0 10px rgba(255,170,0,.3)}
+.reel-item.mythic{border-color:var(--mythic);box-shadow:0 0 14px rgba(255,68,170,.4)}
+.reel-item.exotic{border-color:#ff2a2a;box-shadow:0 0 18px rgba(255,42,42,.6)}
+.reel-landed{animation:reelLandFlash .6s ease}
+@keyframes reelLandFlash{0%{box-shadow:0 0 40px currentColor}100%{box-shadow:0 0 14px currentColor}}
+
+/* EXOTIC rarity styling everywhere */
+.card-rarity.exotic,.item-card.exotic .item-name{color:#ff2a2a}
+.item-card.exotic{border-color:#ff2a2a;box-shadow:0 0 20px rgba(255,42,42,.35);animation:exoticPulse 1.5s infinite}
+@keyframes exoticPulse{0%,100%{box-shadow:0 0 14px rgba(255,42,42,.3)}50%{box-shadow:0 0 28px rgba(255,42,42,.6)}}
+
+/* LOOTBOX BROWSER (categories + odds tables) */
+.box-category-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px 0}
+.box-cat-btn{padding:6px 12px;border-radius:16px;font-size:11px;font-weight:700;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted)}
+.box-cat-btn.active{border-color:var(--neon-blue);color:var(--neon-blue);background:rgba(0,200,255,.08)}
+.box-odds-toggle{display:flex;justify-content:flex-end;padding:6px 12px}
+.btn-odds{font-size:10px;padding:5px 10px;border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted)}
+.btn-odds:hover{border-color:var(--neon-gold);color:var(--neon-gold)}
+.odds-table-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:300;padding:20px}
+.odds-table-box{background:var(--bg-panel);border-radius:var(--radius-lg);padding:20px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto}
+.odds-table-title{font-size:15px;font-weight:800;margin-bottom:4px}
+.odds-table-sub{font-size:11px;color:var(--text-muted);margin-bottom:14px}
+.odds-rarity-group{margin-bottom:10px}
+.odds-rarity-header{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:6px}
+.odds-item-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11px}
+.odds-item-icon{font-size:16px;width:22px;text-align:center}
+.odds-item-name{flex:1}
+.odds-item-pct{color:var(--text-muted);font-variant-numeric:tabular-nums}
+.box-risk-note{font-size:9px;color:var(--neon-gold);margin-top:4px;font-style:italic}
 
 .item-inventory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:12px}
 .item-card{background:var(--bg-card);border-radius:var(--radius-md);padding:12px;text-align:center;border:1px solid var(--border)}
@@ -415,6 +484,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .btn-buy-listing{padding:6px 14px;border-radius:var(--radius-sm);background:var(--neon-green);color:#000;font-size:11px;font-weight:700}
 .btn-cancel-listing{padding:6px 14px;border-radius:var(--radius-sm);background:var(--danger);color:#fff;font-size:11px;font-weight:700}
 .market-select{background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;color:var(--text-main);font-size:12px;font-family:inherit}
+.expansion-page,.community-page{padding-bottom:4px}
 </style>
 </head>
 <body>
@@ -453,6 +523,8 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
   </div>
   <div class="header-btns">
     <div id="user-badge" title="Klicken um dich abzumelden">👤 Gast</div>
+    <button class="icon-btn" id="profile-btn" title="Mein Profil">🪪</button>
+    <button class="icon-btn btn-help" id="help-btn" title="Tutorial / Hilfe">❓</button>
     <button class="icon-btn" id="promo-btn" title="Promo Code">🎁</button>
     <button class="icon-btn" id="sound-btn" title="Sound">🔊</button>
     <button class="icon-btn" id="save-btn" title="Save">💾</button>
@@ -482,8 +554,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     <button class="tab-btn" data-tab="gambling">🎰 Casino</button>
     <button class="tab-btn" data-tab="prestige">✨ Prestige</button>
     <button class="tab-btn" data-tab="stats">📊 Stats</button>
-    <button class="tab-btn" data-tab="leaderboard">🌍 Leaderboard</button>
-    <button class="tab-btn" data-tab="affiliate">🔗 Affiliate</button>
+    <button class="tab-btn" data-tab="community">🌍 Community</button>
   </nav>
 
   <div id="tab-click">
@@ -533,6 +604,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
       <button class="tab-btn" data-itemtab="market">🛒 Marktplatz</button>
     </div>
     <div id="itemstab-boxes">
+      <div class="box-category-tabs" id="box-category-tabs"></div>
       <div class="lootbox-grid" id="lootbox-grid"></div>
     </div>
     <div id="itemstab-inventory" style="display:none">
@@ -551,8 +623,16 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
   </div>
 
   <div id="tab-gambling" style="display:none">
+    <div class="tab-nav" id="casino-subtabs" style="border-top:none">
+      <button class="tab-btn active" data-casinotab="slots">🎰 Slots</button>
+      <button class="tab-btn" data-casinotab="coin">🪙 Münzwurf</button>
+      <button class="tab-btn" data-casinotab="roulette">🎡 Roulette</button>
+      <button class="tab-btn" data-casinotab="race">🐴 Rennen</button>
+      <button class="tab-btn" data-casinotab="crash">🚀 Crash</button>
+      <button class="tab-btn" data-casinotab="dice">🎲 Würfel</button>
+    </div>
     <div id="gambling-section">
-      <div class="gamble-panel">
+      <div class="gamble-panel casino-game" id="casinogame-slots">
         <div class="gamble-title">🎰 Crypto Slots</div>
         <div class="gamble-sub">Match symbols to win big. Jackpot = 100× your bet!</div>
         <div class="slots-machine">
@@ -583,7 +663,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
         </div>
       </div>
 
-      <div class="gamble-panel">
+      <div class="gamble-panel casino-game" id="casinogame-coin" style="display:none">
         <div class="gamble-title">🪙 Bitcoin Flip</div>
         <div class="gamble-sub">50/50 chance. Win 1.9× your bet.</div>
         <div class="coin-area">
@@ -605,7 +685,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
         </div>
       </div>
 
-      <div class="gamble-panel">
+      <div class="gamble-panel casino-game" id="casinogame-roulette" style="display:none">
         <div class="gamble-title">🎡 Digital Roulette</div>
         <div class="gamble-sub">Pick color or number. Numbers pay 35×!</div>
         <div class="roulette-area">
@@ -632,7 +712,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
         </div>
       </div>
 
-      <div class="gamble-panel">
+      <div class="gamble-panel casino-game" id="casinogame-race" style="display:none">
         <div class="gamble-title">🐴 Startup Race</div>
         <div class="gamble-sub">Bet on a startup to win. Higher odds = higher risk!</div>
         <div class="race-track" id="race-track"></div>
@@ -650,7 +730,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
         <div class="slots-result" id="race-result"></div>
       </div>
 
-      <div class="gamble-panel">
+      <div class="gamble-panel casino-game" id="casinogame-crash" style="display:none">
         <div class="gamble-title">🚀 Crypto Crash</div>
         <div class="gamble-sub">Steige aus, bevor es crasht! Je länger du wartest, desto höher der Multiplikator.</div>
         <div class="crash-area">
@@ -675,7 +755,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
         </div>
       </div>
 
-      <div class="gamble-panel">
+      <div class="gamble-panel casino-game" id="casinogame-dice" style="display:none">
         <div class="gamble-title">🎲 Würfel-Duell</div>
         <div class="gamble-sub">Wähle eine Zielzahl. Je niedriger, desto höher die Auszahlung!</div>
         <div class="dice-area">
@@ -749,39 +829,44 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
     <div id="stats-list"></div>
   </div>
 
-  <div id="tab-leaderboard" style="display:none">
-    <div class="lb-refresh-row">
-      <div class="section-title" style="padding:0">🏆 Globales Leaderboard — Top Spieler (nach Gesamtverdienst)</div>
-      <button class="lb-refresh-btn" id="lb-refresh-btn">🔄 Aktualisieren</button>
+  <div id="tab-community" style="display:none">
+    <div class="tab-nav" id="community-subtabs" style="border-top:none">
+      <button class="tab-btn active" data-communitytab="leaderboard">🌍 Leaderboard</button>
+      <button class="tab-btn" data-communitytab="affiliate">🔗 Affiliate</button>
     </div>
-    <div class="leaderboard-list" id="leaderboard-list">
-      <div class="lb-loading">Lade Leaderboard…</div>
+    <div class="community-page" id="communitypage-leaderboard">
+      <div class="lb-refresh-row">
+        <div class="section-title" style="padding:0">🏆 Globales Leaderboard — Top Spieler (nach Gesamtverdienst)</div>
+        <button class="lb-refresh-btn" id="lb-refresh-btn">🔄 Aktualisieren</button>
+      </div>
+      <div class="leaderboard-list" id="leaderboard-list">
+        <div class="lb-loading">Lade Leaderboard…</div>
+      </div>
     </div>
-  </div>
-
-  <div id="tab-affiliate" style="display:none">
-    <div class="affiliate-section">
-      <div class="affiliate-code-card">
-        <div style="font-size:12px;color:var(--text-muted)">Dein Affiliate-Code</div>
-        <div class="affiliate-code-display" id="affiliate-code-display">—</div>
-        <div class="affiliate-link-row">
-          <input class="bet-input" id="affiliate-link-input" readonly value="">
-          <button class="btn-copy" id="affiliate-copy-btn">📋 Kopieren</button>
+    <div class="community-page" id="communitypage-affiliate" style="display:none">
+      <div class="affiliate-section">
+        <div class="affiliate-code-card">
+          <div style="font-size:12px;color:var(--text-muted)">Dein Affiliate-Code</div>
+          <div class="affiliate-code-display" id="affiliate-code-display">—</div>
+          <div class="affiliate-link-row">
+            <input class="bet-input" id="affiliate-link-input" readonly value="">
+            <button class="btn-copy" id="affiliate-copy-btn">📋 Kopieren</button>
+          </div>
+          <button class="btn-change-code" id="affiliate-change-btn">✏️ Code ändern</button>
+          <div id="affiliate-referred-by"></div>
         </div>
-        <button class="btn-change-code" id="affiliate-change-btn">✏️ Code ändern</button>
-        <div id="affiliate-referred-by"></div>
-      </div>
 
-      <div class="affiliate-stat-card">
-        <div style="font-size:12px;color:var(--text-muted)">Verfügbarer Bonus (0,5% vom Verdienst deiner Mitglieder)</div>
-        <div class="affiliate-pending" id="affiliate-pending-display">$0</div>
-        <button class="btn-claim-affiliate" id="affiliate-claim-btn">💰 Bonus abholen</button>
-        <div style="font-size:10px;color:var(--text-muted);margin-top:6px" id="affiliate-claim-info"></div>
-      </div>
+        <div class="affiliate-stat-card">
+          <div style="font-size:12px;color:var(--text-muted)">Verfügbarer Bonus (0,5% vom Verdienst deiner Mitglieder)</div>
+          <div class="affiliate-pending" id="affiliate-pending-display">$0</div>
+          <button class="btn-claim-affiliate" id="affiliate-claim-btn">💰 Bonus abholen</button>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:6px" id="affiliate-claim-info"></div>
+        </div>
 
-      <div class="section-title" style="padding-left:0">Deine Mitglieder (<span id="affiliate-member-count">0</span>)</div>
-      <div class="affiliate-members-list" id="affiliate-members-list">
-        <div class="lb-loading">Melde dich an, um deine Mitglieder zu sehen.</div>
+        <div class="section-title" style="padding-left:0">Deine Mitglieder (<span id="affiliate-member-count">0</span>)</div>
+        <div class="affiliate-members-list" id="affiliate-members-list">
+          <div class="lb-loading">Melde dich an, um deine Mitglieder zu sehen.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1049,49 +1134,318 @@ const CARDS_DEF = [
    Each item is either:
    - passive: permanent stat bonus while owned (like cards, but tradeable)
    - active: triggerable ability with a cooldown
+   System: 100 handcrafted "signature" items + ~150 proceduraly generated items,
+   all created ONCE at script load (not randomly per-session) so every item has a
+   stable identity that's the same for every player and safe to trade.
    ============================================================ */
-const ITEMS_DEF = [
-  // COMMON — basic passive items
-  {id:'i_charger',   rarity:'common',   icon:'🔌', name:'Backup Charger',     kind:'passive', desc:'+5% Click Power',        effect:{type:'click',   mult:1.05}},
-  {id:'i_headset',   rarity:'common',   icon:'🎧', name:'Noise-Cancelling Headset', kind:'passive', desc:'+5% CPS',          effect:{type:'cps',     mult:1.05}},
-  {id:'i_notebook',  rarity:'common',   icon:'📓', name:'Idea Notebook',      kind:'passive', desc:'+5% Research Speed',     effect:{type:'rp',      mult:1.05}},
-  {id:'i_coffee',    rarity:'common',   icon:'☕', name:'Energy Drink',       kind:'active',  desc:'2× CPS für 60s',         cooldownH:4,  effect:{type:'boost',   mult:2,   durationS:60}},
 
-  // RARE
-  {id:'i_keyboard',  rarity:'rare',     icon:'⌨️', name:'Mechanical Keyboard', kind:'passive', desc:'+15% Click Power',      effect:{type:'click',   mult:1.15}},
-  {id:'i_router',    rarity:'rare',     icon:'📡', name:'Pro Router',          kind:'passive', desc:'+15% Traffic',          effect:{type:'traffic', mult:1.15}},
-  {id:'i_vpnkey',    rarity:'rare',     icon:'🔑', name:'VPN Master Key',      kind:'active',  desc:'Schützt 2h vor Raub',    cooldownH:12, effect:{type:'shield',  durationS:7200}},
-  {id:'i_redbull',   rarity:'rare',     icon:'🥤', name:'Triple Espresso',     kind:'active',  desc:'3× CPS für 90s',         cooldownH:6,  effect:{type:'boost',   mult:3,   durationS:90}},
+// --- Rarity tuning: base multiplier ranges and visual weight per rarity tier ---
+const RARITY_ORDER = ['common','rare','epic','legendary','mythic','exotic'];
+const RARITY_TUNING = {
+  common:    {clickMult:[1.03,1.08], cpsMult:[1.03,1.08], otherMult:[1.03,1.08], color:'var(--common)'},
+  rare:      {clickMult:[1.10,1.20], cpsMult:[1.10,1.20], otherMult:[1.10,1.20], color:'var(--rare)'},
+  epic:      {clickMult:[1.22,1.40], cpsMult:[1.22,1.40], otherMult:[1.22,1.40], color:'var(--epic)'},
+  legendary: {clickMult:[1.45,1.80], cpsMult:[1.45,1.80], otherMult:[1.45,1.80], color:'var(--legendary)'},
+  mythic:    {clickMult:[1.90,2.80], cpsMult:[1.90,2.80], otherMult:[1.90,2.80], color:'var(--mythic)'},
+  // EXOTIC: brand-new top tier above mythic — extremely rare, deliberately absurd power level,
+  // for the "real kick" jackpot moments. Only obtainable from the priciest/riskiest boxes.
+  exotic:    {clickMult:[3.50,8.00], cpsMult:[3.50,8.00], otherMult:[3.50,8.00], color:'#ff2a2a'},
+};
 
-  // EPIC
-  {id:'i_gpu',       rarity:'epic',     icon:'🎮', name:'Quantum GPU',         kind:'passive', desc:'+30% CPS',              effect:{type:'cps',     mult:1.30}},
-  {id:'i_blackcard', rarity:'epic',     icon:'💳', name:'Schwarze Kreditkarte', kind:'passive', desc:'-10% Business-Kosten', effect:{type:'costdown',mult:0.10}},
-  {id:'i_lockpick',  rarity:'epic',     icon:'🗝️', name:'Digitaler Dietrich',  kind:'active',  desc:'Nächster Raub +30% Erfolgschance', cooldownH:8, effect:{type:'robboost', bonus:0.30}},
-  {id:'i_overclock', rarity:'epic',     icon:'🔥', name:'Overclock Chip',      kind:'active',  desc:'5× CPS für 2min',        cooldownH:10, effect:{type:'boost',   mult:5,   durationS:120}},
+/* ============================================================
+   100 HANDCRAFTED ITEMS — real names, real flavor, hand-tuned effects.
+   Distribution skews toward fewer at the top, as it should:
+   common 28 · rare 26 · epic 22 · legendary 14 · mythic 8 · exotic 2
+   ============================================================ */
+const ITEMS_HANDCRAFTED = [
+  // ---- COMMON (28) ----
+  {id:'i_charger',   rarity:'common', icon:'🔌', name:'Backup Charger',       kind:'passive', desc:'+5% Click Power',        effect:{type:'click',mult:1.05}},
+  {id:'i_headset',   rarity:'common', icon:'🎧', name:'Noise-Cancelling Headset', kind:'passive', desc:'+5% CPS',           effect:{type:'cps',mult:1.05}},
+  {id:'i_notebook',  rarity:'common', icon:'📓', name:'Idea Notebook',        kind:'passive', desc:'+5% Research Speed',     effect:{type:'rp',mult:1.05}},
+  {id:'i_coffee',    rarity:'common', icon:'☕', name:'Energy Drink',         kind:'active',  desc:'2× CPS für 60s',         cooldownH:4,  effect:{type:'boost',mult:2,durationS:60}},
+  {id:'i_mousepad',  rarity:'common', icon:'🖱️', name:'RGB Mousepad',        kind:'passive', desc:'+4% Click Power',        effect:{type:'click',mult:1.04}},
+  {id:'i_webcam',    rarity:'common', icon:'📷', name:'HD Webcam',            kind:'passive', desc:'+4% Traffic',            effect:{type:'traffic',mult:1.04}},
+  {id:'i_usbhub',    rarity:'common', icon:'🔗', name:'USB-Hub',              kind:'passive', desc:'+5% CPS',                effect:{type:'cps',mult:1.05}},
+  {id:'i_mug',       rarity:'common', icon:'☕', name:'Motivational Mug',     kind:'passive', desc:'+3% Click Power',        effect:{type:'click',mult:1.03}},
+  {id:'i_stickers',  rarity:'common', icon:'🏷️', name:'Laptop-Sticker-Pack', kind:'passive', desc:'+3% CPS',                effect:{type:'cps',mult:1.03}},
+  {id:'i_lamp',      rarity:'common', icon:'💡', name:'Desk Lamp',            kind:'passive', desc:'+4% Research Speed',     effect:{type:'rp',mult:1.04}},
+  {id:'i_fan',       rarity:'common', icon:'🌀', name:'USB-Lüfter',           kind:'passive', desc:'+4% CPS',                effect:{type:'cps',mult:1.04}},
+  {id:'i_cable',     rarity:'common', icon:'🔌', name:'Verlängerungskabel',   kind:'passive', desc:'+3% Traffic',            effect:{type:'traffic',mult:1.03}},
+  {id:'i_pen',       rarity:'common', icon:'🖊️', name:'Glücksstift',         kind:'active',  desc:'1.5× CPS für 45s',       cooldownH:3,  effect:{type:'boost',mult:1.5,durationS:45}},
+  {id:'i_socks',     rarity:'common', icon:'🧦', name:'Glückssocken',         kind:'passive', desc:'+5% Click Power',        effect:{type:'click',mult:1.05}},
+  {id:'i_hoodie',    rarity:'common', icon:'👕', name:'Tech-Hoodie',          kind:'passive', desc:'+5% CPS',                effect:{type:'cps',mult:1.05}},
+  {id:'i_earbuds',   rarity:'common', icon:'🎵', name:'Wireless Earbuds',     kind:'passive', desc:'+4% Click Power',        effect:{type:'click',mult:1.04}},
+  {id:'i_phonecase', rarity:'common', icon:'📱', name:'Stoßfeste Hülle',      kind:'passive', desc:'+3% Research Speed',     effect:{type:'rp',mult:1.03}},
+  {id:'i_keychain',  rarity:'common', icon:'🔑', name:'Server-Schlüsselanhänger',kind:'passive',desc:'+3% Click Power',     effect:{type:'click',mult:1.03}},
+  {id:'i_postit',    rarity:'common', icon:'📝', name:'Post-it-Block',        kind:'passive', desc:'+4% Research Speed',     effect:{type:'rp',mult:1.04}},
+  {id:'i_powerbank', rarity:'common', icon:'🔋', name:'Powerbank',            kind:'active',  desc:'Simuliert 30 Min. Offline-Verdienst', cooldownH:6, effect:{type:'offlineburst',hours:0.5}},
+  {id:'i_sunglasses',rarity:'common', icon:'🕶️', name:'CEO-Sonnenbrille',    kind:'passive', desc:'+5% Click Power',        effect:{type:'click',mult:1.05}},
+  {id:'i_plant',     rarity:'common', icon:'🪴', name:'Büropflanze',          kind:'passive', desc:'+4% Traffic',            effect:{type:'traffic',mult:1.04}},
+  {id:'i_notebook2', rarity:'common', icon:'💻', name:'Refurbished Laptop',   kind:'passive', desc:'+5% CPS',                effect:{type:'cps',mult:1.05}},
+  {id:'i_badge',     rarity:'common', icon:'🪪', name:'Mitarbeiterausweis',   kind:'passive', desc:'+3% CPS',                effect:{type:'cps',mult:1.03}},
+  {id:'i_thermos',   rarity:'common', icon:'🧃', name:'Thermosflasche',       kind:'passive', desc:'+3% Click Power',        effect:{type:'click',mult:1.03}},
+  {id:'i_wristband', rarity:'common', icon:'⌚', name:'Fitness-Tracker',      kind:'passive', desc:'+4% Click Power',        effect:{type:'click',mult:1.04}},
+  {id:'i_speaker',   rarity:'common', icon:'🔊', name:'Bluetooth-Speaker',    kind:'passive', desc:'+4% CPS',                effect:{type:'cps',mult:1.04}},
+  {id:'i_umbrella',  rarity:'common', icon:'☂️', name:'Firmen-Regenschirm',  kind:'passive', desc:'+3% Traffic',            effect:{type:'traffic',mult:1.03}},
 
-  // LEGENDARY (Cash- oder Chip-Kisten, sehr selten)
-  {id:'i_aicore',    rarity:'legendary',icon:'🧠', name:'Sentient AI Core',    kind:'passive', desc:'+75% CPS',              effect:{type:'cps',     mult:1.75}},
-  {id:'i_goldenkey', rarity:'legendary',icon:'🗝️', name:'Goldener Schlüssel', kind:'passive', desc:'+50% Click Power',      effect:{type:'click',   mult:1.50}},
-  {id:'i_timewarp',  rarity:'legendary',icon:'⏳', name:'Zeitkristall',        kind:'active',  desc:'Simuliert 2h Offline-Verdienst sofort', cooldownH:24, effect:{type:'offlineburst', hours:2}},
-  {id:'i_shieldgen', rarity:'legendary',icon:'🛡️', name:'Festungs-Generator', kind:'active',  desc:'Schützt 12h vor Raub',   cooldownH:24, effect:{type:'shield',  durationS:43200}},
+  // ---- RARE (26) ----
+  {id:'i_keyboard',  rarity:'rare', icon:'⌨️', name:'Mechanical Keyboard',   kind:'passive', desc:'+15% Click Power',      effect:{type:'click',mult:1.15}},
+  {id:'i_router',    rarity:'rare', icon:'📡', name:'Pro Router',            kind:'passive', desc:'+15% Traffic',          effect:{type:'traffic',mult:1.15}},
+  {id:'i_vpnkey',    rarity:'rare', icon:'🔑', name:'VPN Master Key',        kind:'active',  desc:'Schützt 2h vor Raub',    cooldownH:12, effect:{type:'shield',durationS:7200}},
+  {id:'i_redbull',   rarity:'rare', icon:'🥤', name:'Triple Espresso',       kind:'active',  desc:'3× CPS für 90s',         cooldownH:6,  effect:{type:'boost',mult:3,durationS:90}},
+  {id:'i_monitor',   rarity:'rare', icon:'🖥️', name:'Curved Ultrawide Monitor',kind:'passive',desc:'+18% CPS',             effect:{type:'cps',mult:1.18}},
+  {id:'i_ssd',       rarity:'rare', icon:'💾', name:'NVMe SSD',              kind:'passive', desc:'+15% Research Speed',    effect:{type:'rp',mult:1.15}},
+  {id:'i_chair',     rarity:'rare', icon:'🪑', name:'Ergonomischer Bürostuhl',kind:'passive',desc:'+12% Click Power',       effect:{type:'click',mult:1.12}},
+  {id:'i_micro',     rarity:'rare', icon:'🎙️', name:'Podcast-Mikrofon',     kind:'passive', desc:'+15% Traffic',           effect:{type:'traffic',mult:1.15}},
+  {id:'i_drone',     rarity:'rare', icon:'🚁', name:'Liefer-Drohne',         kind:'active',  desc:'Nächster Raub +15% Erfolgschance', cooldownH:8, effect:{type:'robboost',bonus:0.15}},
+  {id:'i_camera',    rarity:'rare', icon:'📸', name:'4K-Kamera',             kind:'passive', desc:'+14% CPS',               effect:{type:'cps',mult:1.14}},
+  {id:'i_smartlock', rarity:'rare', icon:'🔒', name:'Smart-Schloss',         kind:'active',  desc:'Schützt 4h vor Raub',     cooldownH:14, effect:{type:'shield',durationS:14400}},
+  {id:'i_tablet',    rarity:'rare', icon:'📱', name:'Profi-Tablet',          kind:'passive', desc:'+15% Click Power',       effect:{type:'click',mult:1.15}},
+  {id:'i_gimbal',    rarity:'rare', icon:'🎬', name:'Kamera-Gimbal',         kind:'passive', desc:'+15% Traffic',           effect:{type:'traffic',mult:1.15}},
+  {id:'i_smartwatch',rarity:'rare', icon:'⌚', name:'Smartwatch Pro',        kind:'passive', desc:'+12% Click Power',       effect:{type:'click',mult:1.12}},
+  {id:'i_nas',       rarity:'rare', icon:'🗄️', name:'NAS-Speicher',         kind:'passive', desc:'+16% CPS',               effect:{type:'cps',mult:1.16}},
+  {id:'i_headphones',rarity:'rare', icon:'🎧', name:'Studio-Kopfhörer',      kind:'passive', desc:'+13% Research Speed',    effect:{type:'rp',mult:1.13}},
+  {id:'i_dualmonitor',rarity:'rare',icon:'🖥️', name:'Dual-Monitor-Setup',   kind:'passive', desc:'+17% CPS',               effect:{type:'cps',mult:1.17}},
+  {id:'i_standdesk', rarity:'rare', icon:'🧍', name:'Höhenverstellbarer Tisch',kind:'passive',desc:'+13% Click Power',      effect:{type:'click',mult:1.13}},
+  {id:'i_lightring', rarity:'rare', icon:'💡', name:'Studio-Ringlicht',      kind:'passive', desc:'+14% Traffic',           effect:{type:'traffic',mult:1.14}},
+  {id:'i_redcoffee', rarity:'rare', icon:'☕', name:'Cold Brew Konzentrat',  kind:'active',  desc:'2.5× CPS für 75s',       cooldownH:5,  effect:{type:'boost',mult:2.5,durationS:75}},
+  {id:'i_smartplug', rarity:'rare', icon:'🔌', name:'Smart-Steckdose',       kind:'passive', desc:'+12% CPS',               effect:{type:'cps',mult:1.12}},
+  {id:'i_console',   rarity:'rare', icon:'🎮', name:'Gaming-Konsole',        kind:'passive', desc:'+15% Click Power',       effect:{type:'click',mult:1.15}},
+  {id:'i_lockbox',   rarity:'rare', icon:'🗝️', name:'Digitaler Dietrich Mk.I',kind:'active', desc:'Nächster Raub +20% Erfolgschance', cooldownH:8, effect:{type:'robboost',bonus:0.20}},
+  {id:'i_timecapsule',rarity:'rare',icon:'⏳', name:'Mini-Zeitkristall',     kind:'active',  desc:'Simuliert 1h Offline-Verdienst', cooldownH:18, effect:{type:'offlineburst',hours:1}},
+  {id:'i_satdish',   rarity:'rare', icon:'📡', name:'Mini-Satellitenschüssel',kind:'passive',desc:'+16% Traffic',           effect:{type:'traffic',mult:1.16}},
+  {id:'i_proxy',     rarity:'rare', icon:'🌐', name:'Proxy-Netzwerk',        kind:'passive', desc:'+15% CPS',               effect:{type:'cps',mult:1.15}},
 
-  // MYTHIC (nur Premium-Kisten + garantiert bei Hard Reset)
-  {id:'i_singularity_core', rarity:'mythic', icon:'♾️', name:'Singularitäts-Kern',  kind:'passive', desc:'+200% CPS, +100% Click', effect:{type:'multi', cps:3.0, click:2.0}},
-  {id:'i_voidkey',          rarity:'mythic', icon:'🌌', name:'Schlüssel zur Leere', kind:'active',  desc:'10× CPS für 5min',       cooldownH:24, effect:{type:'boost', mult:10, durationS:300}},
-  {id:'i_genesis',          rarity:'mythic', icon:'🌟', name:'Genesis-Fragment',    kind:'passive', desc:'+15% Quantum-Chip-Gewinn', effect:{type:'chipgain', mult:1.15}},
+  // ---- EPIC (22) ----
+  {id:'i_gpu',       rarity:'epic', icon:'🎮', name:'Quantum GPU',           kind:'passive', desc:'+30% CPS',               effect:{type:'cps',mult:1.30}},
+  {id:'i_blackcard', rarity:'epic', icon:'💳', name:'Schwarze Kreditkarte',  kind:'passive', desc:'-10% Business-Kosten',   effect:{type:'costdown',mult:0.10}},
+  {id:'i_lockpick',  rarity:'epic', icon:'🗝️', name:'Digitaler Dietrich',   kind:'active',  desc:'Nächster Raub +30% Erfolgschance', cooldownH:8, effect:{type:'robboost',bonus:0.30}},
+  {id:'i_overclock', rarity:'epic', icon:'🔥', name:'Overclock Chip',        kind:'active',  desc:'5× CPS für 2min',        cooldownH:10, effect:{type:'boost',mult:5,durationS:120}},
+  {id:'i_serverrack',rarity:'epic', icon:'🗄️', name:'Mini-Server-Rack',     kind:'passive', desc:'+28% CPS',               effect:{type:'cps',mult:1.28}},
+  {id:'i_fiberline', rarity:'epic', icon:'🌐', name:'Glasfaser-Direktanschluss',kind:'passive',desc:'+30% Traffic',         effect:{type:'traffic',mult:1.30}},
+  {id:'i_aichip',    rarity:'epic', icon:'🧠', name:'Neural Co-Prozessor',   kind:'passive', desc:'+25% CPS, +10% Click',   effect:{type:'multi',cps:1.25,click:1.10}},
+  {id:'i_titanium',  rarity:'epic', icon:'🛠️', name:'Titan-Gehäuse',        kind:'passive', desc:'+25% Click Power',       effect:{type:'click',mult:1.25}},
+  {id:'i_quantumdrive',rarity:'epic',icon:'💾', name:'Quanten-Festplatte',   kind:'passive', desc:'+30% Research Speed',    effect:{type:'rp',mult:1.30}},
+  {id:'i_megadrone', rarity:'epic', icon:'🚁', name:'Schwarm-Drohnen-Einheit',kind:'active', desc:'Nächster Raub +40% Erfolgschance', cooldownH:10, effect:{type:'robboost',bonus:0.40}},
+  {id:'i_blackice',  rarity:'epic', icon:'🧊', name:'Black-ICE-Firewall',    kind:'active',  desc:'Schützt 18h vor Raub',    cooldownH:30, effect:{type:'shield',durationS:64800}},
+  {id:'i_megaphone', rarity:'epic', icon:'📢', name:'Virales Megaphon',      kind:'active',  desc:'4× CPS für 100s',        cooldownH:9,  effect:{type:'boost',mult:4,durationS:100}},
+  {id:'i_cryptowallet',rarity:'epic',icon:'👛', name:'Hardware-Wallet',      kind:'passive', desc:'-12% Business-Kosten',   effect:{type:'costdown',mult:0.12}},
+  {id:'i_neuralink', rarity:'epic', icon:'🧬', name:'Bio-Interface-Chip',    kind:'passive', desc:'+22% Click Power',       effect:{type:'click',mult:1.22}},
+  {id:'i_megaserver',rarity:'epic', icon:'🏢', name:'Edge-Computing-Knoten', kind:'passive', desc:'+32% CPS',               effect:{type:'cps',mult:1.32}},
+  {id:'i_holocall',  rarity:'epic', icon:'📞', name:'Hologramm-Kommunikator',kind:'passive', desc:'+28% Traffic',           effect:{type:'traffic',mult:1.28}},
+  {id:'i_timegear',  rarity:'epic', icon:'⏱️', name:'Zeitlupen-Generator',  kind:'active',  desc:'Simuliert 3h Offline-Verdienst', cooldownH:20, effect:{type:'offlineburst',hours:3}},
+  {id:'i_darkfiber', rarity:'epic', icon:'🕸️', name:'Dark-Fiber-Zugang',    kind:'passive', desc:'+26% Traffic, +10% CPS', effect:{type:'multi',cps:1.10,traffic:1.26}},
+  {id:'i_warpcore',  rarity:'epic', icon:'⚛️', name:'Mini-Warpkern',        kind:'passive', desc:'+35% CPS',               effect:{type:'cps',mult:1.35}},
+  {id:'i_megabank',  rarity:'epic', icon:'🏦', name:'Offshore-Konto',        kind:'passive', desc:'-15% Business-Kosten',   effect:{type:'costdown',mult:0.15}},
+  {id:'i_phantomvpn',rarity:'epic', icon:'👻', name:'Phantom-VPN',          kind:'active',  desc:'Schützt 24h vor Raub',    cooldownH:36, effect:{type:'shield',durationS:86400}},
+  {id:'i_supercollider',rarity:'epic',icon:'🌀',name:'Mini-Teilchenbeschleuniger',kind:'passive',desc:'+30% Research Speed, +10% CPS',effect:{type:'multi',cps:1.10,rp:1.30}},
+
+  // ---- LEGENDARY (14) ----
+  {id:'i_aicore',    rarity:'legendary', icon:'🧠', name:'Sentient AI Core',  kind:'passive', desc:'+75% CPS',              effect:{type:'cps',mult:1.75}},
+  {id:'i_goldenkey', rarity:'legendary', icon:'🗝️', name:'Goldener Schlüssel',kind:'passive', desc:'+50% Click Power',     effect:{type:'click',mult:1.50}},
+  {id:'i_timewarp',  rarity:'legendary', icon:'⏳', name:'Zeitkristall',      kind:'active',  desc:'Simuliert 2h Offline-Verdienst sofort', cooldownH:24, effect:{type:'offlineburst',hours:2}},
+  {id:'i_shieldgen', rarity:'legendary', icon:'🛡️', name:'Festungs-Generator',kind:'active',  desc:'Schützt 12h vor Raub',  cooldownH:24, effect:{type:'shield',durationS:43200}},
+  {id:'i_globaldominance',rarity:'legendary',icon:'🌍',name:'Weltmarkt-Monopol',kind:'passive',desc:'+60% CPS, +20% Traffic',effect:{type:'multi',cps:1.60,traffic:1.20}},
+  {id:'i_quantumbank',rarity:'legendary',icon:'💰', name:'Quanten-Tresor',    kind:'passive', desc:'-25% Business-Kosten',  effect:{type:'costdown',mult:0.25}},
+  {id:'i_hydra',     rarity:'legendary', icon:'🐍', name:'Hydra-Netzwerk',    kind:'active',  desc:'Nächster Raub +55% Erfolgschance', cooldownH:14, effect:{type:'robboost',bonus:0.55}},
+  {id:'i_phoenixchip',rarity:'legendary',icon:'🔥', name:'Phönix-Chip',       kind:'passive', desc:'+55% CPS, +30% Click',  effect:{type:'multi',cps:1.55,click:1.30}},
+  {id:'i_titanvault',rarity:'legendary', icon:'🏛️', name:'Titan-Tresorraum', kind:'active',  desc:'Schützt 24h vor Raub',  cooldownH:40, effect:{type:'shield',durationS:86400}},
+  {id:'i_megaboost', rarity:'legendary', icon:'🚀', name:'Orbital-Booster',   kind:'active',  desc:'7× CPS für 3min',       cooldownH:16, effect:{type:'boost',mult:7,durationS:180}},
+  {id:'i_dragonhoard',rarity:'legendary',icon:'🐉', name:'Drachenschatz',     kind:'passive', desc:'+70% CPS',              effect:{type:'cps',mult:1.70}},
+  {id:'i_chronoshift',rarity:'legendary',icon:'⏰', name:'Chrono-Verschieber',kind:'active',  desc:'Simuliert 4h Offline-Verdienst', cooldownH:30, effect:{type:'offlineburst',hours:4}},
+  {id:'i_voidwallet',rarity:'legendary', icon:'🌑', name:'Leere-Geldbeutel',  kind:'passive', desc:'+25% Quantum-Chip-Gewinn',effect:{type:'chipgain',mult:1.25}},
+  {id:'i_starforge', rarity:'legendary', icon:'⭐', name:'Sternenschmiede',   kind:'passive', desc:'+65% CPS, +15% Research',effect:{type:'multi',cps:1.65,rp:1.15}},
+
+  // ---- MYTHIC (8) ----
+  {id:'i_singularity_core', rarity:'mythic', icon:'♾️', name:'Singularitäts-Kern',  kind:'passive', desc:'+200% CPS, +100% Click', effect:{type:'multi',cps:3.0,click:2.0}},
+  {id:'i_voidkey',          rarity:'mythic', icon:'🌌', name:'Schlüssel zur Leere', kind:'active',  desc:'10× CPS für 5min',       cooldownH:24, effect:{type:'boost',mult:10,durationS:300}},
+  {id:'i_genesis',          rarity:'mythic', icon:'🌟', name:'Genesis-Fragment',    kind:'passive', desc:'+15% Quantum-Chip-Gewinn',effect:{type:'chipgain',mult:1.15}},
+  {id:'i_omegacore',        rarity:'mythic', icon:'🔮', name:'Omega-Kern',          kind:'passive', desc:'+250% CPS',              effect:{type:'cps',mult:3.5}},
+  {id:'i_eternalflame',     rarity:'mythic', icon:'🔥', name:'Ewige Flamme',        kind:'active',  desc:'Schützt 48h vor Raub',   cooldownH:60, effect:{type:'shield',durationS:172800}},
+  {id:'i_godmode_click',    rarity:'mythic', icon:'👑', name:'Königlicher Klick',   kind:'passive', desc:'+220% Click Power',      effect:{type:'click',mult:3.2}},
+  {id:'i_realityshard',     rarity:'mythic', icon:'💎', name:'Realitäts-Fragment',  kind:'passive', desc:'+180% CPS, +80% Traffic',effect:{type:'multi',cps:2.8,traffic:1.8}},
+  {id:'i_infinityvault',    rarity:'mythic', icon:'🏦', name:'Unendlichkeits-Tresor',kind:'passive', desc:'-35% Business-Kosten',   effect:{type:'costdown',mult:0.35}},
+
+  // ---- EXOTIC (2) — the absolute jackpot tier, deliberately rare and absurd ----
+  {id:'i_universe_engine',  rarity:'exotic', icon:'🌠', name:'Universums-Maschine', kind:'passive', desc:'+650% CPS, +250% Click, +150% Traffic', effect:{type:'multi',cps:6.5,click:2.5,traffic:1.5}},
+  {id:'i_chronoking',       rarity:'exotic', icon:'⚜️', name:'Chronos\' Krone',     kind:'active',  desc:'25× CPS für 10min',     cooldownH:48, effect:{type:'boost',mult:25,durationS:600}},
 ];
 
-// Lootbox definitions: which rarities drop, at what weights, and the price/currency.
-const LOOTBOXES_DEF = [
-  {id:'box_common', name:'Standard-Kiste',  icon:'📦', currency:'cash',  cost:1e6,
-    weights:{common:60, rare:30, epic:9, legendary:1, mythic:0}},
-  {id:'box_rare',   name:'Verstärkte Kiste', icon:'🎁', currency:'cash',  cost:5e8,
-    weights:{common:30, rare:45, epic:20, legendary:5, mythic:0}},
-  {id:'box_premium',name:'Premium-Kiste',   icon:'💎', currency:'chips', cost:25,
-    weights:{common:5,  rare:20, epic:40, legendary:30, mythic:5}},
-  {id:'box_mythic', name:'Mythische Kiste', icon:'🌌', currency:'chips', cost:150,
-    weights:{common:0,  rare:0,  epic:25, legendary:50, mythic:25}},
+/* ============================================================
+   PROCEDURAL ITEM GENERATOR — fills out the collection to ~250 total.
+   Built from fixed "template families" (the underlying mechanic) crossed with
+   themed name/icon sets, so every generated item still reads as belonging to
+   the game's world instead of being obviously random filler.
+   ============================================================ */
+const ITEM_NAME_THEMES = [
+  {prefix:'Quanten', icons:['⚛️','🔬','🧪']},
+  {prefix:'Cyber',   icons:['🤖','💻','🦾']},
+  {prefix:'Crypto',  icons:['₿','💰','🪙']},
+  {prefix:'Neural',  icons:['🧠','🔌','⚡']},
+  {prefix:'Stealth', icons:['🥷','🌑','🕶️']},
+  {prefix:'Hyper',   icons:['🚀','💨','🔥']},
+  {prefix:'Solar',   icons:['☀️','🔋','🌞']},
+  {prefix:'Glitch',  icons:['👾','📺','🌀']},
+  {prefix:'Nano',    icons:['🔬','🧬','⚙️']},
+  {prefix:'Orbital', icons:['🛰️','🌍','🪐']},
+  {prefix:'Plasma',  icons:['🔥','⚡','🌋']},
+  {prefix:'Genesis', icons:['🌱','🌟','🐣']},
+  {prefix:'Eternal', icons:['♾️','⏳','🕰️']},
+  {prefix:'Void',    icons:['🌌','⚫','🕳️']},
+  {prefix:'Royal',   icons:['👑','💎','🏆']},
 ];
+const ITEM_NAME_NOUNS = [
+  'Modul','Prozessor','Antrieb','Algorithmus','Schaltkreis','Generator','Relais','Implantat',
+  'Konstrukt','Kompensator','Stabilisator','Resonator','Katalysator','Transmitter','Kondensator',
+  'Reaktor','Spinner','Synthesizer','Beschleuniger','Kompressor',
+];
+const GENERATED_EFFECT_FAMILIES = [
+  {type:'cps',     descFn:(pct)=>`+${pct}% CPS`},
+  {type:'click',   descFn:(pct)=>`+${pct}% Click Power`},
+  {type:'traffic', descFn:(pct)=>`+${pct}% Traffic`},
+  {type:'rp',      descFn:(pct)=>`+${pct}% Research Speed`},
+  {type:'costdown',descFn:(pct)=>`-${pct}% Business-Kosten`},
+];
+const GENERATED_ACTIVE_FAMILIES = [
+  {effectType:'boost',  durationS:[45,300], cooldownH:[3,30], descFn:(mult,dur)=>`${mult}× CPS für ${dur}s`},
+  {effectType:'shield', durationS:[1800,86400], cooldownH:[8,48], descFn:(mult,dur)=>`Schützt ${Math.round(dur/3600)}h vor Raub`},
+  {effectType:'robboost',bonusRange:[0.10,0.50], cooldownH:[6,16], descFn:(bonus)=>`Nächster Raub +${Math.round(bonus*100)}% Erfolgschance`},
+  {effectType:'offlineburst',hoursRange:[0.5,4], cooldownH:[6,30], descFn:(hrs)=>`Simuliert ${hrs}h Offline-Verdienst sofort`},
+];
+
+function seededRandom(seed){
+  // Simple deterministic PRNG (mulberry32) so generated items are stable across reloads/sessions.
+  let t = seed += 0x6D2B79F5;
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
+function generateItems(countPerRarity){
+  const generated = [];
+  let seed = 1337; // fixed seed → same items every time the page loads, for every player
+  const rng = () => seededRandom(seed++);
+
+  RARITY_ORDER.forEach(rarity=>{
+    const tuning = RARITY_TUNING[rarity];
+    const count = countPerRarity[rarity] || 0;
+    for(let i=0;i<count;i++){
+      const theme = ITEM_NAME_THEMES[Math.floor(rng()*ITEM_NAME_THEMES.length)];
+      const noun  = ITEM_NAME_NOUNS[Math.floor(rng()*ITEM_NAME_NOUNS.length)];
+      const icon  = theme.icons[Math.floor(rng()*theme.icons.length)];
+      const name  = `${theme.prefix}-${noun}`;
+      const id    = `g_${rarity}_${i}_${theme.prefix.toLowerCase()}${noun.toLowerCase()}`.replace(/[^a-z0-9_]/g,'');
+
+      const isActive = rng() < 0.35; // ~35% of generated items are active-use, rest passive
+      if(isActive){
+        const fam = GENERATED_ACTIVE_FAMILIES[Math.floor(rng()*GENERATED_ACTIVE_FAMILIES.length)];
+        const cooldownH = Math.round(fam.cooldownH[0] + rng()*(fam.cooldownH[1]-fam.cooldownH[0]));
+        let effect, desc;
+        if(fam.effectType==='boost'){
+          const [lo,hi]=tuning.cpsMult; const mult=Math.round((lo+rng()*(hi-lo))*3*10)/10; // active boosts hit harder than passive equivalent
+          const dur=Math.round(fam.durationS[0]+rng()*(fam.durationS[1]-fam.durationS[0]));
+          effect={type:'boost',mult,durationS:dur}; desc=fam.descFn(mult,dur);
+        } else if(fam.effectType==='shield'){
+          const dur=Math.round(fam.durationS[0]+rng()*(fam.durationS[1]-fam.durationS[0]));
+          effect={type:'shield',durationS:dur}; desc=fam.descFn(1,dur);
+        } else if(fam.effectType==='robboost'){
+          const bonus=Math.round((fam.bonusRange[0]+rng()*(fam.bonusRange[1]-fam.bonusRange[0]))*100)/100;
+          effect={type:'robboost',bonus}; desc=fam.descFn(bonus);
+        } else {
+          const hrs=Math.round((fam.hoursRange[0]+rng()*(fam.hoursRange[1]-fam.hoursRange[0]))*2)/2;
+          effect={type:'offlineburst',hours:hrs}; desc=fam.descFn(hrs);
+        }
+        generated.push({id,rarity,icon,name,kind:'active',desc,cooldownH,effect});
+      } else {
+        const famPool = GENERATED_EFFECT_FAMILIES;
+        const fam = famPool[Math.floor(rng()*famPool.length)];
+        const range = fam.type==='costdown' ? tuning.otherMult : tuning[fam.type==='click'?'clickMult':fam.type==='cps'?'cpsMult':'otherMult'];
+        const rawMult = range[0]+rng()*(range[1]-range[0]);
+        if(fam.type==='costdown'){
+          const pct = Math.round((rawMult-1)*100);
+          generated.push({id,rarity,icon,name,kind:'passive',desc:fam.descFn(pct),effect:{type:'costdown',mult:(rawMult-1)}});
+        } else {
+          const pct = Math.round((rawMult-1)*100);
+          generated.push({id,rarity,icon,name,kind:'passive',desc:fam.descFn(pct),effect:{type:fam.type,mult:rawMult}});
+        }
+      }
+    }
+  });
+  return generated;
+}
+
+// ~150 generated items layered on top of the 100 handcrafted ones (≈250 total).
+const ITEMS_GENERATED = generateItems({common:40, rare:40, epic:35, legendary:22, mythic:10, exotic:3});
+const ITEMS_DEF = [...ITEMS_HANDCRAFTED, ...ITEMS_GENERATED];
+
+/* ============================================================
+   LOOTBOX TEMPLATES → 50+ concrete boxes.
+   Each box belongs to a category (theme/flavor) and a price tier (cost + risk
+   profile: higher tiers skew weights toward rarer items, "risky" variants push
+   even further toward the top end at the cost of more variance).
+   ============================================================ */
+const BOX_CATEGORIES = [
+  {key:'starter',  name:'Starter',     icon:'📦', currency:'cash'},
+  {key:'tech',     name:'Tech',        icon:'💻', currency:'cash'},
+  {key:'crypto',   name:'Crypto',      icon:'₿',  currency:'cash'},
+  {key:'corporate',name:'Corporate',   icon:'🏢', currency:'cash'},
+  {key:'ai',       name:'AI',          icon:'🤖', currency:'chips'},
+  {key:'quantum',  name:'Quantum',     icon:'⚛️', currency:'chips'},
+  {key:'void',     name:'Void',        icon:'🌌', currency:'chips'},
+  {key:'royal',    name:'Royal',       icon:'👑', currency:'chips'},
+];
+// Price tiers within each category — cost scales up, and weights shift toward rarer items.
+const BOX_TIERS = [
+  {key:'basic',  label:'Basis',     costMult:1,   weights:{common:55,rare:30,epic:12,legendary:3, mythic:0,  exotic:0}},
+  {key:'plus',   label:'Plus',      costMult:4,   weights:{common:35,rare:35,epic:20,legendary:9, mythic:1,  exotic:0}},
+  {key:'elite',  label:'Elite',     costMult:14,  weights:{common:15,rare:30,epic:30,legendary:20,mythic:4.5,exotic:0.5}},
+  {key:'risky',  label:'Risiko',    costMult:10,  weights:{common:40,rare:20,epic:15,legendary:15,mythic:8,  exotic:2}, // same-ish cost as plus, but MUCH higher variance — for the "kick"
+   riskNote:'Hohe Varianz: meist wenig, aber Chance auf Top-Tier!'},
+  {key:'mega',   label:'Mega',      costMult:40,  weights:{common:5, rare:20,epic:35,legendary:30,mythic:9,  exotic:1}},
+  {key:'apex',   label:'Apex',      costMult:100, weights:{common:0, rare:5, epic:20,legendary:40,mythic:28, exotic:7},
+   riskNote:'Top-Tier-Kiste: garantiert mindestens Epic, hohe Mythic/Exotic-Chance!'},
+];
+const BOX_CASH_BASE = {
+  starter:1e6, tech:8e6, crypto:2e7, corporate:6e7,
+};
+const BOX_CHIP_BASE = {
+  ai:20, quantum:60, void:150, royal:400,
+};
+
+function buildLootboxes(){
+  const boxes = [];
+  BOX_CATEGORIES.forEach(cat=>{
+    BOX_TIERS.forEach(tier=>{
+      const baseCost = cat.currency==='cash' ? BOX_CASH_BASE[cat.key] : BOX_CHIP_BASE[cat.key];
+      const cost = Math.round(baseCost * tier.costMult);
+      boxes.push({
+        id: `box_${cat.key}_${tier.key}`,
+        name: `${cat.name} ${tier.label}-Kiste`,
+        icon: cat.icon,
+        currency: cat.currency,
+        cost,
+        category: cat.key,
+        tier: tier.key,
+        riskNote: tier.riskNote || null,
+        weights: tier.weights,
+      });
+    });
+  });
+  return boxes;
+}
+// 8 categories × 4 tiers = 32 boxes, plus a handful of unique one-off special boxes below = 50+.
+const LOOTBOXES_GENERATED = buildLootboxes();
+const LOOTBOXES_SPECIAL = [
+  {id:'box_freebie',   name:'Gratis-Starterkiste', icon:'🎁', currency:'cash', cost:0, category:'special', tier:'free',
+    weights:{common:90,rare:10,epic:0,legendary:0,mythic:0,exotic:0}, oncePerAccount:true},
+  {id:'box_jackpot',   name:'Jackpot-Truhe',       icon:'🍀', currency:'chips', cost:1000, category:'special', tier:'jackpot',
+    weights:{common:0,rare:0,epic:10,legendary:40,mythic:40,exotic:10}, riskNote:'Garantiert mindestens Legendary!'},
+  {id:'box_allornothing',name:'Alles-oder-Nichts-Box',icon:'☠️',currency:'cash', cost:5e8, category:'special', tier:'extreme',
+    weights:{common:70,rare:0,epic:0,legendary:0,mythic:25,exotic:5}, riskNote:'Entweder Müll oder der Jackpot — nichts dazwischen!'},
+  {id:'box_collector',  name:'Sammler-Kiste',       icon:'🗃️', currency:'chips', cost:80, category:'special', tier:'balanced',
+    weights:{common:20,rare:35,epic:30,legendary:13,mythic:2,exotic:0}},
+];
+const LOOTBOXES_DEF = [...LOOTBOXES_GENERATED, ...LOOTBOXES_SPECIAL];
 
 /* ============================================================
    EVENTS
@@ -2098,27 +2452,88 @@ const ITEMS = {
     if(this._subtab==='market' && window.MarketModule) window.MarketModule.refresh();
   },
 
+  _activeBoxCategory: 'all',
+
   renderBoxes(){
     const grid=document.getElementById('lootbox-grid');
     if(!grid) return;
+
+    // Category filter bar (built once, categories derived from LOOTBOXES_DEF)
+    const catBar = document.getElementById('box-category-tabs');
+    if(catBar && !catBar.dataset.built){
+      const cats = ['all', ...new Set(LOOTBOXES_DEF.map(b=>b.category))];
+      catBar.innerHTML = cats.map(c=>{
+        const label = c==='all' ? 'Alle' : c.charAt(0).toUpperCase()+c.slice(1);
+        return `<button class="box-cat-btn${c==='all'?' active':''}" data-boxcat="${c}">${label}</button>`;
+      }).join('');
+      catBar.dataset.built='1';
+      catBar.querySelectorAll('[data-boxcat]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          this._activeBoxCategory = btn.dataset.boxcat;
+          catBar.querySelectorAll('.box-cat-btn').forEach(b=>b.classList.toggle('active', b===btn));
+          this.renderBoxes();
+        });
+      });
+    }
+
+    const visible = this._activeBoxCategory==='all' ? LOOTBOXES_DEF : LOOTBOXES_DEF.filter(b=>b.category===this._activeBoxCategory);
     grid.innerHTML='';
-    LOOTBOXES_DEF.forEach(box=>{
+    visible.forEach(box=>{
+      if(box.oncePerAccount && G.claimedFreebox) return; // hide one-time freebie once claimed
       const have = box.currency==='cash' ? G.cash : G.quantumChips;
       const afford = have >= box.cost;
-      const costLabel = box.currency==='cash' ? '$'+fmt(box.cost) : fmt(box.cost)+' 💎';
-      const oddsText = Object.entries(box.weights).filter(([,w])=>w>0).map(([r,w])=>`${r}: ${w}%`).join(' · ');
+      const costLabel = box.cost===0 ? 'KOSTENLOS' : (box.currency==='cash' ? '$'+fmt(box.cost) : fmt(box.cost)+' 💎');
+      const topRarity = RARITY_ORDER.slice().reverse().find(r=>(box.weights[r]||0)>0);
       const card=document.createElement('div');
-      card.className='lootbox-card'+(box.currency==='chips'&&box.cost>=150?' mythic-box':box.currency==='chips'?' premium-box':'');
+      card.className='lootbox-card'+(topRarity==='exotic'?' mythic-box':topRarity==='mythic'?' premium-box':'');
       card.innerHTML=`
         <div class="lootbox-icon">${box.icon}</div>
         <div class="lootbox-name">${box.name}</div>
-        <div class="lootbox-odds">${oddsText}</div>
-        <button class="btn-openbox" data-openbox="${box.id}" ${afford?'':'disabled'}>Öffnen — ${costLabel}</button>`;
+        <button class="btn-odds" data-showodds="${box.id}">📊 Odds anzeigen</button>
+        ${box.riskNote?`<div class="box-risk-note">${box.riskNote}</div>`:''}
+        <button class="btn-openbox" data-openbox="${box.id}" ${afford?'':'disabled'} style="margin-top:8px">Öffnen — ${costLabel}</button>`;
       grid.appendChild(card);
     });
     grid.querySelectorAll('[data-openbox]').forEach(btn=>{
       btn.addEventListener('click', ()=>this.openBox(btn.dataset.openbox));
     });
+    grid.querySelectorAll('[data-showodds]').forEach(btn=>{
+      btn.addEventListener('click', ()=>this.showOddsModal(btn.dataset.showodds));
+    });
+  },
+
+  showOddsModal(boxId){
+    const box = LOOTBOXES_DEF.find(b=>b.id===boxId);
+    if(!box) return;
+    const totalWeight = Object.values(box.weights).reduce((a,b)=>a+b,0);
+    const groups = RARITY_ORDER.map(rarity=>{
+      const weight = box.weights[rarity]||0;
+      if(weight<=0) return '';
+      const pool = ITEMS_DEF.filter(i=>i.rarity===rarity);
+      if(pool.length===0) return '';
+      const pctPerItem = (weight/totalWeight/pool.length*100);
+      const color = RARITY_TUNING[rarity].color;
+      const rows = pool.map(item=>`
+        <div class="odds-item-row">
+          <span class="odds-item-icon">${item.icon}</span>
+          <span class="odds-item-name">${item.name}</span>
+          <span class="odds-item-pct">${pctPerItem.toFixed(pctPerItem<0.01?4:pctPerItem<1?3:2)}%</span>
+        </div>`).join('');
+      return `<div class="odds-rarity-group">
+        <div class="odds-rarity-header" style="color:${color}">${rarity.toUpperCase()} — Gesamt ${(weight/totalWeight*100).toFixed(2)}%</div>
+        ${rows}
+      </div>`;
+    }).join('');
+    document.getElementById('modal-container').innerHTML = `
+    <div class="odds-table-overlay" id="odds-modal">
+      <div class="odds-table-box">
+        <div class="odds-table-title">${box.icon} ${box.name}</div>
+        <div class="odds-table-sub">Vollständige Drop-Tabelle — jedes Item mit exakter Chance</div>
+        ${groups}
+        <button class="btn-collect" id="odds-close" style="margin-top:14px">Schließen</button>
+      </div>
+    </div>`;
+    document.getElementById('odds-close').onclick = ()=>UI.hideModal();
   },
 
   openBox(boxId){
@@ -2127,8 +2542,9 @@ const ITEMS = {
     const have = box.currency==='cash' ? G.cash : G.quantumChips;
     if(have < box.cost){ UI.toast('❌ Nicht genug Guthaben!','danger'); return; }
     if(box.currency==='cash') G.cash -= box.cost; else G.quantumChips -= box.cost;
+    if(box.oncePerAccount) G.claimedFreebox = true;
 
-    // Weighted rarity roll
+    // Weighted rarity roll (using the box's real weights — same odds shown in the Odds modal)
     const total = Object.values(box.weights).reduce((a,b)=>a+b,0);
     let roll = Math.random()*total;
     let chosenRarity = 'common';
@@ -2141,25 +2557,66 @@ const ITEMS = {
     const item = pool[Math.floor(Math.random()*pool.length)] || ITEMS_DEF[0];
 
     G.items[item.id] = (G.items[item.id]||0) + 1;
-    AUDIO.lootbox();
-    this.showBoxRevealModal(item);
+    this.showSlotReelModal(box, item);
     GAME.checkAchievements();
     this.renderAll();
     UI.updateResources();
   },
 
-  showBoxRevealModal(item){
-    const rarityColors = {common:'var(--common)',rare:'var(--rare)',epic:'var(--epic)',legendary:'var(--legendary)',mythic:'var(--mythic)'};
+  showSlotReelModal(box, wonItem){
+    // Build a long strip of random items (weighted toward the box's actual rarity pool, so the
+    // reel "feels" honest) with the real winning item planted at a fixed position near the end.
+    const REEL_LENGTH = 60;
+    const LANDING_INDEX = 50; // winning item sits here; pointer is centered on this slot at rest
+    const fillerPool = ITEMS_DEF; // draw fillers from the whole pool for visual variety
+    const stripItems = [];
+    for(let i=0;i<REEL_LENGTH;i++){
+      if(i===LANDING_INDEX){ stripItems.push(wonItem); continue; }
+      stripItems.push(fillerPool[Math.floor(Math.random()*fillerPool.length)]);
+    }
+
+    const ITEM_WIDTH = 104; // 96px item + 8px margin, matches .reel-item CSS
+    const finalOffset = LANDING_INDEX*ITEM_WIDTH + ITEM_WIDTH/2;
+
     document.getElementById('modal-container').innerHTML = `
     <div class="box-open-overlay" id="box-reveal-modal">
       <div class="box-open-card">
-        <div class="box-open-icon">${item.icon}</div>
-        <div class="box-open-rarity" style="color:${rarityColors[item.rarity]}">${item.rarity}</div>
-        <div class="box-open-name">${item.name}</div>
-        <div class="box-open-desc">${item.desc}</div>
-        <button class="btn-collect" id="box-reveal-close">Nice!</button>
+        <div class="reel-viewport" id="reel-viewport">
+          <div class="reel-pointer"></div>
+          <div class="reel-track" id="reel-track">
+            ${stripItems.map(it=>`<div class="reel-item ${it.rarity}">${it.icon}</div>`).join('')}
+          </div>
+        </div>
+        <div id="reel-result" style="opacity:0;transition:opacity .4s">
+          <div class="box-open-rarity" style="color:${RARITY_TUNING[wonItem.rarity].color}">${wonItem.rarity}</div>
+          <div class="box-open-name">${wonItem.icon} ${wonItem.name}</div>
+          <div class="box-open-desc">${wonItem.desc}</div>
+        </div>
+        <button class="btn-collect" id="box-reveal-close" disabled style="opacity:.3">Nice!</button>
       </div>
     </div>`;
+
+    const track = document.getElementById('reel-track');
+    const viewport = document.getElementById('reel-viewport');
+    // Center the viewport on slot 0 first (instant), then animate to the landing slot.
+    const viewportCenter = viewport.clientWidth/2;
+    track.style.transform = `translateX(${viewportCenter - ITEM_WIDTH/2}px)`;
+    requestAnimationFrame(()=>{
+      track.style.transition = 'transform 3.2s cubic-bezier(0.1,0.6,0.1,1)';
+      track.style.transform = `translateX(${viewportCenter - finalOffset}px)`;
+    });
+
+    AUDIO.lootbox();
+    setTimeout(()=>{
+      const landed = track.children[LANDING_INDEX];
+      if(landed) landed.classList.add('reel-landed');
+      document.getElementById('reel-result').style.opacity = '1';
+      const closeBtn = document.getElementById('box-reveal-close');
+      closeBtn.disabled = false;
+      closeBtn.style.opacity = '1';
+      if(wonItem.rarity==='legendary'||wonItem.rarity==='mythic'||wonItem.rarity==='exotic') AUDIO.winBig();
+    }, 3300);
+
     document.getElementById('box-reveal-close').onclick = ()=>UI.hideModal();
   },
 
@@ -2223,6 +2680,72 @@ const ITEMS = {
 };
 
 /* ============================================================
+   TUTORIAL — first-time onboarding overlay
+   ============================================================ */
+const TUTORIAL = {
+  STORAGE_KEY: 'ie_v2_tutorial_seen',
+  step: 0,
+  steps: [
+    {icon:'⚡', title:'Willkommen bei Internet Empire!',
+     text:'Du baust dein eigenes Internet-Imperium auf — vom unbekannten Nutzer bis zum digitalen Kaiser. Diese kurze Tour zeigt dir die wichtigsten Bereiche.'},
+    {icon:'🖱️', title:'Click & Businesses',
+     text:'Klicke auf den großen Button für Cash, oder kaufe links Businesses, die automatisch Geld verdienen. Das ist der Kern des Spiels — alles andere baut darauf auf.'},
+    {icon:'⬆️', title:'Upgrades & Research',
+     text:'Im "Upgrades"-Tab verstärkst du deine Businesses mit Cash. Im "Research"-Tab investierst du Forschungspunkte (aus Traffic) in permanente Boosts, die auch ein Prestige überleben.'},
+    {icon:'✨', title:'Prestige',
+     text:'Wenn du genug Cash insgesamt verdient hast, kannst du im "Prestige"-Tab zurücksetzen — du verlierst dein Business-Fortschritt, bekommst aber Quantum Chips und einen dauerhaften Multiplikator. Das ist der Haupt-Fortschrittsmotor im späteren Spiel.'},
+    {icon:'🎒', title:'Items, Casino & Erweiterung',
+     text:'Im "Items"-Tab öffnest du Kisten für handelbare Gegenstände. Im "Casino" kannst du dein Cash riskant vervielfachen. Unter "Erweiterung" findest du Börse, Team, Skills, Fusionen, Fraktion und Weltkarte — optionale Zusatzsysteme für mehr Tiefe, aber nicht zwingend nötig.'},
+    {icon:'🌍', title:'Community',
+     text:'Im "Community"-Tab siehst du das Leaderboard aller Spieler und kannst dort Geschenke senden, andere ausrauben oder in sie investieren. Außerdem findest du dort deinen Affiliate-Code, um Freunde einzuladen.'},
+    {icon:'🚀', title:'Los geht\'s!',
+     text:'Das war\'s schon! Du kannst dieses Tutorial jederzeit über den ❓-Button oben erneut öffnen. Viel Erfolg beim Aufbau deines Imperiums!'},
+  ],
+
+  shouldShow(){
+    return !localStorage.getItem(this.STORAGE_KEY);
+  },
+
+  show(){
+    this.step = 0;
+    this._render();
+  },
+
+  _render(){
+    const s = this.steps[this.step];
+    const isLast = this.step === this.steps.length-1;
+    const isFirst = this.step === 0;
+    const dots = this.steps.map((_,i)=>`<div class="tutorial-dot${i===this.step?' active':''}"></div>`).join('');
+    document.getElementById('modal-container').innerHTML = `
+    <div class="modal-overlay" id="tutorial-modal">
+      <div class="modal-box tutorial-box">
+        <div class="tutorial-icon">${s.icon}</div>
+        <h2>${s.title}</h2>
+        <p>${s.text}</p>
+        <div class="tutorial-dots">${dots}</div>
+        <div class="tutorial-nav">
+          ${!isFirst?'<button class="btn-collect secondary" id="tut-back">Zurück</button>':''}
+          <button class="btn-collect" id="tut-next">${isLast?'Los geht\'s!':'Weiter'}</button>
+        </div>
+        ${!isLast?'<span class="tutorial-skip" id="tut-skip">Tutorial überspringen</span>':''}
+      </div>
+    </div>`;
+    document.getElementById('tut-next').onclick = ()=>{
+      if(isLast){ this._finish(); } else { this.step++; this._render(); }
+    };
+    const backBtn = document.getElementById('tut-back');
+    if(backBtn) backBtn.onclick = ()=>{ this.step--; this._render(); };
+    const skipBtn = document.getElementById('tut-skip');
+    if(skipBtn) skipBtn.onclick = ()=>this._finish();
+  },
+
+  _finish(){
+    localStorage.setItem(this.STORAGE_KEY, '1');
+    UI.hideModal();
+  },
+};
+
+/* ============================================================
    GAME LOGIC
    ============================================================ */
 const GAME = {
@@ -2240,6 +2763,7 @@ const GAME = {
     ITEMS.init();
     this.render();
     if(loaded&&G.offlineEarned>0) setTimeout(()=>UI.showWelcomeBack(G.offlineEarned,G.offlineElapsed),600);
+    else if(TUTORIAL.shouldShow()) setTimeout(()=>TUTORIAL.show(),600);
     this.startLoop();
     this.scheduleEvent();
   },
@@ -2278,17 +2802,34 @@ const GAME = {
       const btn=e.target.closest('.tab-btn'); if(!btn) return;
       const tab=btn.dataset.tab;
       document.querySelectorAll('#center-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
-      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard','affiliate','items'].forEach(t=>{
-        document.getElementById('tab-'+t).style.display=t===tab?'':'none';
+      ['click','upgrades','research','cards','gambling','prestige','stats','community','items','expansion'].forEach(t=>{
+        const el=document.getElementById('tab-'+t);
+        if(el) el.style.display=t===tab?'':'none';
       });
       if(tab==='stats')    UI.renderStats();
       if(tab==='prestige') UI.renderPrestige();
       if(tab==='cards')    UI.renderCards();
       if(tab==='upgrades') UI.renderUpgrades(this._upgradeFilter);
       if(tab==='research') UI.renderResearch();
-      if(tab==='leaderboard' && window.LeaderboardModule) window.LeaderboardModule.refresh();
-      if(tab==='affiliate' && window.AffiliateModule) window.AffiliateModule.refresh();
+      if(tab==='community'){
+        // Default to whichever community sub-tab is currently marked active
+        const activeSub = document.querySelector('#community-subtabs .tab-btn.active')?.dataset.communitytab || 'leaderboard';
+        if(activeSub==='leaderboard' && window.LeaderboardModule) window.LeaderboardModule.refresh();
+        if(activeSub==='affiliate' && window.AffiliateModule) window.AffiliateModule.refresh();
+      }
       if(tab==='items')     ITEMS.renderAll();
+      if(tab==='expansion' && window.XUI) window.XUI.renderAll();
+    });
+
+    document.getElementById('community-subtabs').addEventListener('click', e=>{
+      const btn=e.target.closest('.tab-btn'); if(!btn) return;
+      const sub=btn.dataset.communitytab;
+      document.querySelectorAll('#community-subtabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
+      document.querySelectorAll('.community-page').forEach(p=>{
+        p.style.display = p.id==='communitypage-'+sub ? '' : 'none';
+      });
+      if(sub==='leaderboard' && window.LeaderboardModule) window.LeaderboardModule.refresh();
+      if(sub==='affiliate' && window.AffiliateModule) window.AffiliateModule.refresh();
     });
 
     document.getElementById('right-tabs').addEventListener('click',e=>{
@@ -2329,6 +2870,7 @@ const GAME = {
       if(confirm('Hard reset? All progress lost!')) SAVE.reset();
     });
     document.getElementById('promo-btn').addEventListener('click',()=>this.showPromoModal());
+    document.getElementById('help-btn').addEventListener('click',()=>TUTORIAL.show());
 
     document.getElementById('btn-boost-ad').addEventListener('click',()=>{
       G.boostActive=true; G.boostMult=2; G.boostTimer=240;
@@ -2341,6 +2883,14 @@ const GAME = {
     document.getElementById('roulette-btn').addEventListener('click',()=>GAMBLE.roulette(G.selectedRouletteBet,document.getElementById('roulette-bet').value));
     document.getElementById('race-btn').addEventListener('click',()=>GAMBLE.startRace(document.getElementById('race-bet').value));
     document.getElementById('crash-btn').addEventListener('click',()=>GAMBLE.startCrash(document.getElementById('crash-bet').value));
+    document.getElementById('casino-subtabs').addEventListener('click',e=>{
+      const btn=e.target.closest('.tab-btn'); if(!btn) return;
+      const gameId=btn.dataset.casinotab;
+      document.querySelectorAll('#casino-subtabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
+      document.querySelectorAll('.casino-game').forEach(panel=>{
+        panel.style.display = panel.id==='casinogame-'+gameId ? '' : 'none';
+      });
+    });
     document.getElementById('crash-cashout').addEventListener('click',()=>GAMBLE.cashOutCrash());
     document.getElementById('dice-btn').addEventListener('click',()=>{
       const target=parseInt(document.getElementById('dice-target').value);
@@ -3338,62 +3888,68 @@ const XGAME = {
 
   setupTabs(){
     const centerTabs=document.getElementById('center-tabs');
-    if(centerTabs && !document.getElementById('tab-btn-stocks')){
-      ['📈|stocks|Stocks','👔|employees|Team','🌟|skills|Skills','🔗|mergers|Mergers','🏴|factions|Faction','🗺️|regions|World'].forEach(spec=>{
-        const [icon,id,label]=spec.split('|');
-        const btn=document.createElement('button');
-        btn.className='tab-btn';
-        btn.id='tab-btn-'+id;
-        btn.dataset.tab=id;
-        btn.textContent=`${icon} ${label}`;
-        centerTabs.appendChild(btn);
-      });
+    if(centerTabs && !document.getElementById('tab-btn-expansion')){
+      const btn=document.createElement('button');
+      btn.className='tab-btn';
+      btn.id='tab-btn-expansion';
+      btn.dataset.tab='expansion';
+      btn.textContent='🏢 Erweiterung';
+      centerTabs.appendChild(btn);
     }
     const centerPanel=document.getElementById('center-panel');
-    if(centerPanel && !document.getElementById('tab-stocks')){
+    if(centerPanel && !document.getElementById('tab-expansion')){
       const panels=`
-      <div id="tab-stocks" style="display:none">
-        <div class="section-title" style="padding-top:12px">📈 Digital Stock Exchange</div>
-        <div class="stock-list" id="stock-list"></div>
-      </div>
-      <div id="tab-employees" style="display:none">
-        <div class="section-title" style="padding-top:12px">👔 Your Team</div>
-        <div class="employee-grid" id="employee-grid"></div>
-      </div>
-      <div id="tab-skills" style="display:none">
-        <div class="xp-bar-wrap" id="xp-bar-container"></div>
-        <div class="skill-branches" id="skill-branches"></div>
-      </div>
-      <div id="tab-mergers" style="display:none">
-        <div class="section-title" style="padding-top:12px">🔗 Company Mergers</div>
-        <div class="merger-list" id="merger-list"></div>
-      </div>
-      <div id="tab-factions" style="display:none">
-        <div class="section-title" style="padding-top:12px">🏴 Choose Your Faction</div>
-        <div class="faction-grid" id="faction-grid"></div>
-      </div>
-      <div id="tab-regions" style="display:none">
-        <div class="section-title" style="padding-top:12px">🗺️ World Expansion</div>
-        <div class="region-list" id="region-list"></div>
+      <div id="tab-expansion" style="display:none">
+        <div class="tab-nav" id="expansion-subtabs" style="border-top:none">
+          <button class="tab-btn active" data-exptab="stocks">📈 Börse</button>
+          <button class="tab-btn" data-exptab="employees">👔 Team</button>
+          <button class="tab-btn" data-exptab="skills">🌟 Skills</button>
+          <button class="tab-btn" data-exptab="mergers">🔗 Fusionen</button>
+          <button class="tab-btn" data-exptab="factions">🏴 Fraktion</button>
+          <button class="tab-btn" data-exptab="regions">🗺️ Welt</button>
+        </div>
+        <div class="expansion-page" id="exppage-stocks">
+          <div class="section-title" style="padding-top:12px">📈 Digital Stock Exchange</div>
+          <div class="stock-list" id="stock-list"></div>
+        </div>
+        <div class="expansion-page" id="exppage-employees" style="display:none">
+          <div class="section-title" style="padding-top:12px">👔 Your Team</div>
+          <div class="employee-grid" id="employee-grid"></div>
+        </div>
+        <div class="expansion-page" id="exppage-skills" style="display:none">
+          <div class="xp-bar-wrap" id="xp-bar-container"></div>
+          <div class="skill-branches" id="skill-branches"></div>
+        </div>
+        <div class="expansion-page" id="exppage-mergers" style="display:none">
+          <div class="section-title" style="padding-top:12px">🔗 Company Mergers</div>
+          <div class="merger-list" id="merger-list"></div>
+        </div>
+        <div class="expansion-page" id="exppage-factions" style="display:none">
+          <div class="section-title" style="padding-top:12px">🏴 Choose Your Faction</div>
+          <div class="faction-grid" id="faction-grid"></div>
+        </div>
+        <div class="expansion-page" id="exppage-regions" style="display:none">
+          <div class="section-title" style="padding-top:12px">🗺️ World Expansion</div>
+          <div class="region-list" id="region-list"></div>
+        </div>
       </div>`;
       centerPanel.insertAdjacentHTML('beforeend',panels);
+
+      document.getElementById('expansion-subtabs').addEventListener('click', e=>{
+        const btn=e.target.closest('.tab-btn'); if(!btn) return;
+        const sub=btn.dataset.exptab;
+        document.querySelectorAll('#expansion-subtabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
+        document.querySelectorAll('.expansion-page').forEach(p=>{
+          p.style.display = p.id==='exppage-'+sub ? '' : 'none';
+        });
+        XUI.renderAll();
+      });
     }
   },
 
   setupListeners(){
-    document.getElementById('center-tabs').addEventListener('click',e=>{
-      const btn=e.target.closest('.tab-btn');
-      if(!btn) return;
-      const tab=btn.dataset.tab;
-      const xTabs=['stocks','employees','skills','mergers','factions','regions'];
-      if(!xTabs.includes(tab)) return;
-      document.querySelectorAll('#center-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
-      ['click','upgrades','research','cards','gambling','prestige','stats','leaderboard','affiliate','items',...xTabs].forEach(t=>{
-        const el=document.getElementById('tab-'+t);
-        if(el) el.style.display=(t===tab)?'':'none';
-      });
-      XUI.renderAll();
-    });
+    // Tab show/hide for 'expansion' is now handled by the main center-tabs listener
+    // in GAME.setupListeners(); nothing extra needed here.
   },
 
   buyStock(id){
@@ -3577,7 +4133,7 @@ const XGAME = {
     };
     requestAnimationFrame(loop);
     setInterval(()=>{
-      if(document.getElementById('tab-stocks')?.style.display!=='none') XUI.renderStocks();
+      if(document.getElementById('exppage-stocks')?.style.display!=='none') XUI.renderStocks();
     },2000);
   },
 };
@@ -3782,6 +4338,9 @@ import {
   collection, query, where, orderBy, limit, getDocs,
   runTransaction, addDoc, deleteDoc, onSnapshot, increment, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getStorage, ref, uploadBytes, getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBDDouu-3L4s7Wwrt398F5jUkU1OfZRQ3o",
@@ -3796,6 +4355,7 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
+const storage = getStorage(fbApp);
 
 let currentUser = null;
 let authMode = 'login'; // 'login' | 'register'
@@ -3803,6 +4363,26 @@ let cloudSyncInterval = null;
 let isGuestMode = false;
 let isApplyingCloudSave = false;
 let pendingNewUserSetup = null; // {uid, referredByUid, referredByCode} set right after registration
+let myProfile = null; // {username, bio, photoURL, flairs, createdAt}
+
+const FLAIR_CATALOG = [
+  // --- Earned (auto-granted based on game progress, checked on save) ---
+  {id:'f_top10',     icon:'🏆', label:'Top 10 Leaderboard', type:'earned', check:(p)=> (p._lbRank||999) <= 10},
+  {id:'f_prestige10',icon:'♻️', label:'10× Prestige',       type:'earned', check:(p)=> (p.prestigeCount||0) >= 10},
+  {id:'f_hardreset', icon:'💀', label:'Hard Reset Survivor', type:'earned', check:(p)=> (p.hardResetCount||0) >= 1},
+  {id:'f_richest',   icon:'💰', label:'Quintillionär',       type:'earned', check:(p)=> (p.totalCashEarned||0) >= 1e18},
+  {id:'f_collector', icon:'🎒', label:'Item-Sammler',        type:'earned', check:(p)=> Object.values(p.items||{}).filter(c=>c>0).length >= 20},
+  {id:'f_og',        icon:'🌟', label:'Veteran',              type:'earned', check:(p)=> p._accountAgeDays >= 30},
+  // --- Purchasable with Quantum Chips ---
+  {id:'f_crown',     icon:'👑', label:'Krone',     type:'shop', cost:50},
+  {id:'f_fire',      icon:'🔥', label:'On Fire',   type:'shop', cost:25},
+  {id:'f_ghost',     icon:'👻', label:'Phantom',   type:'shop', cost:25},
+  {id:'f_robot',     icon:'🤖', label:'Cyborg',    type:'shop', cost:25},
+  {id:'f_diamond',   icon:'💎', label:'Diamond Hands', type:'shop', cost:75},
+  {id:'f_alien',     icon:'👽', label:'Alien',     type:'shop', cost:40},
+];
+const AVATAR_PRESETS = ['😀','😎','🤖','👾','🦊','🐺','🦁','🐉','🧛','🥷','👨‍💻','👩‍💻','🧙','🦹','🤑','💀','👽','🐸'];
+
 let myAffiliateData = null; // {code, codeChangedAt, referredByUid, referredByCode}
 
 /* ---- Helpers exposed for the main game script (loaded as non-module, so we bridge via window) ---- */
@@ -3914,13 +4494,21 @@ function updateUserBadge(){
   const badge = document.getElementById('user-badge');
   if(!badge) return;
   if(currentUser){
-    badge.textContent = '👤 ' + currentUser.email;
+    if(myProfile){
+      badge.innerHTML = profileAvatarHtml(myProfile,16) + ' ' + myProfile.username;
+    } else {
+      badge.textContent = '👤 ' + currentUser.email;
+    }
     badge.title = 'Klicken um dich abzumelden';
   } else {
     badge.textContent = '👤 Gast (nur lokal)';
     badge.title = 'Nicht angemeldet — Fortschritt wird nur lokal gespeichert';
   }
 }
+document.getElementById('profile-btn')?.addEventListener('click', ()=>{
+  if(!currentUser){ window.UI?.toast('❌ Melde dich an, um ein Profil zu erstellen.','danger'); return; }
+  showProfileCard(currentUser.uid);
+});
 
 document.getElementById('user-badge')?.addEventListener('click', async () => {
   if(currentUser){
@@ -4040,6 +4628,8 @@ onAuthStateChanged(auth, async (user) => {
 
     // Set up affiliate account: generate own code on first login, apply pending referral if registering now.
     await setupAffiliateAccount();
+    await setupProfile();
+    updateUserBadge();
 
     // Periodic cloud sync every 30s + on page hide
     if(cloudSyncInterval) clearInterval(cloudSyncInterval);
@@ -4123,6 +4713,280 @@ async function setupAffiliateAccount(){
   }
 }
 
+/* ============================================================
+   PROFILE SYSTEM — username, avatar, bio, flairs
+   ============================================================ */
+const profileCache = {}; // uid -> profile object (avoids refetching the same player repeatedly)
+
+async function setupProfile(){
+  if(!currentUser) return;
+  try {
+    const profRef = doc(db, 'profiles', currentUser.uid);
+    const snap = await getDoc(profRef);
+    if(!snap.exists()){
+      const defaultUsername = currentUser.email.split('@')[0].slice(0,16);
+      myProfile = {
+        username: defaultUsername,
+        bio: '',
+        photoURL: '',
+        avatarEmoji: AVATAR_PRESETS[Math.floor(Math.random()*AVATAR_PRESETS.length)],
+        flairs: [],
+        activeFlair: null,
+        createdAt: Date.now(),
+      };
+      await setDoc(profRef, { ...myProfile, createdAt: serverTimestamp() });
+    } else {
+      const d = snap.data();
+      myProfile = {
+        username: d.username || currentUser.email.split('@')[0],
+        bio: d.bio || '',
+        photoURL: d.photoURL || '',
+        avatarEmoji: d.avatarEmoji || '😀',
+        flairs: d.flairs || [],
+        activeFlair: d.activeFlair || null,
+        createdAt: d.createdAt?.toMillis ? d.createdAt.toMillis() : Date.now(),
+      };
+    }
+    profileCache[currentUser.uid] = myProfile;
+    await checkEarnedFlairs();
+  } catch(e){
+    console.warn('Profile setup failed', e);
+  }
+}
+
+async function checkEarnedFlairs(){
+  if(!currentUser || !myProfile) return;
+  const G = getGState();
+  if(!G) return;
+  const ageDays = (Date.now() - myProfile.createdAt) / 86400000;
+  const ctx = { ...G, _accountAgeDays: ageDays, _lbRank: leaderboardCache?.findIndex?.(e=>e.uid===currentUser.uid)+1 || 999 };
+  let changed = false;
+  FLAIR_CATALOG.filter(f=>f.type==='earned').forEach(f=>{
+    if(!myProfile.flairs.includes(f.id) && f.check(ctx)){
+      myProfile.flairs.push(f.id);
+      changed = true;
+      window.UI?.toast(`🎖️ Neues Flair freigeschaltet: ${f.icon} ${f.label}!`,'achievement');
+    }
+  });
+  if(changed){
+    try { await setDoc(doc(db,'profiles',currentUser.uid), { flairs: myProfile.flairs }, { merge:true }); } catch(e){}
+  }
+}
+
+async function getProfile(uid){
+  if(profileCache[uid]) return profileCache[uid];
+  try {
+    const snap = await getDoc(doc(db,'profiles',uid));
+    if(snap.exists()){
+      const d = snap.data();
+      const prof = {
+        username: d.username || 'Spieler', bio: d.bio||'', photoURL: d.photoURL||'',
+        avatarEmoji: d.avatarEmoji||'😀', flairs: d.flairs||[], activeFlair: d.activeFlair||null,
+        createdAt: d.createdAt?.toMillis ? d.createdAt.toMillis() : null,
+      };
+      profileCache[uid] = prof;
+      return prof;
+    }
+  } catch(e){ console.warn('getProfile failed', e); }
+  return { username:'Spieler', bio:'', photoURL:'', avatarEmoji:'😀', flairs:[], activeFlair:null, createdAt:null };
+}
+
+function profileAvatarHtml(profile, size){
+  size = size || 28;
+  if(profile.photoURL){
+    return `<img src="${profile.photoURL}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;vertical-align:middle">`;
+  }
+  return `<span style="font-size:${size*0.8}px">${profile.avatarEmoji||'😀'}</span>`;
+}
+
+// Reusable "profile chip" — avatar + username + active flair — used everywhere a player is shown.
+// Always clickable to open that player's public profile card.
+function renderProfileChip(profile, uid, fallbackEmail){
+  const flairDef = profile.activeFlair ? FLAIR_CATALOG.find(f=>f.id===profile.activeFlair) : null;
+  const name = profile.username || maskEmail(fallbackEmail||'');
+  return `<span class="profile-chip" data-profileuid="${uid}">
+    ${profileAvatarHtml(profile,18)}
+    <span class="profile-chip-name">${name}</span>
+    ${flairDef?`<span class="profile-chip-flair" title="${flairDef.label}">${flairDef.icon}</span>`:''}
+  </span>`;
+}
+
+// Delegate clicks on any .profile-chip anywhere in the document to open that player's profile card.
+document.addEventListener('click', (e)=>{
+  const chip = e.target.closest('.profile-chip');
+  if(chip && chip.dataset.profileuid) showProfileCard(chip.dataset.profileuid);
+});
+
+async function showProfileCard(uid){
+  const prof = await getProfile(uid);
+  const isMe = currentUser && uid===currentUser.uid;
+  const flairIcons = prof.flairs.map(fid=>{
+    const f=FLAIR_CATALOG.find(x=>x.id===fid); return f?`<span title="${f.label}" style="margin-right:4px">${f.icon}</span>`:'';
+  }).join('');
+  const createdLabel = prof.createdAt ? new Date(prof.createdAt).toLocaleDateString('de-DE') : 'Unbekannt';
+  document.getElementById('modal-container').innerHTML = `
+  <div class="modal-overlay" id="profile-card-modal">
+    <div class="modal-box">
+      <div style="margin-bottom:10px">${profileAvatarHtml(prof,72)}</div>
+      <h2>${prof.username}</h2>
+      ${prof.bio?`<p style="font-style:italic">"${prof.bio}"</p>`:''}
+      <div style="margin:10px 0">${flairIcons||'<span style="color:var(--text-muted);font-size:11px">Noch keine Flairs</span>'}</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-bottom:14px">Mitglied seit ${createdLabel}</div>
+      ${isMe?'<button class="btn-collect" id="profile-edit-btn">✏️ Profil bearbeiten</button>':''}
+      <button class="btn-collect secondary" id="profile-close-btn">Schließen</button>
+    </div>
+  </div>`;
+  document.getElementById('profile-close-btn').onclick = ()=>window.UI.hideModal();
+  const editBtn = document.getElementById('profile-edit-btn');
+  if(editBtn) editBtn.onclick = ()=>showProfileEditor();
+}
+
+function compressImageFile(file){
+  // Downscale + JPEG-compress client-side before upload, to keep Storage usage (and the
+  // free Spark plan's download quota) small — avatars don't need to be more than ~160px.
+  return new Promise((resolve,reject)=>{
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e)=>{ img.src = e.target.result; };
+    reader.onerror = reject;
+    img.onload = ()=>{
+      const size = 160;
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      // Center-crop to square
+      const minDim = Math.min(img.width, img.height);
+      const sx = (img.width-minDim)/2, sy = (img.height-minDim)/2;
+      ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+      canvas.toBlob(blob=>resolve(blob), 'image/jpeg', 0.82);
+    };
+    img.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function showProfileEditor(){
+  if(!currentUser || !myProfile) return;
+  document.getElementById('modal-container').innerHTML = `
+  <div class="modal-overlay" id="profile-edit-modal">
+    <div class="modal-box">
+      <h2>✏️ Profil bearbeiten</h2>
+      <div style="margin-bottom:10px">${profileAvatarHtml(myProfile,72)}</div>
+      <input type="file" id="avatar-upload-input" accept="image/*" style="display:none">
+      <button class="btn-copy" id="avatar-upload-btn">📷 Bild hochladen</button>
+      <div class="avatar-preset-grid" id="avatar-preset-grid">
+        ${AVATAR_PRESETS.map(e=>`<button class="avatar-preset-btn${e===myProfile.avatarEmoji&&!myProfile.photoURL?' selected':''}" data-emoji="${e}">${e}</button>`).join('')}
+      </div>
+      <input class="auth-input" id="edit-username" type="text" maxlength="16" placeholder="Nutzername" value="${myProfile.username}">
+      <input class="auth-input" id="edit-bio" type="text" maxlength="60" placeholder="Kurze Beschreibung (optional)" value="${myProfile.bio}">
+      <div class="section-title" style="padding:8px 0 4px;text-align:left">Aktives Flair</div>
+      <div class="flair-select-grid" id="flair-select-grid"></div>
+      <button class="btn-collect" id="profile-save-btn" style="margin-top:10px">Speichern</button>
+      <button class="btn-collect secondary" id="profile-cancel-btn">Abbrechen</button>
+      <div class="auth-error" id="profile-edit-error"></div>
+    </div>
+  </div>`;
+
+  let pendingPhotoURL = myProfile.photoURL;
+  let pendingEmoji = myProfile.avatarEmoji;
+
+  document.querySelectorAll('.avatar-preset-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      pendingEmoji = btn.dataset.emoji;
+      pendingPhotoURL = ''; // picking a preset clears any uploaded photo
+      document.querySelectorAll('.avatar-preset-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+    };
+  });
+
+  document.getElementById('avatar-upload-btn').onclick = ()=>document.getElementById('avatar-upload-input').click();
+  document.getElementById('avatar-upload-input').onchange = async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const errEl = document.getElementById('profile-edit-error');
+    errEl.textContent = 'Lade Bild hoch…';
+    try {
+      const blob = await compressImageFile(file);
+      const fileRef = ref(storage, `avatars/${currentUser.uid}.jpg`);
+      await uploadBytes(fileRef, blob);
+      pendingPhotoURL = await getDownloadURL(fileRef);
+      errEl.textContent = '✅ Bild hochgeladen!';
+    } catch(err){
+      console.warn('Avatar upload failed', err);
+      errEl.textContent = '❌ Upload fehlgeschlagen.';
+    }
+  };
+
+  // Flair selection grid: shows earned + purchased flairs as selectable, locked shop flairs as buyable.
+  const grid = document.getElementById('flair-select-grid');
+  let pendingActiveFlair = myProfile.activeFlair;
+  function renderFlairGrid(){
+    grid.innerHTML = `<button class="flair-pill${!pendingActiveFlair?' selected':''}" data-flairpick="none">Kein Flair</button>` +
+      FLAIR_CATALOG.map(f=>{
+        const owned = myProfile.flairs.includes(f.id);
+        if(owned){
+          return `<button class="flair-pill${pendingActiveFlair===f.id?' selected':''}" data-flairpick="${f.id}">${f.icon} ${f.label}</button>`;
+        } else if(f.type==='shop'){
+          return `<button class="flair-pill locked" data-flairbuy="${f.id}">${f.icon} ${f.label} — ${f.cost}💎</button>`;
+        }
+        return `<button class="flair-pill locked" disabled>${f.icon} ${f.label} 🔒</button>`;
+      }).join('');
+    grid.querySelectorAll('[data-flairpick]').forEach(btn=>{
+      btn.onclick = ()=>{ pendingActiveFlair = btn.dataset.flairpick==='none'?null:btn.dataset.flairpick; renderFlairGrid(); };
+    });
+    grid.querySelectorAll('[data-flairbuy]').forEach(btn=>{
+      btn.onclick = async ()=>{
+        const f = FLAIR_CATALOG.find(x=>x.id===btn.dataset.flairbuy);
+        const G = getGState();
+        if(!G || G.quantumChips < f.cost){ window.UI.toast('❌ Nicht genug Quantum Chips!','danger'); return; }
+        G.quantumChips -= f.cost;
+        myProfile.flairs.push(f.id);
+        await setDoc(doc(db,'profiles',currentUser.uid), { flairs: myProfile.flairs }, { merge:true });
+        pushCloudSave();
+        window.UI.toast(`🎖️ Flair gekauft: ${f.icon} ${f.label}!`,'achievement');
+        renderFlairGrid();
+      };
+    });
+  }
+  renderFlairGrid();
+
+  document.getElementById('profile-cancel-btn').onclick = ()=>showProfileCard(currentUser.uid);
+  document.getElementById('profile-save-btn').onclick = async ()=>{
+    const username = document.getElementById('edit-username').value.trim().slice(0,16);
+    const bio = document.getElementById('edit-bio').value.trim().slice(0,60);
+    const errEl = document.getElementById('profile-edit-error');
+    if(!username){ errEl.textContent='Bitte einen Nutzernamen eingeben.'; return; }
+    try {
+      myProfile.username = username;
+      myProfile.bio = bio;
+      myProfile.photoURL = pendingPhotoURL;
+      myProfile.avatarEmoji = pendingEmoji;
+      myProfile.activeFlair = pendingActiveFlair;
+      await setDoc(doc(db,'profiles',currentUser.uid), {
+        username, bio, photoURL: pendingPhotoURL, avatarEmoji: pendingEmoji, activeFlair: pendingActiveFlair,
+      }, { merge:true });
+      profileCache[currentUser.uid] = myProfile;
+      window.UI.toast('✅ Profil gespeichert!','achievement');
+      window.UI.hideModal();
+      if(window.ProfileModule) window.ProfileModule.refreshHeaderBadge();
+    } catch(e){
+      console.warn('Profile save failed', e);
+      errEl.textContent = 'Speichern fehlgeschlagen.';
+    }
+  };
+}
+
+window.ProfileModule = {
+  show: showProfileCard,
+  showEditor: showProfileEditor,
+  getProfile,
+  renderProfileChip,
+  refreshHeaderBadge(){
+    const badge = document.getElementById('user-badge');
+    if(badge && myProfile) badge.innerHTML = `${profileAvatarHtml(myProfile,16)} ${myProfile.username}`;
+  },
+};
+
 
 let gameStarted = false;
 function startGameAfterAuth(){
@@ -4190,27 +5054,35 @@ async function fetchLeaderboard(){
   }
 }
 
-function renderLeaderboard(){
+async function renderLeaderboard(){
   const list = document.getElementById('leaderboard-list');
   if(leaderboardCache.length === 0){
     list.innerHTML = '<div class="lb-loading">Noch keine Spieler im Leaderboard. Spiele etwas und speichere, um hier zu erscheinen!</div>';
     return;
   }
   list.innerHTML = '';
+  // Prefetch profiles for all visible rows up front (uses the cache, so repeat opens are instant).
+  await Promise.all(leaderboardCache.map(e => getProfile(e.uid)));
   leaderboardCache.forEach((entry, i) => {
     const isMe = currentUser && entry.uid === currentUser.uid;
+    const prof = profileCache[entry.uid] || {username:maskEmail(entry.email),avatarEmoji:'😀',flairs:[],activeFlair:null};
     const row = document.createElement('div');
     row.className = 'lb-row' + (isMe ? ' is-me' : '');
     const rankClass = i===0?'top1':i===1?'top2':i===2?'top3':'';
     row.innerHTML = `
       <div class="lb-rank ${rankClass}">#${i+1}</div>
       <div class="lb-info">
-        <div class="lb-email">${maskEmail(entry.email)}${isMe?' (Du)':''}</div>
+        <div class="lb-email">${renderProfileChip(prof, entry.uid, entry.email)}${isMe?' (Du)':''}</div>
         <div class="lb-stats">Lvl ${entry.accountLevel||1} · ${entry.prestigeCount||0}× Prestige</div>
       </div>
       <div class="lb-cash">$${window.fmt(entry.totalCashEarned||0)}</div>`;
     if(!isMe){
-      row.addEventListener('click', () => showPlayerActionModal(entry));
+      // Click the row (outside the profile-chip avatar/name) opens the rob/gift/invest modal.
+      // Click on the profile-chip itself opens the profile card (handled by the global delegated listener).
+      row.addEventListener('click', (e) => {
+        if(e.target.closest('.profile-chip')) return;
+        showPlayerActionModal(entry);
+      });
     }
     list.appendChild(row);
   });
@@ -4219,7 +5091,7 @@ function renderLeaderboard(){
 document.getElementById('lb-refresh-btn')?.addEventListener('click', fetchLeaderboard);
 
 /* ---- Player action modal (Gift / Rob / Invest) ---- */
-function showPlayerActionModal(target){
+async function showPlayerActionModal(target){
   if(!currentUser){
     window.UI?.toast('❌ Melde dich an, um mit anderen Spielern zu interagieren.', 'danger');
     return;
@@ -4227,11 +5099,13 @@ function showPlayerActionModal(target){
   const cooldownUntil = robCooldowns[target.uid] || 0;
   const onCooldown = Date.now() < cooldownUntil;
   const cooldownMins = onCooldown ? Math.ceil((cooldownUntil-Date.now())/60000) : 0;
+  const prof = await getProfile(target.uid);
 
   document.getElementById('modal-container').innerHTML = `
   <div class="modal-overlay" id="player-action-modal">
     <div class="modal-box">
-      <h2>${maskEmail(target.email)}</h2>
+      <div style="margin-bottom:6px">${profileAvatarHtml(prof,48)}</div>
+      <h2>${prof.username || maskEmail(target.email)}</h2>
       <p>Lvl ${target.accountLevel||1} · $${window.fmt(target.totalCashEarned||0)} verdient</p>
       <div class="player-action-grid">
         <button class="player-action-btn gift-action" id="pa-gift">
@@ -4759,7 +5633,9 @@ window.AffiliateModule = {
 
 // Refresh affiliate tab + claim cooldown display every 30s while it's open
 setInterval(() => {
-  if(currentUser && document.getElementById('tab-affiliate')?.style.display !== 'none'){
+  const affiliatePageVisible = document.getElementById('tab-community')?.style.display !== 'none' &&
+                                document.getElementById('communitypage-affiliate')?.style.display !== 'none';
+  if(currentUser && affiliatePageVisible){
     renderAffiliateTab();
   }
 }, 30000);
@@ -4830,24 +5706,31 @@ async function fetchMarketListings(){
   }
   list.innerHTML = '<div class="lb-loading">Lade Angebote…</div>';
   try {
-    const q = query(collection(db, 'marketListings'), where('status', '==', 'active'), orderBy('createdAt', 'desc'), limit(50));
+    // NOTE: deliberately no orderBy() combined with where() here — that combination
+    // requires a composite Firestore index that isn't auto-created, which silently
+    // broke the marketplace before (the query failed and the UI never updated).
+    // Sorting newest-first happens client-side instead.
+    const q = query(collection(db, 'marketListings'), where('status', '==', 'active'), limit(100));
     const snap = await getDocs(q);
     const listings = [];
     snap.forEach(d => listings.push({ id: d.id, ...d.data() }));
+    listings.sort((a,b) => (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0));
 
     if(listings.length === 0){
       list.innerHTML = '<div class="lb-loading">Keine aktiven Angebote. Sei der Erste!</div>';
       return;
     }
     const ITEMS_DEF_REF = window.ITEMS_DEF || [];
+    await Promise.all(listings.map(l => getProfile(l.sellerUid)));
     list.innerHTML = listings.map(l => {
       const itemDef = ITEMS_DEF_REF.find(i => i.id === l.itemId);
       const isMine = l.sellerUid === currentUser.uid;
+      const sellerProf = profileCache[l.sellerUid] || {username:maskEmail(l.sellerEmail),avatarEmoji:'😀',flairs:[],activeFlair:null};
       return `<div class="market-listing-card${isMine?' mine':''}">
         <div class="ml-icon">${itemDef?.icon || '❓'}</div>
         <div class="ml-info">
           <div class="ml-name">${itemDef?.name || l.itemId}${isMine?' (Dein Angebot)':''}</div>
-          <div class="ml-seller">Verkäufer: ${maskEmail(l.sellerEmail)}</div>
+          <div class="ml-seller">Verkäufer: ${renderProfileChip(sellerProf, l.sellerUid, l.sellerEmail)}</div>
         </div>
         <div class="ml-price">$${window.fmt(l.price)}</div>
         ${isMine
