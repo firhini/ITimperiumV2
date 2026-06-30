@@ -484,6 +484,9 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .btn-buy-listing{padding:6px 14px;border-radius:var(--radius-sm);background:var(--neon-green);color:#000;font-size:11px;font-weight:700}
 .btn-cancel-listing{padding:6px 14px;border-radius:var(--radius-sm);background:var(--danger);color:#fff;font-size:11px;font-weight:700}
 .market-select{background:var(--bg-deep);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;color:var(--text-main);font-size:12px;font-family:inherit}
+.duel-create-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.duel-create-row .market-select{flex:1;min-width:140px}
+.duel-create-row .bet-input{flex:1;min-width:80px}
 .expansion-page,.community-page{padding-bottom:4px}
 </style>
 </head>
@@ -630,6 +633,8 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
       <button class="tab-btn" data-casinotab="race">🐴 Rennen</button>
       <button class="tab-btn" data-casinotab="crash">🚀 Crash</button>
       <button class="tab-btn" data-casinotab="dice">🎲 Würfel</button>
+      <button class="tab-btn" data-casinotab="duels">⚔️ Duelle</button>
+      <button class="tab-btn" data-casinotab="pool">🎯 Pool-Wetten</button>
     </div>
     <div id="gambling-section">
       <div class="gamble-panel casino-game" id="casinogame-slots">
@@ -782,6 +787,34 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
         </div>
       </div>
 
+      <div class="gamble-panel casino-game" id="casinogame-duels" style="display:none">
+        <div class="gamble-title">⚔️ PvP-Duelle</div>
+        <div class="gamble-sub">Fordere andere Spieler 1-gegen-1 heraus. Gewinner nimmt den gesamten Einsatz!</div>
+        <div class="duel-create-row">
+          <select class="market-select" id="duel-game-select">
+            <option value="coinflip">🪙 Münzwurf-Duell</option>
+            <option value="dice">🎲 Würfel-Duell</option>
+          </select>
+          <input class="bet-input" id="duel-bet-input" type="text" placeholder="Einsatz" value="1000">
+          <button class="btn-spin" id="duel-create-btn">Duell erstellen</button>
+        </div>
+        <div class="section-title" style="padding-left:0">Offene Duelle</div>
+        <div class="market-listing-list" id="duels-list"></div>
+      </div>
+
+      <div class="gamble-panel casino-game" id="casinogame-pool" style="display:none">
+        <div class="gamble-title">🎯 Live-Pool-Wetten</div>
+        <div class="gamble-sub">Alle Online-Spieler wetten gemeinsam auf Rot/Schwarz. Sieh live, wer wie viel setzt!</div>
+        <div id="pool-timer" style="font-size:11px;color:var(--neon-gold);margin-bottom:8px"></div>
+        <div class="slots-bet-row">
+          <input class="bet-input" id="pool-bet-input" type="text" placeholder="Einsatz" value="1000">
+          <button class="btn-stock buy" id="pool-bet-red">🔴 Auf Rot setzen</button>
+          <button class="btn-stock sell" id="pool-bet-black">⚫ Auf Schwarz setzen</button>
+        </div>
+        <div class="section-title" style="padding-left:0">Aktuelle Wetten dieser Runde</div>
+        <div class="affiliate-members-list" id="pool-bets-list"></div>
+      </div>
+
       <div class="gamble-panel">
         <div class="gamble-title" style="margin-bottom:8px">📊 Casino Stats</div>
         <div class="gamble-stat-row"><span>Total Wagered</span><span id="g-wagered">$0</span></div>
@@ -832,6 +865,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
   <div id="tab-community" style="display:none">
     <div class="tab-nav" id="community-subtabs" style="border-top:none">
       <button class="tab-btn active" data-communitytab="leaderboard">🌍 Leaderboard</button>
+      <button class="tab-btn" data-communitytab="casinolb">🎰 Casino-Rangliste</button>
       <button class="tab-btn" data-communitytab="affiliate">🔗 Affiliate</button>
     </div>
     <div class="community-page" id="communitypage-leaderboard">
@@ -841,6 +875,12 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
       </div>
       <div class="leaderboard-list" id="leaderboard-list">
         <div class="lb-loading">Lade Leaderboard…</div>
+      </div>
+    </div>
+    <div class="community-page" id="communitypage-casinolb" style="display:none">
+      <div class="section-title" style="padding:0 0 8px">🎰 Casino-Rangliste — Größter Netto-Gewinn aus Glücksspiel &amp; Duellen</div>
+      <div class="leaderboard-list" id="casino-leaderboard-list">
+        <div class="lb-loading">Lade Casino-Rangliste…</div>
       </div>
     </div>
     <div class="community-page" id="communitypage-affiliate" style="display:none">
@@ -2829,6 +2869,7 @@ const GAME = {
         p.style.display = p.id==='communitypage-'+sub ? '' : 'none';
       });
       if(sub==='leaderboard' && window.LeaderboardModule) window.LeaderboardModule.refresh();
+      if(sub==='casinolb' && window.CasinoPvP) window.CasinoPvP.refreshLeaderboard();
       if(sub==='affiliate' && window.AffiliateModule) window.AffiliateModule.refresh();
     });
 
@@ -2890,8 +2931,23 @@ const GAME = {
       document.querySelectorAll('.casino-game').forEach(panel=>{
         panel.style.display = panel.id==='casinogame-'+gameId ? '' : 'none';
       });
+      if(gameId==='duels' && window.CasinoPvP) window.CasinoPvP.refreshDuels();
+      if(gameId==='pool' && window.CasinoPvP) window.CasinoPvP.refreshPool();
     });
     document.getElementById('crash-cashout').addEventListener('click',()=>GAMBLE.cashOutCrash());
+    document.getElementById('duel-create-btn')?.addEventListener('click',()=>{
+      const gameId=document.getElementById('duel-game-select').value;
+      const bet=parseBet(document.getElementById('duel-bet-input').value);
+      if(window.CasinoPvP) window.CasinoPvP.createDuel(gameId,bet);
+    });
+    document.getElementById('pool-bet-red')?.addEventListener('click',()=>{
+      const bet=parseBet(document.getElementById('pool-bet-input').value);
+      if(window.CasinoPvP) window.CasinoPvP.createPoolBet('red',bet);
+    });
+    document.getElementById('pool-bet-black')?.addEventListener('click',()=>{
+      const bet=parseBet(document.getElementById('pool-bet-input').value);
+      if(window.CasinoPvP) window.CasinoPvP.createPoolBet('black',bet);
+    });
     document.getElementById('dice-btn').addEventListener('click',()=>{
       const target=parseInt(document.getElementById('dice-target').value);
       GAMBLE.rollDice(document.getElementById('dice-bet').value,target);
@@ -3492,13 +3548,13 @@ const GAME = {
    EXPANSION DATA
    ============================================================ */
 const STOCKS_DEF = [
-  {id:'s_meme',   name:'MemeForge Holdings',     ticker:'MEME', basePrice:8.40,   volatility:0.04, sector:'media',  drift:0.0003},
-  {id:'s_app',    name:'AppWorks Technologies',  ticker:'AWRX', basePrice:34.20,  volatility:0.03, sector:'tech',   drift:0.0004},
-  {id:'s_social', name:'SocialSphere Inc.',      ticker:'SOCS', basePrice:142.75, volatility:0.035,sector:'media',  drift:0.0003},
-  {id:'s_crypto', name:'CryptoExchange Group',   ticker:'CRYX', basePrice:67.90,  volatility:0.09, sector:'crypto', drift:0.0002},
-  {id:'s_cloud',  name:'CloudNet Systems',       ticker:'CLDN', basePrice:215.30, volatility:0.025,sector:'tech',   drift:0.0005},
-  {id:'s_ai',     name:'NeuralCore AI',          ticker:'NCAI', basePrice:380.50, volatility:0.05, sector:'ai',     drift:0.0006},
-  {id:'s_quantum',name:'Quantum Dynamics Corp',  ticker:'QNTD', basePrice:890.00, volatility:0.06, sector:'tech',   drift:0.0005},
+  {id:'s_meme',   name:'MemeForge Holdings',     ticker:'MEME', basePrice:8.40,   volatility:0.08, sector:'media',  drift:0.0003},
+  {id:'s_app',    name:'AppWorks Technologies',  ticker:'AWRX', basePrice:34.20,  volatility:0.06, sector:'tech',   drift:0.0004},
+  {id:'s_social', name:'SocialSphere Inc.',      ticker:'SOCS', basePrice:142.75, volatility:0.07, sector:'media',  drift:0.0003},
+  {id:'s_crypto', name:'CryptoExchange Group',   ticker:'CRYX', basePrice:67.90,  volatility:0.18, sector:'crypto', drift:0.0002},
+  {id:'s_cloud',  name:'CloudNet Systems',       ticker:'CLDN', basePrice:215.30, volatility:0.05, sector:'tech',   drift:0.0005},
+  {id:'s_ai',     name:'NeuralCore AI',          ticker:'NCAI', basePrice:380.50, volatility:0.10, sector:'ai',     drift:0.0006},
+  {id:'s_quantum',name:'Quantum Dynamics Corp',  ticker:'QNTD', basePrice:890.00, volatility:0.12, sector:'tech',   drift:0.0005},
 ];
 const STOCK_NEWS = [
   {sector:'ai',     text:'AI Sektor im Aufwind nach starken Quartalszahlen',  mult:1.4,  dur:300},
@@ -3710,7 +3766,7 @@ const XUI = {
 
       card.innerHTML=`
         <div class="stock-head">
-          <div><div class="stock-name">${s.name}</div><div class="stock-ticker">$${s.ticker}</div></div>
+          <div><div class="stock-name">${s.name}</div><div class="stock-ticker">$${s.ticker} · <span data-showholders="${s.id}" style="text-decoration:underline;cursor:pointer">Top-Halter</span></div></div>
           <div style="text-align:right"><div class="stock-price">$${h.price.toFixed(2)}</div>
             <div class="stock-change ${changePct>=0?'up':'down'}">${changePct>=0?'▲':'▼'} ${Math.abs(changePct).toFixed(2)}%</div></div>
         </div>
@@ -3753,6 +3809,9 @@ const XUI = {
     });
     list.querySelectorAll('[data-sellmax]').forEach(btn=>{
       btn.addEventListener('click',()=>XGAME.sellStock(btn.dataset.sellmax,true));
+    });
+    list.querySelectorAll('[data-showholders]').forEach(el=>{
+      el.addEventListener('click',()=>{ if(window.StockSyncModule) window.StockSyncModule.showHolders(el.dataset.showholders); });
     });
   },
 
@@ -3967,6 +4026,7 @@ const XGAME = {
     UI.toast(`📈 ${qty}× $${s.ticker} gekauft für $${fmt(cost)}`);
     if(GAME.checkAchievements) GAME.checkAchievements();
     XUI.renderStocks();
+    if(window.StockSyncModule) window.StockSyncModule.pushPositions();
   },
   sellStock(id, sellAll){
     const s=STOCKS_DEF.find(s=>s.id===id);
@@ -3982,6 +4042,7 @@ const XGAME = {
     if(h.owned===0) h.avgCost=0;
     UI.toast(profit>=0?`📈 ${qty}× $${s.ticker} verkauft für +$${fmt(proceeds)} (Gewinn $${fmt(profit)})`:`📉 ${qty}× $${s.ticker} verkauft für $${fmt(proceeds)} (Verlust $${fmt(Math.abs(profit))})`,profit>=0?'achievement':'danger');
     XUI.renderStocks();
+    if(window.StockSyncModule) window.StockSyncModule.pushPositions();
   },
 
   hireEmployee(id){
@@ -4124,14 +4185,10 @@ const XGAME = {
   },
 
   startStockLoop(){
-    let last=performance.now();
-    const loop=(now)=>{
-      const dt=Math.min((now-last)/1000,1);
-      last=now;
-      this.tickStocks(dt);
-      requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
+    // NOTE: Local price-ticking is now handled by the global Firestore-synced market
+    // system (see MarketSync module in the Firebase script below). This client only
+    // renders whatever the synced market state contains; it no longer computes prices
+    // independently, so every player sees the exact same numbers.
     setInterval(()=>{
       if(document.getElementById('exppage-stocks')?.style.display!=='none') XUI.renderStocks();
     },2000);
@@ -4629,6 +4686,7 @@ onAuthStateChanged(auth, async (user) => {
     // Set up affiliate account: generate own code on first login, apply pending referral if registering now.
     await setupAffiliateAccount();
     await setupProfile();
+    if(window.StockSyncModule && !marketUnsub) window.StockSyncModule.start();
     updateUserBadge();
 
     // Periodic cloud sync every 30s + on page hide
@@ -5822,6 +5880,471 @@ window.MarketModule = {
   },
   showListPrompt: showListPromptFromInventory,
 };
+
+/* ============================================================
+   GLOBAL SYNCHRONIZED STOCK MARKET
+   No dedicated server/cronjob: whichever client notices the shared market
+   state is "stale" (last tick older than ~3s) becomes the temporary ticker
+   for one tick and writes the result back. Everyone else just reads the
+   same Firestore document in real time via onSnapshot, so all players see
+   identical prices and history at all times.
+   ============================================================ */
+const MARKET_DOC = () => doc(db, 'market', 'state');
+const MARKET_STALE_MS = 3000;
+let marketUnsub = null;
+let marketLastSnapshot = null; // latest market/state data, kept in sync via onSnapshot
+let marketTickInFlight = false;
+
+function buildInitialMarketState(){
+  const stocks = {};
+  STOCKS_DEF.forEach(s=>{
+    stocks[s.id] = { price:s.basePrice, fairValue:s.basePrice, history:[s.basePrice], trend:0 };
+  });
+  return { stocks, activeNews:null, updatedAt:Date.now(), tickCount:0 };
+}
+
+async function ensureMarketDocExists(){
+  const snap = await getDoc(MARKET_DOC());
+  if(!snap.exists()){
+    await setDoc(MARKET_DOC(), buildInitialMarketState());
+  }
+}
+
+function computeNextMarketTick(state, dtSeconds){
+  // Same mean-reversion model as the original local simulation (GAME.tickStocks),
+  // just operating on the shared state object instead of G.stocks, and with the
+  // option for a random news event to fire and shift fair value for everyone.
+  const dt = Math.min(dtSeconds, 5); // clamp to avoid one client's long absence causing a huge jump
+  const next = { stocks:{}, activeNews: state.activeNews, updatedAt: Date.now(), tickCount:(state.tickCount||0)+1 };
+
+  // Occasionally clear expired news, or roll a new one if none active.
+  if(next.activeNews){
+    next.activeNews = { ...next.activeNews, timeLeft: next.activeNews.timeLeft - dt };
+    if(next.activeNews.timeLeft <= 0) next.activeNews = null;
+  } else if(Math.random() < dt * 0.0015){ // small chance per second a fresh news event fires
+    const news = STOCK_NEWS[Math.floor(Math.random()*STOCK_NEWS.length)];
+    next.activeNews = { sector:news.sector, mult:news.mult, timeLeft:news.dur, text:news.text };
+  }
+
+  STOCKS_DEF.forEach(s=>{
+    const h = state.stocks?.[s.id] || { price:s.basePrice, fairValue:s.basePrice, history:[s.basePrice], trend:0 };
+    let fairValue = h.fairValue;
+    if(next.activeNews && (next.activeNews.sector===s.sector || next.activeNews.sector==='all')){
+      const targetFV = s.basePrice * next.activeNews.mult;
+      fairValue += (targetFV - fairValue) * 0.002 * dt * 60;
+    } else {
+      fairValue += (s.basePrice - fairValue) * 0.0008 * dt * 60;
+    }
+    fairValue = Math.min(fairValue, s.basePrice * 5);
+
+    let trend = h.trend*0.9 + (Math.random()-0.5)*s.volatility*0.1;
+    trend = Math.max(-s.volatility*1.5, Math.min(s.volatility*1.5, trend));
+
+    const pullToFair = (fairValue - h.price) * 0.015;
+    const changePerSecond = (pullToFair/Math.max(h.price,0.01)) + trend*2;
+    const MAX_CHANGE_PER_SECOND = 0.01; // slightly higher cap than before — more dramatic swings
+    const capped = Math.max(-MAX_CHANGE_PER_SECOND, Math.min(MAX_CHANGE_PER_SECOND, changePerSecond));
+    let price = h.price * (1 + capped*dt);
+    price = Math.max(s.basePrice*0.15, Math.min(s.basePrice*8, price));
+
+    const history = (h.history||[s.basePrice]).slice(-59);
+    history.push(price);
+
+    next.stocks[s.id] = { price, fairValue, trend, history };
+  });
+  return next;
+}
+
+async function maybeTickMarket(){
+  if(marketTickInFlight) return;
+  const snapshot = marketLastSnapshot;
+  if(!snapshot) return;
+  const ageMs = Date.now() - (snapshot.updatedAt||0);
+  if(ageMs < MARKET_STALE_MS) return; // someone else is already keeping it fresh enough
+
+  marketTickInFlight = true;
+  try {
+    // Re-read fresh right before writing, to minimize (not fully eliminate) the chance two
+    // clients tick at once. A small race here is harmless — worst case is a double-tick,
+    // which just means one extra price step, not a desync (everyone still converges on
+    // the same document afterward).
+    const fresh = await getDoc(MARKET_DOC());
+    const data = fresh.exists() ? fresh.data() : buildInitialMarketState();
+    const dt = Math.max(0.5, (Date.now() - (data.updatedAt||Date.now())) / 1000);
+    const next = computeNextMarketTick(data, dt);
+    await setDoc(MARKET_DOC(), next);
+  } catch(e){
+    console.warn('Market tick failed (harmless if another client ticked first)', e);
+  } finally {
+    marketTickInFlight = false;
+  }
+}
+
+function startMarketSync(){
+  ensureMarketDocExists().then(()=>{
+    marketUnsub = onSnapshot(MARKET_DOC(), (snap)=>{
+      if(!snap.exists()) return;
+      marketLastSnapshot = snap.data();
+      // Mirror synced prices into local G.stocks so all existing CALC/UI code
+      // (portfolio value, buy/sell, charts) keeps working unchanged — only price/
+      // fairValue/trend/history are overwritten; owned/avgCost/realizedPnl stay local.
+      const G = getGState();
+      if(G && marketLastSnapshot.stocks){
+        STOCKS_DEF.forEach(s=>{
+          const synced = marketLastSnapshot.stocks[s.id];
+          if(!synced) return;
+          if(!G.stocks[s.id]) G.stocks[s.id] = {owned:0,avgCost:0,realizedPnl:0};
+          G.stocks[s.id].price = synced.price;
+          G.stocks[s.id].fairValue = synced.fairValue;
+          G.stocks[s.id].trend = synced.trend;
+          G.stocks[s.id].history = synced.history;
+        });
+        G.activeNews = marketLastSnapshot.activeNews;
+        if(window.XUI && document.getElementById('exppage-stocks')?.style.display!=='none'){
+          window.XUI.renderStocks();
+        }
+      }
+    });
+  });
+  // Every 2s, check whether the market needs a new tick and step in if so.
+  setInterval(maybeTickMarket, 2000);
+}
+
+/* ============================================================
+   STOCK POSITIONS — see what other players are holding (per stock)
+   Lightweight: we just read each player's public 'leaderboard' doc which
+   already exposes nothing stock-specific, so instead we maintain a small
+   'stockPositions/{uid}' doc per player (written alongside normal cloud
+   saves) summarizing their current holdings. Readable by everyone.
+   ============================================================ */
+async function pushStockPositions(){
+  if(!currentUser) return;
+  const G = getGState();
+  if(!G || !G.stocks) return;
+  const positions = {};
+  STOCKS_DEF.forEach(s=>{
+    const h = G.stocks[s.id];
+    if(h && h.owned > 0) positions[s.id] = h.owned;
+  });
+  try {
+    await setDoc(doc(db,'stockPositions',currentUser.uid), {
+      positions, email: currentUser.email, updatedAt: serverTimestamp(),
+    });
+  } catch(e){ console.warn('Push stock positions failed', e); }
+}
+
+async function fetchTopHolders(stockId){
+  try {
+    const snap = await getDocs(collection(db,'stockPositions'));
+    const holders = [];
+    snap.forEach(d=>{
+      const data = d.data();
+      const qty = data.positions?.[stockId];
+      if(qty>0) holders.push({ uid:d.id, email:data.email, qty });
+    });
+    holders.sort((a,b)=>b.qty-a.qty);
+    return holders.slice(0,10);
+  } catch(e){ console.warn('Fetch holders failed', e); return []; }
+}
+
+async function showTopHoldersModal(stockId){
+  const s = STOCKS_DEF.find(x=>x.id===stockId);
+  const holders = await fetchTopHolders(stockId);
+  await Promise.all(holders.map(h=>getProfile(h.uid)));
+  const rows = holders.length===0
+    ? '<div class="lb-loading">Noch niemand hält diese Aktie.</div>'
+    : holders.map((h,i)=>{
+        const prof = profileCache[h.uid] || {username:maskEmail(h.email),avatarEmoji:'😀',flairs:[],activeFlair:null};
+        return `<div class="lb-row" style="cursor:default"><div class="lb-rank">#${i+1}</div><div class="lb-info">${renderProfileChip(prof,h.uid,h.email)}</div><div class="lb-cash">${h.qty} Anteile</div></div>`;
+      }).join('');
+  document.getElementById('modal-container').innerHTML = `
+  <div class="modal-overlay" id="holders-modal">
+    <div class="modal-box" style="max-width:380px">
+      <h2>📊 Top-Halter: $${s?.ticker||stockId}</h2>
+      <div style="text-align:left;max-height:300px;overflow-y:auto">${rows}</div>
+      <button class="btn-collect" id="holders-close" style="margin-top:12px">Schließen</button>
+    </div>
+  </div>`;
+  document.getElementById('holders-close').onclick = ()=>window.UI.hideModal();
+}
+
+window.StockSyncModule = {
+  start: startMarketSync,
+  pushPositions: pushStockPositions,
+  showHolders: showTopHoldersModal,
+};
+
+/* ============================================================
+   CASINO PVP — 1v1 duels + open bet pools, plus a dedicated casino leaderboard
+   ============================================================ */
+const DUEL_GAMES = [
+  {id:'coinflip', name:'Münzwurf-Duell', icon:'🪙'},
+  {id:'dice',     name:'Würfel-Duell',   icon:'🎲'},
+];
+
+async function createDuel(gameId, betAmount){
+  if(!currentUser) return;
+  const G = getGState();
+  if(!G || G.cash < betAmount){ window.UI.toast('❌ Nicht genug Cash!','danger'); return; }
+  G.cash -= betAmount;
+  try {
+    const ref = await addDoc(collection(db,'duels'), {
+      gameId, betAmount,
+      creatorUid: currentUser.uid, creatorEmail: currentUser.email,
+      opponentUid: null, opponentEmail: null,
+      status: 'open', // open -> accepted -> resolved
+      winnerUid: null,
+      createdAt: serverTimestamp(),
+    });
+    window.UI.toast(`⚔️ Duell erstellt! Warte auf einen Gegner…`,'achievement');
+    pushCloudSave();
+    return ref.id;
+  } catch(e){
+    console.warn('Create duel failed', e);
+    G.cash += betAmount; // rollback
+    window.UI.toast('❌ Duell konnte nicht erstellt werden.','danger');
+  }
+}
+
+async function acceptDuel(duelId){
+  if(!currentUser) return;
+  const G = getGState();
+  if(!G) return;
+  try {
+    let resolvedDuel = null;
+    await runTransaction(db, async (tx)=>{
+      const ref = doc(db,'duels',duelId);
+      const snap = await tx.get(ref);
+      if(!snap.exists() || snap.data().status!=='open') throw new Error('Dieses Duell ist nicht mehr verfügbar.');
+      const d = snap.data();
+      if(d.creatorUid===currentUser.uid) throw new Error('Du kannst nicht gegen dich selbst spielen.');
+      if(G.cash < d.betAmount) throw new Error('Nicht genug Cash für diesen Einsatz.');
+      const winnerUid = Math.random()<0.5 ? d.creatorUid : currentUser.uid;
+      resolvedDuel = { ...d, opponentUid: currentUser.uid, opponentEmail: currentUser.email, status:'resolved', winnerUid };
+      tx.update(ref, { opponentUid: currentUser.uid, opponentEmail: currentUser.email, status:'resolved', winnerUid, resolvedAt: serverTimestamp() });
+    });
+    G.cash -= resolvedDuel.betAmount;
+    const won = resolvedDuel.winnerUid === currentUser.uid;
+    const payout = resolvedDuel.betAmount * 2;
+    if(won){
+      G.cash += payout;
+      window.UI.toast(`🏆 Du hast das Duell gewonnen! +$${window.fmt(payout)}`,'achievement');
+      AUDIO.winBig();
+      await bumpCasinoStat('duelWins', 1);
+      await bumpCasinoStat('duelProfit', payout - resolvedDuel.betAmount);
+    } else {
+      window.UI.toast(`❌ Verloren! ${maskEmail(resolvedDuel.creatorEmail)} gewinnt $${window.fmt(payout)}.`,'danger');
+      AUDIO.lose();
+      await bumpCasinoStat('duelLosses', 1);
+      await bumpCasinoStat('duelProfit', -resolvedDuel.betAmount);
+    }
+    // Deliver winnings to the OTHER player if they were the winner (creator side, since this
+    // client just resolved it — the creator isn't online to claim instantly).
+    if(!won){
+      await addDoc(collection(db,'inbox',resolvedDuel.creatorUid,'items'), {
+        type:'gift', amount:payout, fromEmail:`Duell-Gewinn (${DUEL_GAMES.find(g=>g.id===resolvedDuel.gameId)?.name||'Duell'})`,
+        createdAt: serverTimestamp(), read:false,
+      });
+    }
+    pushCloudSave();
+    window.CasinoPvP.refreshDuels();
+  } catch(e){
+    console.warn('Accept duel failed', e);
+    window.UI.toast('❌ '+(e.message||'Duell fehlgeschlagen.'),'danger');
+  }
+}
+
+async function cancelDuel(duelId, betAmount){
+  const G = getGState();
+  try {
+    await setDoc(doc(db,'duels',duelId), { status:'cancelled' }, { merge:true });
+    if(G) G.cash += betAmount; // refund
+    window.UI.toast('↩️ Duell zurückgezogen, Einsatz erstattet.');
+    pushCloudSave();
+    window.CasinoPvP.refreshDuels();
+  } catch(e){ window.UI.toast('❌ Konnte nicht zurückgezogen werden.','danger'); }
+}
+
+async function fetchOpenDuels(){
+  try {
+    const q = query(collection(db,'duels'), where('status','==','open'), limit(30));
+    const snap = await getDocs(q);
+    const duels = [];
+    snap.forEach(d=>duels.push({id:d.id,...d.data()}));
+    duels.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+    return duels;
+  } catch(e){ console.warn('Fetch duels failed', e); return []; }
+}
+
+async function renderDuelsList(){
+  const list = document.getElementById('duels-list');
+  if(!list) return;
+  if(!currentUser){ list.innerHTML='<div class="lb-loading">Melde dich an, um Duelle zu spielen.</div>'; return; }
+  list.innerHTML = '<div class="lb-loading">Lade Duelle…</div>';
+  const duels = await fetchOpenDuels();
+  await Promise.all(duels.map(d=>getProfile(d.creatorUid)));
+  if(duels.length===0){ list.innerHTML='<div class="lb-loading">Keine offenen Duelle. Erstelle eins!</div>'; return; }
+  list.innerHTML = duels.map(d=>{
+    const game = DUEL_GAMES.find(g=>g.id===d.gameId);
+    const isMine = d.creatorUid===currentUser.uid;
+    const prof = profileCache[d.creatorUid]||{username:maskEmail(d.creatorEmail),avatarEmoji:'😀',flairs:[],activeFlair:null};
+    return `<div class="market-listing-card${isMine?' mine':''}">
+      <div class="ml-icon">${game?.icon||'⚔️'}</div>
+      <div class="ml-info">
+        <div class="ml-name">${game?.name||'Duell'}</div>
+        <div class="ml-seller">${renderProfileChip(prof,d.creatorUid,d.creatorEmail)}</div>
+      </div>
+      <div class="ml-price">$${window.fmt(d.betAmount)}</div>
+      ${isMine
+        ? `<button class="btn-cancel-listing" data-canceldueld="${d.id}" data-bet="${d.betAmount}">Zurückziehen</button>`
+        : `<button class="btn-buy-listing" data-acceptduel="${d.id}">Annehmen</button>`}
+    </div>`;
+  }).join('');
+  list.querySelectorAll('[data-acceptduel]').forEach(btn=>btn.addEventListener('click',()=>acceptDuel(btn.dataset.acceptduel)));
+  list.querySelectorAll('[data-canceldueld]').forEach(btn=>btn.addEventListener('click',()=>cancelDuel(btn.dataset.canceldueld, parseFloat(btn.dataset.bet))));
+}
+
+/* ---- Open bet pools: everyone bets on the same upcoming roulette spin, see each other's bets ---- */
+async function createPoolBet(side, amount){
+  if(!currentUser) return;
+  const G = getGState();
+  if(!G || G.cash < amount){ window.UI.toast('❌ Nicht genug Cash!','danger'); return; }
+  G.cash -= amount;
+  try {
+    await setDoc(doc(db,'betPools',getCurrentPoolId(),'bets',currentUser.uid), {
+      side, amount, email: currentUser.email, placedAt: serverTimestamp(),
+    });
+    pushCloudSave();
+    window.UI.toast(`🎯 $${window.fmt(amount)} auf "${side}" gesetzt!`);
+    window.CasinoPvP.refreshPool();
+  } catch(e){
+    G.cash += amount;
+    window.UI.toast('❌ Wette fehlgeschlagen.','danger');
+  }
+}
+
+function getCurrentPoolId(){
+  // A new shared pool "round" every 90 seconds, identified by a rounded timestamp —
+  // every online player betting in the same 90s window is automatically in the same pool.
+  return 'round_' + Math.floor(Date.now()/90000);
+}
+
+async function renderBetPool(){
+  const list = document.getElementById('pool-bets-list');
+  const timerEl = document.getElementById('pool-timer');
+  if(!list) return;
+  const poolId = getCurrentPoolId();
+  const msLeft = 90000 - (Date.now() % 90000);
+  if(timerEl) timerEl.textContent = `Nächste Auflösung in ${Math.ceil(msLeft/1000)}s`;
+  if(!currentUser){ list.innerHTML='<div class="lb-loading">Melde dich an, um mitzuwetten.</div>'; return; }
+  try {
+    const snap = await getDocs(collection(db,'betPools',poolId,'bets'));
+    const bets = [];
+    snap.forEach(d=>bets.push({uid:d.id,...d.data()}));
+    if(bets.length===0){ list.innerHTML='<div class="lb-loading">Noch keine Wetten in dieser Runde.</div>'; return; }
+    await Promise.all(bets.map(b=>getProfile(b.uid)));
+    const redTotal = bets.filter(b=>b.side==='red').reduce((s,b)=>s+b.amount,0);
+    const blackTotal = bets.filter(b=>b.side==='black').reduce((s,b)=>s+b.amount,0);
+    list.innerHTML = `<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">🔴 Rot: $${window.fmt(redTotal)} · ⚫ Schwarz: $${window.fmt(blackTotal)}</div>` +
+      bets.map(b=>{
+        const prof = profileCache[b.uid]||{username:maskEmail(b.email),avatarEmoji:'😀',flairs:[],activeFlair:null};
+        return `<div class="affiliate-member-row"><div class="am-info">${renderProfileChip(prof,b.uid,b.email)}</div><div class="am-cash">${b.side==='red'?'🔴':'⚫'} $${window.fmt(b.amount)}</div></div>`;
+      }).join('');
+  } catch(e){ console.warn('Render pool failed', e); }
+}
+
+// Resolve the previous pool round once it expires — any client can do this (idempotent:
+// a 'resolved' flag on the round doc prevents double-payouts even if two clients race).
+async function tryResolvePoolRound(){
+  const currentMs = Date.now() % 90000;
+  if(currentMs > 5000) return; // only attempt right at the start of a new round (prev round just ended)
+  const prevRoundId = 'round_' + (Math.floor(Date.now()/90000)-1);
+  const roundRef = doc(db,'betPoolResults',prevRoundId);
+  try {
+    const resultSnap = await getDoc(roundRef);
+    if(resultSnap.exists()) return; // already resolved by someone else
+    const winningSide = Math.random()<0.5 ? 'red' : 'black';
+    await setDoc(roundRef, { winningSide, resolvedAt: serverTimestamp() });
+
+    if(!currentUser) return;
+    const myBetSnap = await getDoc(doc(db,'betPools',prevRoundId,'bets',currentUser.uid));
+    if(myBetSnap.exists()){
+      const bet = myBetSnap.data();
+      const G = getGState();
+      if(bet.side===winningSide && G){
+        const payout = bet.amount*1.95;
+        G.cash += payout;
+        window.UI.toast(`🎉 Pool-Wette gewonnen! +$${window.fmt(payout)}`,'achievement');
+        pushCloudSave();
+      } else if(G){
+        window.UI.toast(`❌ Pool-Wette verloren (${winningSide==='red'?'🔴 Rot':'⚫ Schwarz'} gewann).`,'danger');
+      }
+    }
+  } catch(e){ console.warn('Pool resolve check failed', e); }
+}
+
+/* ---- Casino leaderboard: separate ranking by net casino profit ---- */
+async function bumpCasinoStat(field, delta){
+  if(!currentUser) return;
+  try {
+    await setDoc(doc(db,'casinoStats',currentUser.uid), {
+      [field]: increment(delta), email: currentUser.email, updatedAt: serverTimestamp(),
+    }, { merge:true });
+  } catch(e){ console.warn('bumpCasinoStat failed', e); }
+}
+
+async function renderCasinoLeaderboard(){
+  const list = document.getElementById('casino-leaderboard-list');
+  if(!list) return;
+  list.innerHTML = '<div class="lb-loading">Lade Casino-Rangliste…</div>';
+  try {
+    const snap = await getDocs(collection(db,'casinoStats'));
+    const rows = [];
+    snap.forEach(d=>{
+      const data = d.data();
+      const netProfit = (data.gambleProfit||0) + (data.duelProfit||0);
+      rows.push({ uid:d.id, email:data.email, netProfit, duelWins:data.duelWins||0, duelLosses:data.duelLosses||0 });
+    });
+    rows.sort((a,b)=>b.netProfit-a.netProfit);
+    const top = rows.slice(0,20);
+    if(top.length===0){ list.innerHTML='<div class="lb-loading">Noch keine Casino-Daten.</div>'; return; }
+    await Promise.all(top.map(r=>getProfile(r.uid)));
+    list.innerHTML = top.map((r,i)=>{
+      const prof = profileCache[r.uid]||{username:maskEmail(r.email),avatarEmoji:'😀',flairs:[],activeFlair:null};
+      const rankClass = i===0?'top1':i===1?'top2':i===2?'top3':'';
+      return `<div class="lb-row" style="cursor:default">
+        <div class="lb-rank ${rankClass}">#${i+1}</div>
+        <div class="lb-info">${renderProfileChip(prof,r.uid,r.email)}<div class="lb-stats">${r.duelWins}S / ${r.duelLosses}N Duelle</div></div>
+        <div class="lb-cash" style="color:${r.netProfit>=0?'var(--neon-green)':'var(--danger)'}">${r.netProfit>=0?'+':''}$${window.fmt(r.netProfit)}</div>
+      </div>`;
+    }).join('');
+  } catch(e){ console.warn('Casino leaderboard failed', e); list.innerHTML='<div class="lb-loading">Konnte nicht geladen werden.</div>'; }
+}
+
+// Hook normal gambling wins/losses (slots/coin/roulette/crash/dice/race) into casino stats too.
+(function hookCasinoStats(){
+  const origResolveGamble = GAME._resolveGamble.bind(GAME);
+  GAME._resolveGamble = function(bet, win){
+    origResolveGamble(bet, win);
+    const profit = win - bet;
+    bumpCasinoStat('gambleProfit', profit);
+  };
+})();
+
+window.CasinoPvP = {
+  createDuel, acceptDuel,
+  refreshDuels: renderDuelsList,
+  createPoolBet,
+  refreshPool: renderBetPool,
+  refreshLeaderboard: renderCasinoLeaderboard,
+};
+setInterval(tryResolvePoolRound, 3000);
+setInterval(()=>{
+  if(document.getElementById('communitypage-casinolb')?.style.display!=='none') renderCasinoLeaderboard();
+}, 15000);
+// Push my stock positions to the public collection whenever a cloud save happens, so other
+// players' "top holders" views stay reasonably fresh.
+setInterval(pushStockPositions, 60000);
 
 // Auto-fill affiliate code from ?ref=CODE URL parameter and switch to register tab.
 // Runs last, after all auth listeners above are registered, so the click() works correctly.
